@@ -37,6 +37,7 @@ def index():
 
 @frontend.route('/search')
 def search():
+    login_form = None
     if not current_user.is_authenticated():
         login_form= LoginForm(next=request.args.get('next'))
     keywords = request.args.get('keywords', '').strip()

@@ -1,0 +1,19 @@
+syntax: glob
+
+*.egg-info
+*.log
+*.pyc
+*.db
+*.swp
+*.swo
+*.zip
+*.orig
+*.cfg
+*.tox
+
+# Ignore Vim swap files.
+*~
+
+# Ignore setup stuffs.
+dist
+build

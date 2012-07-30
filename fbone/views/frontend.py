@@ -124,14 +124,21 @@ def change_password():
     elif 'activation_key' in request.values and 'email' in request.values:
         activation_key = request.values['activation_key']
         email = request.values['email']
+        session['activation_key'] = activation_key
+        session['email'] = email
+        #from fbone.models import User
         user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
-
-    if user is None:
+    else:
+        email = session['email']
+        activation_key = session['activation_key']
+        user = User.query.filter_by(activation_key=activation_key) \
+                         .filter_by(email=email).first()
+       
+    if not user:
         abort(403)
 
     form = ChangePasswordForm(activation_key=user.activation_key)
-
     if form.validate_on_submit():
         user.password = form.password.data
         user.activation_key = None
@@ -140,9 +147,12 @@ def change_password():
 
         flash(_("Your password has been changed, please log in again"),
               "success")
+        session.pop('email', None)
+        session.pop('activation_code', None)
         return redirect(url_for("frontend.login"))
-
+  
     return render_template("change_password.html", form=form)
+
 
 
 @frontend.route('/reset_password', methods=['GET', 'POST'])
@@ -160,7 +170,7 @@ def reset_password():
             db.session.add(user)
             db.session.commit()
             body = render_template('emails/reset_password.html', user=user)
-            message = Message(subject=_('Recover your password'), body=body,
+            message = Message(subject=_('Recover your password'), html=body,
                               recipients=[user.email])
             mail.send(message)
 

@@ -118,11 +118,7 @@ def signup():
 @frontend.route('/change_password', methods=['GET', 'POST'])
 def change_password():
     user = None
-    if current_user.is_authenticated():
-        if not login_fresh():
-            return login_manager.needs_refresh()
-        user = current_user
-    elif 'activation_key' in request.values and 'email' in request.values:
+    if 'activation_key' in request.values and 'email' in request.values:
         activation_key = request.values['activation_key']
         email = request.values['email']
         session['activation_key'] = activation_key
@@ -130,6 +126,10 @@ def change_password():
         #from fbone.models import User
         user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
+    elif current_user.is_authenticated():
+        if not login_fresh():
+            return login_manager.needs_refresh()
+        user = current_user
     else:
         email = session['email']
         activation_key = session['activation_key']

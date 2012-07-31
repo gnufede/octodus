@@ -6,14 +6,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{% block title %}{{ page_title|default(_('Fbone')) }}{% endblock %}</title>
+   	<meta name="keywords" content="Orlas, orlas universitarias, foto, actos académicos, reportaje fotográfico">
+	<meta name="description" content="Somos una empresa formada por un grupo de profesionales con larga experiencia con el objetivo primordial de ofrecerles un servicio cimentado en la garantía de calidad, que conseguimos gracias a nuestros equipos fotográficos de alta definición">
+	<title>E.F. Digital Orlas - {% block title %}{{ page_title }}{% endblock %}</title> 
     <meta name="description" content="Fbone, a Flask skeleton project.">
-    <meta name="author" content="Wilson Xu">
+    <meta name="author" content="Sigmaset">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="Shortcut Icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
     {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleorlas.css') }}">
     {% endblock %}
 </head>
 <body style='padding-top: 40px; background-color: #EEE;'>
@@ -22,7 +25,7 @@
         <header class="topbar" data-dropdown="dropdown" role='banner'>
             <div class="topbar-inner">
                 <div class="container">
-                    <h3><a class='brand' href='{{ url_for('frontend.index') }}'>Fbone</a></h3>
+                    <h3><a class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
                     <form class="pull-left" action="{{ url_for('frontend.search') }}">
                         <input type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
                     </form>
@@ -67,7 +70,7 @@
 
         <footer>
             <p style='text-align: center;'>
-                © 2011 Fbone -
+                © 2012 E.F. Digital Orlas - Realizado por <a href="http://www.sigmaset.com">Sigmaset</a> -
                 <a href='{{ url_for('frontend.about') }}'>{{ _('About') }}</a> -
                 <a href='{{ url_for('frontend.blog') }}'>{{ _('Blog') }}</a> -
                 <a href='{{ url_for('frontend.help') }}'>{{ _('Help') }}</a> -

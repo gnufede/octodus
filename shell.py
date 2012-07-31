@@ -6,7 +6,7 @@ from flaskext.script import Manager, prompt, prompt_pass, prompt_bool
 
 from fbone import create_app
 from fbone.extensions import db
-from fbone.models import User
+from fbone.models import User, Group, UsersGroups
 
 
 manager = Manager(create_app())
@@ -30,6 +30,10 @@ def reset():
     db.drop_all()
     db.create_all()
     user = User(name='tester', email='tester@hz.com', password='123456')
+    rel = UsersGroups(extra_data="2012")
+    rel.group = Group(name='group1', activation_key='HOLA')
+    user.groups.append(rel)
+
     db.session.add(user)
     db.session.commit()
 

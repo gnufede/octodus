@@ -23,6 +23,7 @@
         {{ signup_form.next }}
         <fieldset>
             <legend><h5>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</h5></legend>
+            {{ render_input(signup_form.code, 'large') }}
             {{ render_input(signup_form.name, 'large') }}
             {{ render_input(signup_form.email, 'large') }}
             {{ render_input(signup_form.password, 'large') }}

@@ -7,7 +7,8 @@ from flask.ext.login import UserMixin
 from fbone.extensions import db
 from fbone.models import DenormalizedText
 from fbone.utils import get_current_time, VARCHAR_LEN_128
-
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declarative_base
 
 class User(db.Model, UserMixin):
 
@@ -18,9 +19,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(VARCHAR_LEN_128), nullable=False, unique=True)
     _password = db.Column('password', db.String(VARCHAR_LEN_128), nullable=False)
     activation_key = db.Column(db.String(VARCHAR_LEN_128))
-    followers = db.Column(DenormalizedText)
-    following = db.Column(DenormalizedText)
     created_time = db.Column(db.DateTime, default=get_current_time)
+    groups = relationship("UsersGroups", backref="users")
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -41,32 +41,7 @@ class User(db.Model, UserMixin):
             return False
         return check_password_hash(self.password, password)
 
-    @property
-    def num_followers(self):
-        if self.followers:
-            return len(self.followers)
-        return 0
 
-    @property
-    def num_following(self):
-        return len(self.following)
-
-    def follow(self, user):
-        user.followers.add(self.id)
-        self.following.add(user.id)
-
-    def unfollow(self, user):
-        if self.id in user.followers:
-            user.followers.remove(self.id)
-
-        if user.id in self.following:
-            self.following.remove(user.id)
-
-    def get_following_query(self):
-        return User.query.filter(User.id.in_(self.following or set()))
-
-    def get_followers_query(self):
-        return User.query.filter(User.id.in_(self.followers or set()))
 
     @classmethod
     def authenticate(cls, login, password):

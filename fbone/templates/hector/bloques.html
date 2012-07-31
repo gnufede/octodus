@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+
+{% block body %}
+
+	<div id="wrapper">
+	
+		<div id="header">
+			<div id="logo">
+	
+			</div>
+		</div>
+	
+		<div id="menu">
+		<!--Meter condición de "active" para cada elemento del menú-->
+			<ul>
+				<li><a href="../sigma/login.html">Entrar</a></li>
+				<li class="current_page_item"><a href="../quienes/Quienes_somos.html">Presentación</a></li>
+				<li><a href="../quienes/proceso.html">Orlas universitarias</a></li>
+				<li><a href="../quienes/index.html">Fotoescuela</a></li>
+				<li><a href="../quienes/login.html">Actos de graduación</a></li>
+				<li><a href="../quienes/bodas.html">Eventos y celebraciones</a></li>
+			</ul>
+		</div>	
+		<div id="page">
+				<div id="page-bgtop">
+					<div id="page-bgbtm">
+						<div id="content">
+						{% block content %} {% endblock %}
+						</div>
+					
+						<!-- end #content -->
+						<div id="sidebar">
+										<ul>
+							<li>
+								<h2>Presentación</h2>
+								<ul>
+									<li><a href="Quienes_somos.html">Quiénes somos</a></li>
+									<!-- <li><a href="contacto.php">Contacto</a></li> -->
+									<li><a href="presentacion/localizacion.html">Localización</a></li>
+								</ul>
+							</li>
+						</ul>			</div>
+						<!-- end #sidebar -->
+					<div style="clear: both;">&nbsp;</div>
+					</div>
+			</div>
+		</div>
+	<!-- end #page -->
+	</div>
+	<div id="footer">
+		<p>Copyright (c) 2011 E.F. Digital Orlas.</p>
+	</div>
+
+<!--Optimizador de google analytics, revisar aquí http://support.google.com/googleanalytics/bin/answer.py?hl=es&answer=77075 -->
+<script type="text/javascript" async="" src="Quienes_somos_files/ga.js"></script><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21285120-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+{% endblock %}

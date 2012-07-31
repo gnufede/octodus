@@ -1,0 +1,33 @@
+{% extends "bloques.html" %}
+
+{% block content %}
+
+<!-- ejemplo de variable a usar, debería recibir este valor dependiendo de la opción seleccionada, no es definitivo-->
+{% tabs = enum( 'entrar', 'presentacion', 'orlas', 'fotoescuela', 'actos', 'eventos') %}
+
+{% 	switch (tabs)
+	{ 	case 'entrar':
+			block entrar
+			endblock
+		case 'presentacion':
+			block presentacion
+			endblock
+		case 'orlas':
+			block orlas
+			endblock
+		case 'fotoescuela':
+			block escuela
+			endblock
+		case 'actos'
+			block actos
+			endblock
+		case 'eventos'
+			block eventos
+			endblock
+		default: 
+		break;
+	}	
+%}
+
+
+{% endblock %}

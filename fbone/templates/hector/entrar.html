@@ -1,0 +1,45 @@
+{% extends "content.html" %}
+
+{% block entrar %}
+
+				<div class="post">
+					<h2 class="title"><a href="presentacion/quienessomos.html#">Entrar</a></h2>
+					<div class="entry">
+					<!-- <p class="meta">Posted by <a href="#">Someone</a> on October 8, 2010
+						&nbsp;&bull;&nbsp; <a href="#" class="comments">Comments (64)</a> &nbsp;&bull;&nbsp; <a href="#" class="permalink">Full article</a></p> -->
+					<br />
+					<p>Por favor introduzca los datos siguientes para poder registrarse en la página y poder acceder así al área privada</p>
+					<br />
+					<fieldset>
+					<form action="http://" method="post">
+    					<P><br />
+					<label for="Código de grupo">Código de grupo: </label>
+					<!-- pendiente de alinear como debe ser-->					
+					&nbsp;&nbsp;&nbsp;&nbsp;
+				        <input type="text" id="codgr" class="required"><br />
+					<label for="Correo">Correo: </label>
+					<!-- pendiente de alinear como debe ser-->
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				        <input type="text" id="correo" class="required email"><br />
+					<label id="cusuario"for="Código de grupo">Contraseña: </label>
+					<!-- pendiente de alinear como debe ser-->
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;
+				        <input type="text" id="cusuario"><br />
+					<label for="valcusuario">Verificar contraseña: </label>
+				        <input type="text" id="codgr"><br />
+					<input type="submit" value="send"> <input type="reset">
+					</p>
+					</form>
+					</fieldset>
+						<!--p>&nbsp;</p>
+						<p>Código de grupo</p>
+						<p>Correo</p>
+						<p>Contraseña</p>
+						<p>verificar Contraseña</p-->
+					</div>
+				</div>
+				<div style="clear: both;">&nbsp;</div>
+			
+{% endblock %}

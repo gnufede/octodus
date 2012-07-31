@@ -19,9 +19,10 @@ class LoginForm(Form):
 
 class SignupForm(Form):
     next = HiddenField()
+    code = TextField(_('Code'), [required()])
     name = TextField(_('Username'), [required()])
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
-    password_again = PasswordField(_('Password again'), [required(), length(min=6, max=16), equal_to('password')])
+    password_again = PasswordField(_('Password again'), [required(), equal_to('password')])
     email = TextField(_('Email address'), [required(), email(message=_('A valid email address is required'))])
     submit = SubmitField(_('Signup'))
 
@@ -43,7 +44,8 @@ class RecoverPasswordForm(Form):
 class ChangePasswordForm(Form):
     activation_key = HiddenField()
     password = PasswordField('Password', validators=[
-                             required(message=_('Password is required'))])
+                             required(message=_('Password is required')),
+                            length(min=6, max=16)])
     password_again = PasswordField(_('Password again'), validators=[
                                    equal_to('password', message=\
                                             _("Passwords don't match"))])

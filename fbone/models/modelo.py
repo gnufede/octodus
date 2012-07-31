@@ -96,7 +96,7 @@ class Sesion(Base):
     alumnos_bloque = Column(Integer)
 
 
-class Nodo(Base):
+class Nodo(Base): # Es la plantilla de titulos, cursos, universidades, etc.
     __tablename__ = "nodos"
     id = Column(Integer, primary_key=True)
     id_padre = Column(Integer, ForeignKey("nodos.id"))

@@ -55,20 +55,27 @@ def search():
 def login():
     form = LoginForm(login=request.args.get('login', None),
                      next=request.args.get('next', None))
-
+    
+    
+    tries = request.args.get('tries', 0)
     if form.validate_on_submit():
         user, authenticated = User.authenticate(form.login.data,
                                     form.password.data)
 
-        if user and authenticated:
-            remember = request.form.get('remember') == 'y'
-            if login_user(user, remember=remember):
-                flash("Logged in!", 'success')
-            return redirect(form.next.data or url_for('user.index'))
-        else:
-            flash(_('Sorry, invalid login'), 'error')
+        if user: 
+            if authenticated:
+                remember = request.form.get('remember') == 'y'
+                if login_user(user, remember=remember):
+                    flash("Logged in!", 'success')
+                return redirect(form.next.data or url_for('user.index'))
+            else:
+                flash(_('Sorry, invalid login'), 'error')
+                tries = tries + 1
 
-    return render_template('login.html', form=form)
+        else:
+            flash(_('Sorry, there is no such account'), 'error')
+            return redirect(url_for('frontend.signup'))
+    return render_template('login.html', form=form, tries=tries)
 
 
 @frontend.route('/reauth', methods=['GET', 'POST'])
@@ -171,6 +178,10 @@ def change_password():
 def reset_password():
     form = RecoverPasswordForm()
 
+    if 'value' in request.values:
+        value = request.values['value']
+    else: value = ''
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
@@ -190,7 +201,7 @@ def reset_password():
         else:
             flash(_('Sorry, no user found for that email address'), 'error')
 
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_password.html', form=form, value=value)
 
 
 

@@ -6,14 +6,14 @@
     {% endif %}
 {% endmacro %}
 
-{% macro render_input(field, cls='') %}
+{% macro render_input(field, cls='', value='') %}
 <div class='clearfix {% if field.errors %}error{% endif %}'>
     {{ field.label }}
     <div class='input'>
         {% if field.errors %}
         {{ field(class_=cls~' error') }}
         {% else %}
-        {{ field(class_=cls) }}
+        {{ field(class_=cls,value=value) }}
         {% endif %}
         <span class="help-inline">
             {% for error in field.errors %}

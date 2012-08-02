@@ -10,7 +10,12 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
+        	{% if not tries -%}
             <legend>Not a member? <a href="{{ url_for('frontend.signup') }}">Sign up</a> please.</legend>
+            {% endif %}
+            {% if tries -%}
+            <legend>Forgot your password? <a href="{{ url_for('frontend.reset_password',value=form.data.login) }}">Recover your password</a>.</legend>
+            {% endif %}
             {{ render_input(form.login, 'xlarge') }}
             {{ render_input(form.password, 'xlarge') }}
             <div class='clearfix'>

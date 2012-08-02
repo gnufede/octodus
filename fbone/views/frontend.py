@@ -23,10 +23,7 @@ frontend = Blueprint('frontend', __name__)
 @frontend.route('/')
 def index():
     if current_user.is_authenticated():
-        if current_user.utype:
-            return redirect(url_for('admin.index'))
-        else:
-            return redirect(url_for('user.index'))
+        return redirect(url_for('user.index'))
 
     login_form = signup_form = None
     if not current_user.is_authenticated():

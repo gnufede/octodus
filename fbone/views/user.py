@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, current_app, g, redirect, url_for
+from flask import Blueprint, render_template, current_app, g, redirect, url_for, request
 from flask.ext.login import login_required, current_user
 
 from fbone.models import User
 from fbone.decorators import keep_login_url
+from fbone.forms import (EditDatosForm)
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
@@ -14,6 +15,13 @@ user = Blueprint('user', __name__, url_prefix='/user')
 @login_required
 def index():
     return render_template('user_index.html', current_user=current_user)
+
+@user.route('/edit_datos')
+@login_required
+def edit_datos():
+    form = EditDatosForm(next=request.args.get('next'))
+    return render_template('user_edit_datos.html', form=form,
+                           current_user=current_user)
 
 
 @user.route('/<name>')

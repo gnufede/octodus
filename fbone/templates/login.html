@@ -16,7 +16,7 @@
             {% if tries -%}
             <legend>Forgot your password? <a href="{{ url_for('frontend.reset_password',value=form.data.login) }}">Recover your password</a>.</legend>
             {% endif %}
-            {{ render_input(form.login, 'xlarge') }}
+            {{ render_input(form.login, 'xlarge', value=email) }}
             {{ render_input(form.password, 'xlarge') }}
             <div class='clearfix'>
                 <label></label>

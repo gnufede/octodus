@@ -11,7 +11,7 @@ from flask.ext.login import (login_required, login_user, current_user,
                             logout_user, confirm_login, fresh_login_required,
                             login_fresh)
 
-from fbone.models import User, Group, UsersGroups
+from fbone.models import User, Group, UsersGroups, Proceso
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
@@ -58,6 +58,7 @@ def login():
     
     
     tries = request.args.get('tries', 0)
+    email = request.args.get('email', '')
     if form.validate_on_submit():
         user, authenticated = User.authenticate(form.login.data,
                                     form.password.data)
@@ -75,7 +76,7 @@ def login():
         else:
             flash(_('Sorry, there is no such account'), 'error')
             return redirect(url_for('frontend.signup'))
-    return render_template('login.html', form=form, tries=tries)
+    return render_template('login.html', form=form, tries=tries, email=email)
 
 
 @frontend.route('/reauth', methods=['GET', 'POST'])
@@ -149,9 +150,10 @@ def change_password():
             return login_manager.needs_refresh()
         user = current_user
     else:
-        email = session['email']
-        activation_key = session['activation_key']
-        user = User.query.filter_by(activation_key=activation_key) \
+        if 'email' and 'activation_key' in session:
+            email = session['email']
+            activation_key = session['activation_key']
+            user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
        
     if not user:
@@ -168,7 +170,7 @@ def change_password():
               "success")
         session.pop('email', None)
         session.pop('activation_code', None)
-        return redirect(url_for("frontend.login"))
+        return redirect(url_for("frontend.login",email=email))
   
     return render_template("change_password.html", form=form)
 
@@ -203,6 +205,10 @@ def reset_password():
 
     return render_template('reset_password.html', form=form, value=value)
 
+@frontend.route('/proceso')
+def proceso():
+    proceso = Proceso.query.first()
+    return render_template('proceso.html', proceso=proceso)
 
 
 @frontend.route('/about')

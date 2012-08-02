@@ -1,0 +1,12 @@
+{% set page_title = 'Administracion' %}
+
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="span6">	
+<ul>
+	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
+	</li>
+</ul>
+</div>	
+{% endblock %}

@@ -29,13 +29,14 @@ def reset():
 
     db.drop_all()
     db.create_all()
-    user = User(name='tester', email='tester@hz.com', password='123456')
+    user = User(name='tester', email='tester@hz.com', password='123456', utype=1)
     proceso = Proceso(content="<div> <p> hola </p> </div>")
     rel = UsersGroups(extra_data="2012")
     rel.group = Group(name='group1', activation_key='HOLA')
     user.groups.append(rel)
 
     db.session.add(user)
+    db.session.add(proceso)
     db.session.commit()
 
 

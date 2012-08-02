@@ -23,7 +23,10 @@ frontend = Blueprint('frontend', __name__)
 @frontend.route('/')
 def index():
     if current_user.is_authenticated():
-        return redirect(url_for('user.index'))
+        if current_user.utype:
+            return redirect(url_for('admin.index'))
+        else:
+            return redirect(url_for('user.index'))
 
     login_form = signup_form = None
     if not current_user.is_authenticated():
@@ -208,7 +211,17 @@ def reset_password():
 @frontend.route('/proceso')
 def proceso():
     proceso = Proceso.query.first()
-    return render_template('proceso.html', proceso=proceso)
+    return render_template('proceso.html', proceso=proceso.content)
+
+@frontend.route('/edit_proceso')
+def edit_proceso():
+    user = current_user
+    if not user or not (user.utype == 1) :
+        abort(403)
+    
+    proceso = Proceso.query.first()
+    return render_template('edit_proceso.html', proceso=proceso.content)
+
 
 
 @frontend.route('/about')

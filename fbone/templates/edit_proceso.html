@@ -1,10 +1,10 @@
-{% set page_title = current_user.name %}
+{% set page_title = 'Editar Proceso' %}
 
 {% extends "layout.html" %}
 
 {% block body %}
 <div class="span6">	
-Luser
+{{ proceso|safe }}
 </div>	
 {% endblock %}
 

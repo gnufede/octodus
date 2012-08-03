@@ -142,7 +142,6 @@ def change_password():
         email = request.values['email']
         session['activation_key'] = activation_key
         session['email'] = email
-        #from fbone.models import User
         user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
     elif current_user.is_authenticated():

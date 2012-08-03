@@ -17,3 +17,5 @@ syntax: glob
 # Ignore setup stuffs.
 dist
 build
+
+.venv/

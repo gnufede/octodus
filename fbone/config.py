@@ -4,7 +4,7 @@ APP_NAME = 'fbone'
 
 class BaseConfig(object):
 
-    DEBUG = False
+    DEBUG = True
     TESTING = False
 
     # os.urandom(24)
@@ -34,17 +34,17 @@ class DefaultConfig(BaseConfig):
 
     # Email (Flask-email)
     # https://bitbucket.org/danjac/flask-mail/issue/3/problem-with-gmails-smtp-server
-    MAIL_DEBUG = DEBUG
+    MAIL_DEBUG = False
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
     MAIL_USERNAME = 'gnu.fede'
-    MAIL_PASSWORD = 'set_yours'
+    MAIL_PASSWORD = '#faif#99GGL'
     DEFAULT_MAIL_SENDER = '%s@gmail.com' % MAIL_USERNAME
 
 
 class TestConfig(BaseConfig):
-    TESTING = True
+    TESTING = False
     CSRF_ENABLED = False
 
     SQLALCHEMY_ECHO = False

@@ -19,20 +19,36 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleorlas.css') }}">
     {% endblock %}
 </head>
-<body style='padding-top: 40px; background-color: #EEE;'>
-
+<body style='padding-top: 4px; background-color: #EEE;'>
+	<div class="container" style="margin-top: 0;">
+    	<div id="logo" style="margin-left: auto;"></div>
+    	</div>
     <div class="topbar-wrapper" style="z-index: 5;">
+
         <header class="topbar" data-dropdown="dropdown" role='banner'>
             <div class="topbar-inner">
                 <div class="container">
+                	{% if current_user.is_authenticated() %}
+                	 <h3><a class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
+                	 {% else %}
                     <h3><a class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
-                    <form class="pull-left" action="{{ url_for('frontend.search') }}">
+                    {% endif %}
+                    <!--form class="pull-left" action="{{ url_for('frontend.search') }}">
                         <input type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
-                    </form>
+                    </form-->
+                 <!--div class="nav-collapse"-->
+                 	<ul class="nav secondary-nav">
+                
+				<li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
+				<li><a href="../static/index.html">Fotoescuela</a></li>
+				<li><a href="../static/login.html">Actos de graduación</a></li>
+				<li><a href="../static/bodas.html">Eventos y celebraciones</a></li>
+				
+
                     {% if current_user.is_authenticated() %}
-                    <ul class="nav secondary-nav">
+                    <!--ul class="nav secondary-nav"-->
                         <li class="dropdown">
-                        <a href="#" class="dropdown-toggle">{{ current_user.name }}</a>
+                        <a href="#" class="dropdown-toggle">{{ current_user.email }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('frontend.change_password') }}">Change Password</a></li>
                             <li class="divider"></li>
@@ -41,13 +57,24 @@
                         </li>
                     </ul>
                     {% elif login_form is defined %}
-                    <form class='pull-right' method='POST' action='{{ url_for('frontend.login') }}'>
+                    <!--ul class="nav secondary-nav"-->
+                        <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Login</a>
+                        <ul class="dropdown-menu">
+                         <form class='pull-right' method='POST' action='{{ url_for('frontend.login') }}'>
                         {{ login_form.hidden_tag() }}
                         {{ login_form.next }}
-                        {{ login_form.login(class_='input-small', placeholder='Username') }}
+                        {{ login_form.login(class_='input-small', placeholder='Email') }}
                         {{ login_form.password(class_='input-small', placeholder='Password') }}
-                        <button class='btn' type='submit'>Log in</button>
+                        <button class='btn-grey' style="float:right; margin-right: 15px; margin-top: 8px;" type='submit'>Log in</button>
                     </form>
+                    				</ul>
+                 <!--/div-->
+                        </ul>
+                        </li>
+                    </ul>
+                    
+
                     {% endif %}
                 </div>
             </div><!-- /topbar-inner -->

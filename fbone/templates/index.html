@@ -1,24 +1,44 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Fbone is a flask skeleton.') %}
+{% set page_title = _('Who we are.') %}
 
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="span8">
-    <h2>Powered by <a href='http://flask.pocoo.org'>Flask</a> and its <a href='http://flask.pocoo.org/extensions/'>extensions</a>.</h2>
-    <ul>
-        <li>Flask-SQLAlchemy</li>
-        <li>Flask-Login</li>
-        <li>Flask-WTF</li>
-        <li>Flask-Script</li>
-        <li>Flask-Babel</li>
-        <li>Flask-Testing</li>
-        <li>Flask-Mail</li>
-    </ul>
+<div class="span6">	
+    <h2>Presentación.</h2>
+    <p>
+    	Somos una empresa formada por un grupo de profesionales con larga experiencia con el objetivo primordial 
+    	de ofrecerles un servicio cimentado en la garantía de calidad, que conseguimos gracias a nuestros equipos 
+    	fotográficos de alta definición.
+    </p>
+    <p>
+    	Al mismo tiempo, disponemos de una plataforma on-line, en la que le ofrecemos un abanico de múltiples 
+    	posibilidades a la hora de diseñar su orla, reportaje fotográfico, etc... y que ponemos a su disposición 
+    	para mejorar nuestros tiempos de respuesta, gestión y, en definitiva, conseguir su total satisfacción.
+    </p>
 </div>
-<div class="span6">
-    <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
+<div class="span7">
+	
+    <h2>Localización.</h2>
+    <p></p>
+							<p>
+						<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.es/maps?f=q&amp;source=embed&amp;hl=es&amp;geocode=&amp;q=Avenida+de+Roma,+7,+Coslada&amp;aq=0&amp;sll=40.434928,-3.56575&amp;sspn=0.357483,0.616608&amp;ie=UTF8&amp;hq=&amp;hnear=Av+de+Roma,+7,+28822+Coslada,+Madrid,+Comunidad+de+Madrid&amp;ll=40.422465,-3.540494&amp;spn=0.005668,0.00912&amp;z=16&amp;iwloc=A&amp;output=embed"></iframe><br /><small><a href="http://maps.google.es/maps?f=q&amp;source=embed&amp;hl=es&amp;geocode=&amp;q=Avenida+de+Roma,+7,+Coslada&amp;aq=0&amp;sll=40.434928,-3.56575&amp;sspn=0.357483,0.616608&amp;ie=UTF8&amp;hq=&amp;hnear=Av+de+Roma,+7,+28822+Coslada,+Madrid,+Comunidad+de+Madrid&amp;ll=40.422465,-3.540494&amp;spn=0.005668,0.00912&amp;z=16&amp;iwloc=A" style="color:#0000FF;text-align:center">Ver mapa más grande</a></small>
+						</p>
+						<p>&nbsp;</p>
+						<p> Avenida de Roma, nº 7, local<br />
+	28820 Coslada (Madrid) <br />
+	<strong>Tfno.: 912477428 </strong><br />
+	<strong>Email: <a href="mailto:efdigitalorlas@gmail.com" style="text-decoration:underline">efdigitalorlas@gmail.com </a>			
+				</strong><br />
+	METRO: LINEA 7 - PARADA LA RAMBLA (COSLADA) <br />
+	AUTOBUS: L. 286 (Ciudad Lineal-Coslada Ciudad 70) <br />
+	CERCANÍAS: C1, C2, C7 </p>
+						<p><strong>Horario de Atención al Público:	De	lunes	a	viernes	de 17:00 a 20:00 horas.</strong></p>
+						<p>Meses de julio y agosto llamar antes en horario de tarde.</p>
+	
+	
+    <!--form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ signup_form.hidden_tag() }}
         {{ signup_form.next }}
         <fieldset>
@@ -30,6 +50,6 @@
             {{ render_input(signup_form.password_again, 'large') }}
             {{ render_action(signup_form.submit) }}
         </fieldset>
-    </form>
+    </form-->
 </div>
 {% endblock %}

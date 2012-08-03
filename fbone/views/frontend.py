@@ -11,7 +11,7 @@ from flask.ext.login import (login_required, login_user, current_user,
                             logout_user, confirm_login, fresh_login_required,
                             login_fresh)
 
-from fbone.models import User, Group, UsersGroups
+from fbone.models import User, Group, UsersGroups, Proceso
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
@@ -55,20 +55,28 @@ def search():
 def login():
     form = LoginForm(login=request.args.get('login', None),
                      next=request.args.get('next', None))
-
+    
+    
+    tries = request.args.get('tries', 0)
+    email = request.args.get('email', '')
     if form.validate_on_submit():
         user, authenticated = User.authenticate(form.login.data,
                                     form.password.data)
 
-        if user and authenticated:
-            remember = request.form.get('remember') == 'y'
-            if login_user(user, remember=remember):
-                flash("Logged in!", 'success')
-            return redirect(form.next.data or url_for('user.index'))
-        else:
-            flash(_('Sorry, invalid login'), 'error')
+        if user: 
+            if authenticated:
+                remember = request.form.get('remember') == 'y'
+                if login_user(user, remember=remember):
+                    flash("Logged in!", 'success')
+                return redirect(form.next.data or url_for('user.index'))
+            else:
+                flash(_('Sorry, invalid login'), 'error')
+                tries = tries + 1
 
-    return render_template('login.html', form=form)
+        else:
+            flash(_('Sorry, there is no such account'), 'error')
+            return redirect(url_for('frontend.signup'))
+    return render_template('login.html', form=form, tries=tries, email=email)
 
 
 @frontend.route('/reauth', methods=['GET', 'POST'])
@@ -142,9 +150,10 @@ def change_password():
             return login_manager.needs_refresh()
         user = current_user
     else:
-        email = session['email']
-        activation_key = session['activation_key']
-        user = User.query.filter_by(activation_key=activation_key) \
+        if 'email' and 'activation_key' in session:
+            email = session['email']
+            activation_key = session['activation_key']
+            user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
        
     if not user:
@@ -161,7 +170,7 @@ def change_password():
               "success")
         session.pop('email', None)
         session.pop('activation_code', None)
-        return redirect(url_for("frontend.login"))
+        return redirect(url_for("frontend.login",email=email))
   
     return render_template("change_password.html", form=form)
 
@@ -170,6 +179,10 @@ def change_password():
 @frontend.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     form = RecoverPasswordForm()
+
+    if 'value' in request.values:
+        value = request.values['value']
+    else: value = ''
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -190,7 +203,21 @@ def reset_password():
         else:
             flash(_('Sorry, no user found for that email address'), 'error')
 
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_password.html', form=form, value=value)
+
+@frontend.route('/proceso')
+def proceso():
+    proceso = Proceso.query.first()
+    return render_template('proceso.html', proceso=proceso.content)
+
+@frontend.route('/edit_proceso')
+def edit_proceso():
+    user = current_user
+    if not user or not (user.utype == 1) :
+        abort(403)
+    
+    proceso = Proceso.query.first()
+    return render_template('edit_proceso.html', proceso=proceso.content)
 
 
 

@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     activation_key = db.Column(db.String(VARCHAR_LEN_128))
     created_time = db.Column(db.DateTime, default=get_current_time)
     groups = relationship("UsersGroups", backref="users")
+    utype = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<User %r>' % self.name

@@ -3,5 +3,16 @@
 {% extends "layout.html" %}
 
 {% block body %}
+<div class="span6">	
+{% if current_user.utype == 1 %}
+<ul>
+	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
+	</li>
+</ul>
+{% endif %}
+<ul>
+	<li><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
+	</li>
+</ul>	
+</div>
 {% endblock %}
-

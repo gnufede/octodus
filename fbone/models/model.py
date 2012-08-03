@@ -84,6 +84,7 @@ class User(Base, UserMixin):
     surname = Column(String(128))
     email = Column(String(128))
     password_hash = Column(String(50))
+    activation_key = Column(String(128))
     type = Column(Integer)
     
     def __init__(self, name, surname, password=""):
@@ -136,6 +137,7 @@ class Node(Base):
     __tablename__ = "nodes"
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
+    activation_key = Column(String(128), nullable=False, unique=True)
     parent_id = Column(Integer, ForeignKey("nodes.id"))
     parent = relationship("Node")
 

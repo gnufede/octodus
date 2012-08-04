@@ -1,0 +1,23 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Edit datos') %}
+
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class='span12'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.edit_datos') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <fieldset>
+            {{ render_input(form.name, 'xlarge') }}
+            {{ render_input(form.surname, 'xlarge') }}
+            {{ render_input(form.university, 'xlarge') }}
+            {{ render_input(form.specialty, 'xlarge') }}
+            {{ render_input(form.group, 'xlarge') }}
+            {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+

@@ -17,7 +17,7 @@ class DefaultConfig(BaseConfig):
     DEBUG = True
 
     SQLALCHEMY_ECHO = True
-    dbhost =  os.environ.get('SHARED_DATABASE_URL', 'postgresql://localhost')
+    dbhost =  os.environ.get('SHARED_DATABASE_URL', 'mysql://orlas:salro@localhost/orlas')
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'

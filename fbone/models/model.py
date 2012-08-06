@@ -49,7 +49,8 @@ class Project(Base):
     term = Column(String(30))
     users = relationship("User", secondary=projects_users, backref="projects")
     node_id = Column(Integer, ForeignKey("nodes.id"))
-    appointments = relationship("Appointment", backref="project")
+    #appointments = relationship("Appointment", backref="project")
+    sessions = relationship("Session", backref="project")
     
     def __init__(self, name, term):
         self.name = name
@@ -87,10 +88,12 @@ class User(Base, UserMixin):
     activation_key = Column(String(128))
     type = Column(Integer)
     
-    def __init__(self, name, surname, password=""):
+    def __init__(self, name, surname, email, password="", type=0):
         self.name = name
         self.surname = surname
+        self.email = email
         self.password = password
+        self.type = type
 
     def get_password(self):
         return ""
@@ -131,6 +134,14 @@ class Session(Base):
     end = Column(DateTime)
     block_duration = Column(Integer)
     block_capacity = Column(Integer)
+    project_id = Column(Integer, ForeignKey("projects.id"))
+
+    def __init__(self, begin, end, capacity_per_hour, block_duration=10):
+        self.begin = begin
+        self.end = end
+        self.capacity_per_hour = capacity_per_hour
+        self.block_duration = block_duration
+    
 
 
 class Node(Base):
@@ -140,6 +151,12 @@ class Node(Base):
     activation_key = Column(String(128), nullable=False, unique=True)
     parent_id = Column(Integer, ForeignKey("nodes.id"))
     parent = relationship("Node")
+    projects = relationship("Project", backref="node")
+
+    def __init__(self, begin, end, parent_id=None):
+        self.name = name
+        self.activation_key = activation_key
+        self.parent_id = parent_id
 
 
 def main():

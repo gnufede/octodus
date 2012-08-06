@@ -11,7 +11,7 @@ from flask.ext.login import (login_required, login_user, current_user,
                             logout_user, confirm_login, fresh_login_required,
                             login_fresh)
 
-from fbone.models import User, Group, UsersGroups, Proceso
+from fbone.models import User, Group, Proceso
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)

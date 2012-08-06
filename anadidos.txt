@@ -1,2 +1,4 @@
 - Verificación de cuenta (con envío de email)
 - Corrección de email en el signup: https://github.com/Kicksend/mailcheck
+- Dar opción al administrador a calcular cuántas horas/sesiones necesita para hacer las fotos a un grupo
+

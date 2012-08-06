@@ -42,8 +42,8 @@ class DefaultConfig(BaseConfig):
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = 'gnu.fede'
-    MAIL_PASSWORD = 'set_yours'
+    MAIL_USERNAME = 'efdigitalorlas.test'
+    MAIL_PASSWORD = 'EFDOtest'
     DEFAULT_MAIL_SENDER = '%s@gmail.com' % MAIL_USERNAME
 
 

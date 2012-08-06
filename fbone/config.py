@@ -18,7 +18,8 @@ class DefaultConfig(BaseConfig):
     SQLALCHEMY_ECHO = True
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
-    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
+#    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost'
     # Mysql: 'mysql://dbusername:dbpassword@dbhost/dbname'
 
     # To create log folder.

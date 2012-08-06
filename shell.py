@@ -20,7 +20,8 @@ project_root_path = os.path.join(os.path.dirname(app.root_path))
 def run():
     """Run local server."""
 
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(port=port)
 
 
 @manager.command

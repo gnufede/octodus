@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+##!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
@@ -66,9 +66,9 @@ class Project(db.Model):
 class Professor(db.Model):
     __tablename__ = "professors"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    surname = db.Column(db.String(100))
-    picture = db.Column(db.String(100))
+    name = db.Column(db.String(128))
+    surname = db.Column(db.String(128))
+    picture = db.Column(db.String(128))
     
 #    def __init__(self, name, surname):
 #        self.name = name
@@ -81,10 +81,10 @@ class Professor(db.Model):
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(64))
     surname = db.Column(db.String(128))
     email = db.Column(db.String(128))
-    password_hash = db.Column(db.String(50))
+    password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     type = db.Column(db.Integer)
     

@@ -7,6 +7,7 @@ from flaskext.script import Manager, prompt, prompt_pass, prompt_bool
 from fbone import create_app
 from fbone.extensions import db
 from fbone.models import User, Group, Proceso
+from fbone.models.model import *
 
 
 manager = Manager(create_app())

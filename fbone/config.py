@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 APP_NAME = 'fbone'
 
@@ -16,7 +17,7 @@ class DefaultConfig(BaseConfig):
     DEBUG = True
 
     SQLALCHEMY_ECHO = True
-    dbhost = port = int(os.environ.get('SHARED_DATABASE_URL', 'localhost'))
+    dbhost =  int(os.environ.get('SHARED_DATABASE_URL', 'localhost'))
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'

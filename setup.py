@@ -23,6 +23,7 @@ setup(
         'Flask-Mail',
         'Flask-Cache',
         'Flask-Login',
+        'MySQL-python',
         'nose',
     ]
 )

@@ -1,0 +1,2 @@
+- Verificación de cuenta (con envío de email)
+- Corrección de email en el signup: https://github.com/Kicksend/mailcheck

@@ -17,12 +17,12 @@ class DefaultConfig(BaseConfig):
     DEBUG = True
 
     SQLALCHEMY_ECHO = True
-    dbhost =  int(os.environ.get('SHARED_DATABASE_URL', 'localhost'))
+    dbhost =  os.environ.get('SHARED_DATABASE_URL', 'postgresql://localhost')
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
 #    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost'
+    SQLALCHEMY_DATABASE_URI = dbhost
     # Mysql: 'mysql://dbusername:dbpassword@dbhost/dbname'
 
     # To create log folder.

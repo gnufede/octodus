@@ -16,6 +16,8 @@ class DefaultConfig(BaseConfig):
     DEBUG = True
 
     SQLALCHEMY_ECHO = True
+    dbhost = port = int(os.environ.get('SHARED_DATABASE_URL', 'localhost'))
+
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
 #    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'

@@ -25,7 +25,7 @@ projects_users = db.Table("projects_users", db.metadata,
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
 
 
-class Appointment(db.Model, Base):
+class Appointment(db.Model):
     __tablename__ = "appointments"
     project_id = db.Column(db.Integer, ForeignKey("projects.id"), primary_key=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
@@ -43,7 +43,7 @@ class Appointment(db.Model, Base):
         return s
 
 
-class Project(db.Model, Base):
+class Project(db.Model):
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
     term = db.Column(db.String(30))
@@ -63,7 +63,7 @@ class Project(db.Model, Base):
         return s
 
 
-class Professor(db.Model, Base):
+class Professor(db.Model):
     __tablename__ = "professors"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -78,7 +78,7 @@ class Professor(db.Model, Base):
         return "PROFESSOR %s %s\n" % (self.name, self.surname)
 
 
-class User(db.Model, UserMixin, Base):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -127,7 +127,7 @@ class User(db.Model, UserMixin, Base):
         return cls.query.filter(q)
 
 
-class Session(db.Model, Base):
+class Session(db.Model):
     __tablename__ = "sessions"
     id = db.Column(db.Integer, primary_key=True)
     begin = db.Column(db.DateTime)
@@ -144,7 +144,7 @@ class Session(db.Model, Base):
     
 
 
-class Node(db.Model, Base):
+class Node(db.Model):
     __tablename__ = "nodes"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))

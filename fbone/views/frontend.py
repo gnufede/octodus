@@ -206,8 +206,14 @@ def reset_password():
 
 @frontend.route('/proceso')
 def proceso():
+    login_form = signup_form = None
+    if not current_user.is_authenticated():
+        login_form= LoginForm(next=request.args.get('next'))
+        signup_form = SignupForm(nex=request.args.get('next'))
     proceso = Proceso.query.first()
-    return render_template('proceso.html', proceso=proceso.content)
+    return render_template('proceso.html', proceso=proceso.content,
+                       login_form=login_form,
+                           signup_form=signup_form)
 
 @frontend.route('/edit_proceso')
 def edit_proceso():

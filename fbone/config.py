@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import os
 
 APP_NAME = 'fbone'
 
 class BaseConfig(object):
 
-    DEBUG = True
+    DEBUG = False
     TESTING = False
 
     # os.urandom(24)
@@ -16,6 +17,10 @@ class DefaultConfig(BaseConfig):
     DEBUG = True
 
     SQLALCHEMY_ECHO = True
+#    dbhost =  os.environ.get('SHARED_DATABASE_URL')
+#    dbhost = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+#    SQLALCHEMY_DATABASE_URI = dbhost
+
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
     SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
@@ -34,17 +39,17 @@ class DefaultConfig(BaseConfig):
 
     # Email (Flask-email)
     # https://bitbucket.org/danjac/flask-mail/issue/3/problem-with-gmails-smtp-server
-    MAIL_DEBUG = False
+    MAIL_DEBUG = DEBUG
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = 'gnu.fede'
-    MAIL_PASSWORD = '#faif#99GGL'
+    MAIL_USERNAME = 'efdigitalorlas.test'
+    MAIL_PASSWORD = 'EFDOtest'
     DEFAULT_MAIL_SENDER = '%s@gmail.com' % MAIL_USERNAME
 
 
 class TestConfig(BaseConfig):
-    TESTING = False
+    TESTING = True
     CSRF_ENABLED = False
 
     SQLALCHEMY_ECHO = False

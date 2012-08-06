@@ -1,0 +1,9 @@
+TODO:
+- Traducciones
+- Boton de darse de alta en el elemento Login de la barra
+- Colocar el ojo del fondo a la izquierda abajo y el fondo de debajo blanco
+- Hover de los elementos de la barra de menú igual que el del elemento Login
+- Verificación de cuenta (con envío de email)
+- Corrección de email en el signup: https://github.com/Kicksend/mailcheck
+- Dar opción al administrador a calcular cuántas horas/sesiones necesita para hacer las fotos a un grupo
+

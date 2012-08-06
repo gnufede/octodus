@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Edit datos') %}
+{% set page_title = _('Edita tus datos personales') %}
 
 {% extends 'layout.html' %}
 
@@ -10,9 +10,12 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
+            <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
+            
             {{ render_input(form.name, 'xlarge') }}
             {{ render_input(form.surname, 'xlarge') }}
             {{ render_input(form.university, 'xlarge') }}
+            {{ render_input(form.title, 'xlarge') }}
             {{ render_input(form.specialty, 'xlarge') }}
             {{ render_input(form.group, 'xlarge') }}
             {{ render_action(form.submit) }}

@@ -6,7 +6,8 @@ from flaskext.script import Manager, prompt, prompt_pass, prompt_bool
 
 from fbone import create_app
 from fbone.extensions import db
-from fbone.models import User, Group, UsersGroups, Proceso
+from fbone.models import User, Group, Proceso
+from fbone.models.model import *
 
 
 manager = Manager(create_app())
@@ -20,7 +21,8 @@ project_root_path = os.path.join(os.path.dirname(app.root_path))
 def run():
     """Run local server."""
 
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0',port=port)
 
 
 @manager.command
@@ -29,11 +31,11 @@ def reset():
 
     db.drop_all()
     db.create_all()
-    user = User(name='tester', email='tester@hz.com', password='123456', utype=1)
+    user = User(name='Perico', surname='De los Palotes', email='tester@hz.com', password='123456', type=1)
     proceso = Proceso(content="<div> <p> hola </p> </div>")
-    rel = UsersGroups(extra_data="2012")
-    rel.group = Group(name='group1', activation_key='HOLA')
-    user.groups.append(rel)
+
+    #rel.group = Group(name='group1', activation_key='HOLA')
+    #user.groups.append(rel)
 
     db.session.add(user)
     db.session.add(proceso)

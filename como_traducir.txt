@@ -1,0 +1,1 @@
+python setup.py compile_catalog --directory fbone/translations --locale es -f

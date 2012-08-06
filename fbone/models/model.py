@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+##!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
+from fbone.extensions import db
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
@@ -12,48 +13,48 @@ from werkzeug import (generate_password_hash, check_password_hash, cached_proper
 from flask.ext.login import UserMixin
 
 
-Base = declarative_base()
+#Base = declarative_base()
+
+nodes_professors = db.Table("nodes_professors", db.metadata,
+    db.Column("node_id", db.Integer, ForeignKey("nodes.id")),
+    db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
-nodes_professors = Table("nodes_professors", Base.metadata,
-    Column("node_id", Integer, ForeignKey("nodes.id")),
-    Column("professor_id", Integer, ForeignKey("professors.id")))
+projects_users = db.Table("projects_users", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("user_id", db.Integer, ForeignKey("users.id")))
 
 
-projects_users = Table("projects_users", Base.metadata,
-    Column("project_id", Integer, ForeignKey("projects.id")),
-    Column("user_id", Integer, ForeignKey("users.id")))
-
-
-class Appointment(Base):
+class Appointment(db.Model):
     __tablename__ = "appointments"
-    project_id = Column(Integer, ForeignKey("projects.id"), primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    session_id = Column(Integer, ForeignKey("sessions.id"), primary_key=True)
-    date = Column(DateTime)
+    project_id = db.Column(db.Integer, ForeignKey("projects.id"), primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
+    session_id = db.Column(db.Integer, ForeignKey("sessions.id"), primary_key=True)
+    date = db.Column(db.DateTime)
     project = relationship("Project", backref="appointments")
     user = relationship("User", backref="appointments")
     session = relationship("Session", backref="appointments")
     
-    def __init__(self, date):
-        self.date = date
+#    def __init__(self, date):
+#        self.date = date
     
     def __str__(self):
         s = "APPOINTMENT: %s %s @ %s on %s\n" % (self.user.name, self.user.surname, self.project.name, self.date)
         return s
 
 
-class Project(Base):
+class Project(db.Model):
     __tablename__ = "projects"
-    id = Column(Integer, primary_key=True)
-    term = Column(String(30))
+    id = db.Column(db.Integer, primary_key=True)
+    term = db.Column(db.String(30))
     users = relationship("User", secondary=projects_users, backref="projects")
-    node_id = Column(Integer, ForeignKey("nodes.id"))
-    appointments = relationship("Appointment", backref="project")
+    node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
+    #appointments = relationship("Appointment", backref="project")
+    sessions = relationship("Session", backref="project")
     
-    def __init__(self, name, term):
-        self.name = name
-        self.term = term
+#    def __init__(self, name, term):
+#        self.name = name
+#        self.term = term
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)
@@ -62,35 +63,37 @@ class Project(Base):
         return s
 
 
-class Professor(Base):
+class Professor(db.Model):
     __tablename__ = "professors"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    surname = Column(String(100))
-    picture = Column(String(100))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    surname = db.Column(db.String(128))
+    picture = db.Column(db.String(128))
     
-    def __init__(self, name, surname):
-        self.name = name
-        self.surname = surname
+#    def __init__(self, name, surname):
+#        self.name = name
+#        self.surname = surname
     
     def __str__(self):
         return "PROFESSOR %s %s\n" % (self.name, self.surname)
 
 
-class User(Base, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    surname = Column(String(128))
-    email = Column(String(128))
-    password_hash = Column(String(50))
-    activation_key = Column(String(128))
-    type = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    surname = db.Column(db.String(128))
+    email = db.Column(db.String(128))
+    password_hash = db.Column(db.String(64))
+    activation_key = db.Column(db.String(128))
+    type = db.Column(db.Integer)
     
-    def __init__(self, name, surname, password=""):
-        self.name = name
-        self.surname = surname
-        self.password = password
+    #def __init__(self, name, surname, email, password="", type=0):
+    #    self.name = name
+    #    self.surname = surname
+    #    self.email = email
+    #    self.password = password
+    #    self.type = type
 
     def get_password(self):
         return ""
@@ -124,22 +127,36 @@ class User(Base, UserMixin):
         return cls.query.filter(q)
 
 
-class Session(Base):
+class Session(db.Model):
     __tablename__ = "sessions"
-    id = Column(Integer, primary_key=True)
-    begin = Column(DateTime)
-    end = Column(DateTime)
-    block_duration = Column(Integer)
-    block_capacity = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    begin = db.Column(db.DateTime)
+    end = db.Column(db.DateTime)
+    block_duration = db.Column(db.Integer)
+    block_capacity = db.Column(db.Integer)
+    project_id = db.Column(db.Integer, ForeignKey("projects.id"))
+
+#    def __init__(self, begin, end, capacity_per_hour, block_duration=10):
+#        self.begin = begin
+#        self.end = end
+#        self.capacity_per_hour = capacity_per_hour
+#        self.block_duration = block_duration
+    
 
 
-class Node(Base):
+class Node(db.Model):
     __tablename__ = "nodes"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    activation_key = Column(String(128), nullable=False, unique=True)
-    parent_id = Column(Integer, ForeignKey("nodes.id"))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    activation_key = db.Column(db.String(128), nullable=False, unique=True)
+    parent_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     parent = relationship("Node")
+    projects = relationship("Project", backref="node")
+
+#    def __init__(self, begin, end, parent_id=None):
+#        self.name = name
+#        self.activation_key = activation_key
+#        self.parent_id = parent_id
 
 
 def main():

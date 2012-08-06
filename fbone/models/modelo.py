@@ -16,26 +16,27 @@ nodos_profesores = Table("nodos_profesores", Base.metadata,
     Column("id_profesor", Integer, ForeignKey("profesores.id")))
 
 
-proyectos_alumnos = Table("proyectos_alumnos", Base.metadata,
+proyectos_usuarios = Table("proyectos_usuarios", Base.metadata,
     Column("id_proyecto", Integer, ForeignKey("proyectos.id")),
-    Column("id_alumno", Integer, ForeignKey("alumnos.id")))
+    Column("id_usuario", Integer, ForeignKey("usuarios.id")))
 
 
 class Cita(Base):
     __tablename__ = "citas"
     id_proyecto = Column(Integer, ForeignKey("proyectos.id"), primary_key=True)
-    id_alumno = Column(Integer, ForeignKey("alumnos.id"), primary_key=True)
+    id_usuario = Column(Integer, ForeignKey("usuarios.id"), primary_key=True)
     id_sesion = Column(Integer, ForeignKey("sesiones.id"), primary_key=True)
     fecha = Column(DateTime)
     proyecto = relationship("Proyecto", backref="citas")
-    alumno = relationship("Alumno", backref="citas")
+    usuario = relationship("Usuario", backref="citas")
     sesion = relationship("Sesion", backref="citas")
     
     def __init__(self, fecha):
         self.fecha = fecha
     
     def __str__(self):
-        s = "CITA de %s %s en el proyecto %s para el %s\n" % (self.alumno.nombre, self.alumno.apellidos, self.proyecto.nombre, self.fecha)
+        s = "CITA de %s %s en el proyecto %s para el %s\n" % 
+            (self.usuario.nombre, self.usuario.apellidos, self.proyecto.nombre, self.fecha)
         return s
 
 
@@ -44,7 +45,7 @@ class Proyecto(Base):
     id = Column(Integer, primary_key=True)
     #nombre = Column(String(100))
     curso = Column(String(30))
-    alumnos = relationship("Alumno", secondary=proyectos_alumnos, backref="proyectos")
+    usuarios = relationship("Usuario", secondary=proyectos_usuarios, backref="proyectos")
     id_nodo = Column(Integer, ForeignKey("nodos.id"))
     citas = relationship("Cita", backref="proyecto")
     
@@ -54,8 +55,8 @@ class Proyecto(Base):
     
     def __str__(self):
         s = "PROYECTO %s (id %d)\n" % (self.curso, self.id)
-        for a in self.alumnos:
-            s += "\tALUMNO: %s %s (id %d)\n" % (a.nombre, a.apellidos, a.id)
+        for a in self.usuarios:
+            s += "\tUSUARIO: %s %s (id %d)\n" % (a.nombre, a.apellidos, a.id)
         return s
 
 
@@ -74,12 +75,14 @@ class Profesor(Base):
         return "PROFESOR %s %s\n" % (self.nombre, self.apellidos)
 
 
-class Alumno(Base):
-    __tablename__ = "alumnos"
+class Usuario(Base):
+    __tablename__ = "usuarios"
     id = Column(Integer, primary_key=True)
     nombre = Column(String(50))
-    apellidos = Column(String(100))
+    apellidos = Column(String(128))
+    email = Column(String(128))
     password = Column(String(50))
+    tipo = Column(Integer)
     
     def __init__(self, nombre, apellidos, password=""):
         self.nombre = nombre
@@ -93,7 +96,7 @@ class Sesion(Base):
     inicio = Column(DateTime)
     fin = Column(DateTime)
     tiempo_bloque = Column(Integer)
-    alumnos_bloque = Column(Integer)
+    usuarios_bloque = Column(Integer)
 
 
 class Nodo(Base): # Es la plantilla de titulos, cursos, universidades, etc.
@@ -111,4 +114,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    #main()
+    pass

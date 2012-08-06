@@ -19,5 +19,4 @@ dist
 build
 
 # Ignore Virtualenv
-venv
-
+venv/

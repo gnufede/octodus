@@ -13,15 +13,14 @@ from werkzeug import (generate_password_hash, check_password_hash, cached_proper
 from flask.ext.login import UserMixin
 
 
-Base = declarative_base()
+#Base = declarative_base()
 
-
-nodes_professors = db.Table("nodes_professors", Base.metadata,
+nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("node_id", db.Integer, ForeignKey("nodes.id")),
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
-projects_users = db.Table("projects_users", Base.metadata,
+projects_users = db.Table("projects_users", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
 

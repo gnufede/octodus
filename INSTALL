@@ -1,0 +1,10 @@
+#sudo apt-get install mysql-server phpmyadmin
+sudo apt-get install python-virtualenv python-mysqldb
+virtualenv venv
+. venv/bin/activate
+
+python setup.py install
+
+python shell.py reset
+python shell.py run
+

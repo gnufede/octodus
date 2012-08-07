@@ -152,7 +152,9 @@ class Session(db.Model):
 class Node(db.Model):
     __tablename__ = "nodes"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(128))
+    type = db.Column(db.String(128))
+    depth = db.Column(db.Integer)
     activation_key = db.Column(db.String(128), nullable=False, unique=True)
     parent_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     parent = relationship("Node")

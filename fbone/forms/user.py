@@ -19,8 +19,8 @@ class EditDatosForm(Form):
     group = TextField(_('Group'))
     submit = SubmitField(_('Save'))
 
-    def set_user_data(self, current_user):
-        self.name.default = current_user.name
+    #def set_user_data(self, current_user):
+    #    self.name.default = current_user.name
 
  #   def validate_email(self, field):
  #       if Group.query.filter_by(email=field.data).first() is None:

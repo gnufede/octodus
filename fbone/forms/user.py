@@ -11,8 +11,8 @@ from fbone.models import User
 
 class EditDatosForm(Form):
     next = HiddenField()
-    surname = TextField(_('Surname'), [required()], default=current_user.surname)
-    name = TextField(_('Name'), [required()], default=current_user.name)
+    surname = TextField(_('Surname'), [required()])
+    name = TextField(_('Name'), [required()])
     university = TextField(_('University'), [required()])
     title = TextField(_('Title'), [required()])
     specialty = TextField(_('Specialty'))

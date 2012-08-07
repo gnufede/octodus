@@ -52,7 +52,7 @@ def reset():
 
     db.session.add(user)
     db.session.add(proceso)
-    project.create() 
+#    project.create() 
     db.session.commit()
     #while node.parent:
     #   print node.parent

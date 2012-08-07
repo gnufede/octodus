@@ -9,10 +9,10 @@ from flaskext.babel import gettext, lazy_gettext as _
 from fbone.models import User
 
 
-class EditDatosForm(Form):
+class EditDatosForm(Form, current_user=None):
     next = HiddenField()
-    surname = TextField(_('Surname'), [required()])
-    name = TextField(_('Username'), [required()])
+    surname = TextField(_('Surname'), [required()], default=current_user.surname)
+    name = TextField(_('Name'), [required()], default=current_user.name)
     university = TextField(_('University'), [required()])
     title = TextField(_('Title'), [required()])
     specialty = TextField(_('Specialty'))

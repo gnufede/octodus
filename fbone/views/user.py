@@ -19,7 +19,7 @@ def index():
 @user.route('/edit_datos')
 @login_required
 def edit_datos():
-    form = EditDatosForm(next=request.args.get('next'))
+    form = EditDatosForm(next=request.args.get('next'),current_user=current_user)
     return render_template('user_edit_datos.html', form=form,
                            current_user=current_user)
 

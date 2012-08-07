@@ -12,7 +12,7 @@
         <fieldset>
             <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
             
-            {{ render_input(form.name, 'xlarge') }}
+            {{ render_input(form.name, 'xlarge', value=current_user.name) }}
             {{ render_input(form.surname, 'xlarge') }}
             {{ render_input(form.university, 'xlarge') }}
             {{ render_input(form.title, 'xlarge') }}

@@ -1,0 +1,27 @@
+#Thu Aug 02 19:07:43 CEST 2012
+eclipse.preferences.version=1
+encoding//fbone/__init__.py=utf-8
+encoding//fbone/app.py=utf-8
+encoding//fbone/decorators.py=utf-8
+encoding//fbone/extensions.py=utf-8
+encoding//fbone/forms/__init__.py=utf-8
+encoding//fbone/forms/frontend.py=utf-8
+encoding//fbone/forms/user.py=utf-8
+encoding//fbone/models/__init__.py=utf-8
+encoding//fbone/models/group.py=utf-8
+encoding//fbone/models/modelo.py=utf-8
+encoding//fbone/models/proceso.py=utf-8
+encoding//fbone/models/types.py=utf-8
+encoding//fbone/models/user.py=utf-8
+encoding//fbone/models/users_groups.py=utf-8
+encoding//fbone/utils.py=utf-8
+encoding//fbone/views/__init__.py=utf-8
+encoding//fbone/views/admin.py=utf-8
+encoding//fbone/views/frontend.py=utf-8
+encoding//fbone/views/user.py=utf-8
+encoding//venv/lib/python2.7/site-packages/Flask-0.9-py2.7.egg/flask/app.py=utf-8
+encoding//venv/lib/python2.7/site-packages/Flask-0.9-py2.7.egg/flask/globals.py=utf-8
+encoding//venv/lib/python2.7/site-packages/Flask-0.9-py2.7.egg/flask/templating.py=utf-8
+encoding//venv/lib/python2.7/site-packages/Werkzeug-0.8.3-py2.7.egg/werkzeug/local.py=utf-8
+encoding//venv/lib/python2.7/site-packages/Werkzeug-0.8.3-py2.7.egg/werkzeug/serving.py=utf-8
+encoding/shell.py=utf-8

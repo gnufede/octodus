@@ -32,7 +32,7 @@ class DefaultConfig(BaseConfig):
     DEBUG_LOG = '/tmp/fbone-debug.log'
 
     ACCEPT_LANGUAGES = ['en']
-    BABEL_DEFAULT_LOCALE = 'es'
+    BABEL_DEFAULT_LOCALE = 'es_ES'
 
     CACHE_TYPE = 'simple'
     CACHE_DEFAULT_TIMEOUT = 60

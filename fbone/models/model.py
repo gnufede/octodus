@@ -20,8 +20,8 @@ nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
-projects_users = db.Table("projects_users", db.metadata,
-    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+nodes_users = db.Table("nodes_users", db.metadata,
+    db.Column("nodes_id", db.Integer, ForeignKey("nodes.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
 
 

@@ -91,7 +91,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     type = db.Column(db.Integer)
-    nodes = relationship("Node", secondary=nodes_users, backref="users")
+#    nodes = relationship("Node", secondary=nodes_users, backref="users")
     
     #def __init__(self, name, surname, email, password="", type=0):
     #    self.name = name

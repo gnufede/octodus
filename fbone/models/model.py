@@ -20,6 +20,10 @@ nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
+projects_users = db.Table("projects_users", db.metadata,
+    db.Column("projects_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("user_id", db.Integer, ForeignKey("users.id")))
+
 nodes_users = db.Table("nodes_users", db.metadata,
     db.Column("nodes_id", db.Integer, ForeignKey("nodes.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
@@ -87,6 +91,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     type = db.Column(db.Integer)
+    nodes = relationship("Node", secondary=nodes_users, backref="users")
     
     #def __init__(self, name, surname, email, password="", type=0):
     #    self.name = name
@@ -152,6 +157,7 @@ class Node(db.Model):
     parent_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     parent = relationship("Node")
     projects = relationship("Project", backref="node")
+    users = relationship("User", secondary=nodes_users, backref="nodes")
 
 #    def __init__(self, begin, end, parent_id=None):
 #        self.name = name

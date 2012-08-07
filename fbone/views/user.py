@@ -3,9 +3,10 @@
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request
 from flask.ext.login import login_required, current_user
 
-from fbone.models import User
+from fbone.models import *
 from fbone.decorators import keep_login_url
 from fbone.forms import (EditDatosForm)
+from fbone.extensions import db
 
 
 user = Blueprint('user', __name__, url_prefix='/user')

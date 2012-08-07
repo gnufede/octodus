@@ -20,12 +20,12 @@ nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
-projects_users = db.Table("projects_users", db.metadata,
-    db.Column("projects_id", db.Integer, ForeignKey("projects.id")),
-    db.Column("user_id", db.Integer, ForeignKey("users.id")))
+projects_nodes = db.Table("projects_nodes", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("node_id", db.Integer, ForeignKey("nodes.id")))
 
-nodes_users = db.Table("nodes_users", db.metadata,
-    db.Column("nodes_id", db.Integer, ForeignKey("nodes.id")),
+projects_users = db.Table("projects_users", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
 
 
@@ -52,13 +52,35 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     term = db.Column(db.String(30))
     users = relationship("User", secondary=projects_users, backref="projects")
-    node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
+    nodes = relationship("Node", secondary=projects_nodes, backref="projects")
+    #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
     sessions = relationship("Session", backref="project")
     
 #    def __init__(self, name, term):
 #        self.name = name
 #        self.term = term
+    def create(self):
+        nodes = self.nodes[:]
+        modified = 1
+        pos = 0
+        while modified:
+            newnodes = set(nodes)
+            if newnodes:
+                modified = 0
+                for n in list(newnodes)[pos:]:
+                    oldsize = len(nodes)
+                    nodes.extend(n.children)
+                    modified = len(nodes)-oldsize
+                    pos = pos + 1
+
+        print "AAAAAAAAAAAAA" + str(newnodes)
+        for i in newnodes:
+            project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=i.id)).all()
+            if not project_already_created:
+               new_project = Project(term="2012")
+               new_project.nodes.append(i)
+               db.session.commit()
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)
@@ -157,9 +179,10 @@ class Node(db.Model):
     depth = db.Column(db.Integer)
     activation_key = db.Column(db.String(128), nullable=False, unique=True)
     parent_id = db.Column(db.Integer, ForeignKey("nodes.id"))
-    parent = relationship("Node")
-    projects = relationship("Project", backref="node")
-    users = relationship("User", secondary=nodes_users, backref="nodes")
+    #projects = relationship("Project", backref="node")
+    children = relationship("Node",
+                backref=backref('parent', remote_side=[id])
+               )
 
 #    def __init__(self, begin, end, parent_id=None):
 #        self.name = name

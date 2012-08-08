@@ -61,26 +61,14 @@ class Project(db.Model):
 #        self.name = name
 #        self.term = term
     def create(self):
-        nodes = self.nodes[:]
-        modified = 1
-        pos = 0
-        while modified:
-            newnodes = set(nodes)
-            if newnodes:
-                modified = 0
-                for n in list(newnodes)[pos:]:
-                    oldsize = len(nodes)
-                    nodes.extend(n.children)
-                    modified = len(nodes)-oldsize
-                    pos = pos + 1
-
-        print "AAAAAAAAAAAAA" + str(newnodes)
-        for i in newnodes:
-            project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=i.id)).all()
-            if not project_already_created:
-               new_project = Project(term="2012")
-               new_project.nodes.append(i)
-               db.session.commit()
+        for i in self.nodes:
+            for j in i.children:
+                project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=j.id)).all()
+                if not project_already_created:
+                   new_project = Project(term="2012")
+                   new_project.nodes.append(j)
+                   db.session.commit()
+                   new_project.create()
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)

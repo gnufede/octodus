@@ -28,6 +28,10 @@ projects_users = db.Table("projects_users", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
 
+projects_sessions = db.Table("projects_sessions", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("session_id", db.Integer, ForeignKey("sessions.id")))
+
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -53,6 +57,7 @@ class Project(db.Model):
     term = db.Column(db.String(30))
     users = relationship("User", secondary=projects_users, backref="projects")
     nodes = relationship("Node", secondary=projects_nodes, backref="projects")
+    sessions = relationship("Session", secondary=projects_sessions, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
     depth = db.Column(db.Integer)
@@ -164,7 +169,7 @@ class Session(db.Model):
     end = db.Column(db.DateTime)
     block_duration = db.Column(db.Integer)
     block_capacity = db.Column(db.Integer)
-    project_id = db.Column(db.Integer, ForeignKey("projects.id"))
+    #project_id = db.Column(db.Integer, ForeignKey("projects.id"))
 
 #    def __init__(self, begin, end, capacity_per_hour, block_duration=10):
 #        self.begin = begin
@@ -191,6 +196,9 @@ class Node(db.Model):
 #        self.name = name
 #        self.activation_key = activation_key
 #        self.parent_id = parent_id
+
+
+class 
 
 
 def main():

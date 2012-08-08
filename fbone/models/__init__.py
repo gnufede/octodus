@@ -7,7 +7,7 @@ from fbone.models.types import DenormalizedText
 #from fbone.models.users_groups import UsersGroups
 
 
-from fbone.models.model import User
+from fbone.models.model import User, Project
 from fbone.models.model import Node as Group
 
 

@@ -11,7 +11,7 @@ from flask.ext.login import (login_required, login_user, current_user,
                             logout_user, confirm_login, fresh_login_required,
                             login_fresh)
 
-from fbone.models import User, Group, Proceso
+from fbone.models import User, Proceso, Project
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
@@ -113,16 +113,14 @@ def signup():
     if form.validate_on_submit():
        
         activation_key = form.code.data
-        group = Group.query.filter_by(activation_key=activation_key).first()
+        group = Project.query.filter_by(activation_key=activation_key).first()
         if group:
             user = User()
-            rel = UsersGroups(extra_data="2012")
-            rel.group = group
             form.populate_obj(user)            
-            user.groups.append(rel)
+            group.users.append(user)
 
             db.session.add(user)
-            db.session.add(rel)
+            
             db.session.commit()
 
             if login_user(user):

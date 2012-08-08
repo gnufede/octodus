@@ -218,7 +218,7 @@ def proceso():
 @frontend.route('/edit_proceso')
 def edit_proceso():
     user = current_user
-    if not user or not (user.utype == 1) :
+    if not user or not (user.type == 1) :
         abort(403)
     
     proceso = Proceso.query.first()

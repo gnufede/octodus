@@ -34,11 +34,11 @@ def reset():
     user = User(name='Perico', surname='De los Palotes', email='tester@hz.com', password='123456', type=1)
     proceso = Proceso(content="<div> <p> hola </p> </div>")
 
-    group = Group(name='Universidad de Vicalvaro', activation_key='VICALVARO', depth=0, type='Universidad')
-    group1 = Group(name='Ingenieria Informatica', activation_key='INFOR', depth=1, type='Titulacion')
-    group2 = Group(name='Especialista en HW', activation_key='HW', depth=2, type='Especialidad')
-    group3 = Group(name='Especialista en SW', activation_key='SW', depth=2, type='Especialidad')
-    group4 = Group(name='Tarde', activation_key='T', depth=3, type='Grupo')
+    group = Group(name='Universidad de Vicalvaro', activation_key = "VICALVARO",depth=0, type='Universidad')
+    group1 = Group(name='Ingenieria Informatica', activation_key = "INFOR",depth=1, type='Titulacion')
+    group2 = Group(name='Especialista en HW', activation_key = "HW", depth=2, type='Especialidad')
+    group3 = Group(name='Especialista en SW', activation_key = "SW", depth=2, type='Especialidad')
+    group4 = Group(name='Tarde', activation_key = "TARDE", depth=3, type='Grupo')
 
     group.children.append(group1)
     group1.children.append(group2)

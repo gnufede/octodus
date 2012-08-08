@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="span6">	
-{% if current_user.utype == 1 %}
+{% if current_user.type == 1 %}
 <ul>
 	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
 	</li>

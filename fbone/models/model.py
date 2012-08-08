@@ -55,18 +55,33 @@ class Project(db.Model):
     nodes = relationship("Node", secondary=projects_nodes, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
+    depth = db.Column(db.Integer)
+    activation_key = db.Column(db.String(128), unique=True)
+    parent_id = db.Column(db.Integer, ForeignKey("projects.id"))
+    #projects = relationship("Project", backref="node")
+    children = relationship("Project",
+                backref=backref('parent', remote_side=[id])
+               )
     sessions = relationship("Session", backref="project")
     
 #    def __init__(self, name, term):
 #        self.name = name
 #        self.term = term
+
     def create(self):
+        if self.depth is None:
+            self.depth = 0
+        if self.activation_key is None:
+            self.activation_key = self.nodes[0].activation_key + self.term
         for i in self.nodes:
             for j in i.children:
                 project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=j.id)).all()
                 if not project_already_created:
-                   new_project = Project(term="2012")
+                   new_project = Project(term=self.term)
                    new_project.nodes.append(j)
+                   new_project.activation_key = j.activation_key + self.term
+                   new_project.depth = self.depth + 1
+                   self.children.append(new_project)
                    db.session.commit()
                    new_project.create()
     

@@ -213,6 +213,7 @@ def proceso():
                        login_form=login_form,
                            signup_form=signup_form)
 
+
 @frontend.route('/edit_proceso')
 def edit_proceso():
     user = current_user
@@ -222,6 +223,15 @@ def edit_proceso():
     proceso = Proceso.query.first()
     return render_template('edit_proceso.html', proceso=proceso.content)
 
+
+@frontend.route('/edit_session')
+def edit_session():
+    user = current_user
+    if not user or not user.is_admin() or not user.is_coordinator():
+        abort(403)
+    
+    proceso = Proceso.query.first()
+    return render_template('edit_proceso.html', proceso=proceso.content)
 
 
 @frontend.route('/about')

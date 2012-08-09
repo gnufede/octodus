@@ -13,7 +13,10 @@ from werkzeug import (generate_password_hash, check_password_hash, cached_proper
 from flask.ext.login import UserMixin
 
 
-#Base = declarative_base()
+class Definitions(object):
+    USER_TYPE_ADMIN = 1
+    USER_TYPE_COORDINATOR = 2
+    
 
 nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("node_id", db.Integer, ForeignKey("nodes.id")),
@@ -151,6 +154,12 @@ class User(db.Model, UserMixin):
         if self.password is None:
             return False
         return check_password_hash(self.password_hash, password)
+        
+    def is_admin(self):
+        return self.type == Definitions.USER_TYPE_ADMIN
+    
+    def is_coordinator(self):
+        return self.type == Definitions.USER_TYPE_COORDINATOR
 
     @classmethod
     def authenticate(cls, login, password):

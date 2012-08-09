@@ -1,24 +1,45 @@
 # -*- coding: utf-8 -*-
 
-from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField,
-                          PasswordField, SubmitField, TextField,
-                          ValidationError, required, equal_to, email,
+from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
+                          PasswordField, SubmitField, TextField, SelectField, 
+                          ValidationError, required, equal_to, email, Label,
                           length)
 from flaskext.babel import gettext, lazy_gettext as _
 
-from fbone.models import User
+from fbone.models import User, Project
 
 
 class EditDatosForm(Form):
     next = HiddenField()
     surname = TextField(_('Surname'), [required()])
     name = TextField(_('Name'), [required()])
-    university = TextField(_('University'), [required()])
-    title = TextField(_('Title'), [required()])
-    specialty = TextField(_('Specialty'))
-    group = TextField(_('Group'))
-    submit = SubmitField(_('Save'))
+    projects = FieldList(TextField(""))
+    nextproject = SelectField("")
 
+    
+    submit = SubmitField(_('Save'))
+    
+    
+    def validate_nextproject(self, field):
+        if Project.query.filter_by(id=field.data).first() is None:
+            raise ValidationError, gettext('This group does not exist')
+
+    
+
+    def generate_groups (self, groups):
+        for idx, val in enumerate(groups):
+            self.projects.append_entry(TextField(val.type))
+            self.projects[idx].label = Label('projects-'+str(idx),val.type)
+            if val.children:
+                self.nextproject.label = Label('projects-'+str(idx+1),val.children[0].type)
+                children = []
+                for i in val.children:
+                    children.append((i.id, i.name))
+                self.nextproject.choices = children
+            else:
+                del self.nextproject
+     
+            
     #def set_user_data(self, current_user):
     #    self.name.default = current_user.name
 

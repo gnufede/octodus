@@ -14,10 +14,15 @@
             
             {{ render_input(form.name, 'xlarge', value=current_user.name) }}
             {{ render_input(form.surname, 'xlarge', value=current_user.surname) }}
-            {{ render_input(form.university, 'xlarge') }}
-            {{ render_input(form.title, 'xlarge') }}
-            {{ render_input(form.specialty, 'xlarge') }}
-            {{ render_input(form.group, 'xlarge') }}
+            
+            {% for p in form.projects: %}
+                {{ render_input(p, 'xlarge', value=groups[loop.index0].name) }}
+            {% endfor %}
+            {% if form.nextproject %}
+             {{ render_input(form.nextproject, 'xlarge') }}
+            {% endif %}
+
+
             {{ render_action(form.submit) }}
         </fieldset>
     </form>

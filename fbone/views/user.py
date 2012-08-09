@@ -17,13 +17,27 @@ user = Blueprint('user', __name__, url_prefix='/user')
 def index():
     return render_template('user_index.html', current_user=current_user)
 
-@user.route('/edit_datos')
+@user.route('/edit_datos', methods=['GET', 'POST'])
 @login_required
-def edit_datos():
-    form = EditDatosForm(next=request.args.get('next'))
+def edit_datos(): 
+
+    project = current_user.projects[-1]
+    groups = [project,]
+    while project.depth > 0:
+        project = project.parent
+        groups.append(project)
+    groups.reverse()
     #form.set_user(current_user)
+    form = EditDatosForm(next=request.args.get('next'))
+    form.generate_groups(groups)
+    if form.validate_on_submit():
+        group = Project.query.filter_by(id=form.nextproject.data).first()
+        current_user.projects = []
+        current_user.projects.append(group)
+        groups = [group,]
+
     return render_template('user_edit_datos.html', form=form,
-                           current_user=current_user)
+                           current_user=current_user, groups=groups)
 
 
 @user.route('/<name>')

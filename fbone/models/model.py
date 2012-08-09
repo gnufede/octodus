@@ -54,7 +54,9 @@ class Appointment(db.Model):
 class Project(db.Model):
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
-    term = db.Column(db.String(30))
+    name = db.Column(db.String(128))
+    type = db.Column(db.String(128))    
+    term = db.Column(db.String(32))
     users = relationship("User", secondary=projects_users, backref="projects")
     nodes = relationship("Node", secondary=projects_nodes, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
@@ -76,14 +78,20 @@ class Project(db.Model):
     def create(self):
         if self.depth is None:
             self.depth = 0
-        if self.activation_key is None:
+        if not self.activation_key:
             self.activation_key = self.nodes[0].activation_key + self.term
+        if not self.name:
+            self.name = self.nodes[0].name
+        if not self.type:
+            self.type = self.nodes[0].type
         for i in self.nodes:
             for j in i.children:
                 project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=j.id)).all()
                 if not project_already_created:
                    new_project = Project(term=self.term)
                    new_project.nodes.append(j)
+                   new_project.name = j.name
+                   new_project.type = j.type
                    new_project.activation_key = j.activation_key + self.term
                    new_project.depth = self.depth + 1
                    self.children.append(new_project)
@@ -121,6 +129,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     type = db.Column(db.Integer)
+    #projects = relationship("Project", secondary=projects_users, backref="users")
 #    nodes = relationship("Node", secondary=nodes_users, backref="users")
     
     #def __init__(self, name, surname, email, password="", type=0):

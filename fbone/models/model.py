@@ -70,7 +70,7 @@ class Project(db.Model):
     children = relationship("Project",
                 backref=backref('parent', remote_side=[id])
                )
-    sessions = relationship("Session", backref="project")
+    #sessions = relationship("Session", backref="project")
     
 #    def __init__(self, name, term):
 #        self.name = name
@@ -207,7 +207,6 @@ class Node(db.Model):
 #        self.parent_id = parent_id
 
 
-class 
 
 
 def main():

@@ -21,6 +21,7 @@ class SignupForm(Form):
     next = HiddenField()
     code = TextField(_('Code'), [required()])
     name = TextField(_('Username'), [required()])
+    surname = TextField(_('Surname'), [required()])
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
     password_again = PasswordField(_('Password again'), [required(), equal_to('password')])
     email = TextField(_('Email address'), [required(), email(message=_('A valid email address is required'))])

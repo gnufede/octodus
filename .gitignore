@@ -20,3 +20,6 @@ build
 
 # Ignore Virtualenv
 venv/
+
+# Ignore OS X shit
+.DS_Store

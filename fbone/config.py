@@ -14,7 +14,7 @@ class BaseConfig(object):
 
 class DefaultConfig(BaseConfig):
 
-    DEBUG = True
+    DEBUG = False
 
     SQLALCHEMY_ECHO = True
 #    dbhost =  os.environ.get('SHARED_DATABASE_URL')

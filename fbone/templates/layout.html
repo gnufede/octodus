@@ -29,21 +29,24 @@
             <div class="topbar-inner">
                 <div class="container">
                 	{% if current_user.is_authenticated() %}
-                	 <h3><a class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
-                	 {% else %}
-                    <h3><a class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
-                    {% endif %}
+                	  <h3><a class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
+                	   <ul class="nav secondary-nav">
+                	   <li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
+                	  <li><a href="../static/login.html">Actos de graduación</a></li>
+                	{% else %}
+                      <h3><a class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
+                    
                     <!--form class="pull-left" action="{{ url_for('frontend.search') }}">
                         <input type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
                     </form-->
-                 <!--div class="nav-collapse"-->
-                 	<ul class="nav secondary-nav">
+                    <!--div class="nav-collapse"-->
+                 	  <ul class="nav secondary-nav">
                 
-				<li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-				<li><a href="../static/index.html">Fotoescuela</a></li>
-				<li><a href="../static/login.html">Actos de graduación</a></li>
-				<li><a href="../static/bodas.html">Eventos y celebraciones</a></li>
-				
+						<li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
+						<li><a href="../static/index.html">Fotoescuela</a></li>
+						<li><a href="../static/login.html">Actos de graduación</a></li>
+						<li><a href="../static/bodas.html">Eventos y celebraciones</a></li>
+				    {% endif %}
 
                     {% if current_user.is_authenticated() %}
                     <!--ul class="nav secondary-nav"-->

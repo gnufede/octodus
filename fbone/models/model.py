@@ -23,10 +23,6 @@ nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
 
-projects_nodes = db.Table("projects_nodes", db.metadata,
-    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
-    db.Column("node_id", db.Integer, ForeignKey("nodes.id")))
-
 projects_users = db.Table("projects_users", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("user_id", db.Integer, ForeignKey("users.id")))
@@ -61,7 +57,6 @@ class Project(db.Model):
     type = db.Column(db.String(128))    
     term = db.Column(db.String(32))
     users = relationship("User", secondary=projects_users, backref="projects")
-    nodes = relationship("Node", secondary=projects_nodes, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
@@ -78,28 +73,27 @@ class Project(db.Model):
 #        self.name = name
 #        self.term = term
 
-    def create(self):
+    def create(self, node):
         if self.depth is None:
             self.depth = 0
         if not self.activation_key:
-            self.activation_key = self.nodes[0].activation_key + self.term
+            self.activation_key = node.activation_key + self.term
         if not self.name:
-            self.name = self.nodes[0].name
+            self.name = node.name
         if not self.type:
-            self.type = self.nodes[0].type
-        for i in self.nodes:
-            for j in i.children:
-                project_already_created = db.session.query(Project).filter(Project.term==self.term).filter(Project.nodes.any(id=j.id)).all()
-                if not project_already_created:
-                   new_project = Project(term=self.term)
-                   new_project.nodes.append(j)
-                   new_project.name = j.name
-                   new_project.type = j.type
-                   new_project.activation_key = j.activation_key + self.term
-                   new_project.depth = self.depth + 1
-                   self.children.append(new_project)
-                   db.session.commit()
-                   new_project.create()
+            self.type = node.type
+        
+        for j in node.children:
+            project_already_created = db.session.query(Project).filter(Project.term==self.term).all()
+            if not project_already_created:
+               new_project = Project(term=self.term)
+               new_project.name = j.name
+               new_project.type = j.type
+               new_project.activation_key = j.activation_key + self.term
+               new_project.depth = self.depth + 1
+               self.children.append(new_project)
+               db.session.commit()
+               new_project.create(j)
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)

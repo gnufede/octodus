@@ -31,7 +31,7 @@ def reset():
 
     db.drop_all()
     db.create_all()
-    user = User(name='Perico', surname='De los Palotes', email='tester@hz.com', password='123456', type=1)
+    user = User(name='Jose Manuel', surname='Lopez', email='efdigitalorlas.test@gmail.com', password='123456', type=1)
     proceso = Proceso(content="<div> <p> hola </p> </div>")
 
     group = Group(name='Universidad de Vicalvaro', activation_key = "VICALVARO",depth=0, type='Universidad')
@@ -46,13 +46,12 @@ def reset():
     group2.children.append(group4)
 
     project = Project(term="2012")
-    #project.nodes.append(group)
     db.session.commit()
-    user.projects.append(project)
 
     db.session.add(user)
     db.session.add(proceso)
-    project.create() 
+    project.create(group) 
+    user.projects.append(project)
     db.session.commit()
     #while node.parent:
     #   print node.parent

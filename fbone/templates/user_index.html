@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="span6">	
-{% if current_user.type == 1 %}
+{% if current_user.is_admin() %}
 <ul>
 	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
 	</li>
@@ -13,6 +13,12 @@
 <ul>
 	<li><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
 	</li>
-</ul>	
+</ul>
+{% if current_user.is_coordinator() %}
+<ul>
+	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
+	</li>
+</ul>
+{% endif %}	
 </div>
 {% endblock %}

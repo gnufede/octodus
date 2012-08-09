@@ -14,16 +14,17 @@ class BaseConfig(object):
 
 class DefaultConfig(BaseConfig):
 
-    DEBUG = True
-
     SQLALCHEMY_ECHO = True
-#    dbhost =  os.environ.get('SHARED_DATABASE_URL')
-#    dbhost = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
-#    SQLALCHEMY_DATABASE_URI = dbhost
+
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
+
+    if os.environ.get('SHARED_DATABASE_URL'):
+        SQLALCHEMY_DATABASE_URI = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+        DEBUG = False
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
-    SQLALCHEMY_DATABASE_URI = 'mysql://orlas:salro@localhost/orlas'
     # Mysql: 'mysql://dbusername:dbpassword@dbhost/dbname'
 
     # To create log folder.

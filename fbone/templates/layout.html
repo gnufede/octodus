@@ -9,7 +9,6 @@
    	<meta name="keywords" content="Orlas, orlas universitarias, foto, actos académicos, reportaje fotográfico">
 	<meta name="description" content="Somos una empresa formada por un grupo de profesionales con larga experiencia con el objetivo primordial de ofrecerles un servicio cimentado en la garantía de calidad, que conseguimos gracias a nuestros equipos fotográficos de alta definición">
 	<title>E.F. Digital Orlas - {% block title %}{{ page_title }}{% endblock %}</title> 
-    <meta name="description" content="Fbone, a Flask skeleton project.">
     <meta name="author" content="Sigmaset">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="Shortcut Icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
@@ -51,23 +50,25 @@
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle">{{ current_user.email }}</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('frontend.change_password') }}">Change Password</a></li>
+                            <li><a href="{{ url_for('frontend.change_password') }}">Cambiar contraseña</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ url_for('frontend.logout') }}">Logout</a></li>
+                            <li><a href="{{ url_for('frontend.logout') }}">Salir</a></li>
                         </ul>
                         </li>
                     </ul>
                     {% elif login_form is defined %}
                     <!--ul class="nav secondary-nav"-->
                         <li class="dropdown">
-                        <a href="#" class="dropdown-toggle">Login</a>
+                        <a href="#" class="dropdown-toggle">Entrar</a>                        
                         <ul class="dropdown-menu">
+						 <li><a href="{{ url_for('frontend.signup') }}">Registrarse</a></li>
+						 <li class="divider"></li>
                          <form class='pull-right' method='POST' action='{{ url_for('frontend.login') }}'>
                         {{ login_form.hidden_tag() }}
                         {{ login_form.next }}
-                        {{ login_form.login(class_='input-small', placeholder='Email') }}
-                        {{ login_form.password(class_='input-small', placeholder='Password') }}
-                        <button class='btn-grey' style="float:right; margin-right: 15px; margin-top: 8px;" type='submit'>Log in</button>
+                        {{ login_form.email(class_='input-small', placeholder='Email') }}
+                        {{ login_form.password(class_='input-small', placeholder='Contraseña') }}
+                        <button class='btn-grey' style="float:right; margin-right: 15px; margin-top: 8px;" type='submit'>Entrar</button>
                     </form>
                     				</ul>
                  <!--/div-->
@@ -99,10 +100,10 @@
         <footer>
             <p style='text-align: center;'>
                 © 2012 E.F. Digital Orlas - Realizado por <a href="http://www.sigmaset.com">Sigmaset</a> -
-                <a href='{{ url_for('frontend.about') }}'>{{ _('About') }}</a> -
+                <!--a href='{{ url_for('frontend.about') }}'>{{ _('About') }}</a> -
                 <a href='{{ url_for('frontend.blog') }}'>{{ _('Blog') }}</a> -
                 <a href='{{ url_for('frontend.help') }}'>{{ _('Help') }}</a> -
-                <a href='{{ url_for('frontend.terms') }}' title='{{ _('Terms of Service') }}'>{{ _('Terms') }}</a>
+                <a href='{{ url_for('frontend.terms') }}' title='{{ _('Terms of Service') }}'>{{ _('Terms') }}</a-->
             </p>
         </footer>
     </div>

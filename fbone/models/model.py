@@ -162,8 +162,8 @@ class User(db.Model, UserMixin):
         return self.type == Definitions.USER_TYPE_COORDINATOR
 
     @classmethod
-    def authenticate(cls, login, password):
-        user = cls.query.filter(User.email == login).first()
+    def authenticate(cls, email, password):
+        user = cls.query.filter(User.email == email).first()
         if user:
             authenticated = user.check_password(password)
         else:

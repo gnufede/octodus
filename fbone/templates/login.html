@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Log in to fbone') %}
+{% set page_title = _('Entrar en E.F. Digital Orlas') %}
 
 {% extends "layout.html" %}
 
@@ -11,17 +11,17 @@
         {{ form.next }}
         <fieldset>
         	{% if not tries -%}
-            <legend>Not a member? <a href="{{ url_for('frontend.signup') }}">Sign up</a> please.</legend>
+            <legend>Aún no tienes cuenta? <a href="{{ url_for('frontend.signup') }}">Regístrate</a> por favor.</legend>
             {% endif %}
             {% if tries -%}
-            <legend>Forgot your password? <a href="{{ url_for('frontend.reset_password',value=form.data.login) }}">Recover your password</a>.</legend>
+            <legend>Olvidaste la contraseña? <a href="{{ url_for('frontend.reset_password',value=form.data.login) }}">Recupera tu contraseña</a>.</legend>
             {% endif %}
-            {{ render_input(form.login, 'xlarge', value=email) }}
+            {{ render_input(form.email, 'xlarge', value=email) }}
             {{ render_input(form.password, 'xlarge') }}
             <div class='clearfix'>
                 <label></label>
                 <div class="input">
-                    {{ form.remember() }}<span class='remember_me'>{{ _('Remember me') }}</span>
+                    {{ form.remember() }}<span class='remember_me'>{{ _('Recuérdame') }}</span>
                 </div>
             </div>
             {{ render_action(form.submit) }}

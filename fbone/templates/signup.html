@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Sign up to fbone') %}
+{% set page_title = _('Registrarse en E.F. Digital Orlas') %}
 
 {% extends 'layout.html' %}
 
@@ -10,7 +10,7 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
-            <legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend>
+            <legend>Ya tienes cuenta? <a href="{{ url_for('frontend.login') }}">Entra</a> por favor.</legend>
             {{ render_input(form.code, 'xlarge') }}
             {{ render_input(form.name, 'xlarge') }}
             {{ render_input(form.surname, 'xlarge') }}

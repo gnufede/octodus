@@ -46,7 +46,7 @@ def reset():
     group2.children.append(group4)
 
     project = Project(term="2012")
-    project.nodes.append(group)
+    #project.nodes.append(group)
     db.session.commit()
     user.projects.append(project)
 

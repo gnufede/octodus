@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, current_app, g, redirect, url_for, request
+from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash
 from flask.ext.login import login_required, current_user
 
 from fbone.models import *
@@ -17,7 +17,7 @@ user = Blueprint('user', __name__, url_prefix='/user')
 def index():
     return render_template('user_index.html', current_user=current_user)
 
-@user.route('/edit_datos', methods=['GET', 'POST'])
+@user.route('/edit_datos', methods=['POST','GET'])
 @login_required
 def edit_datos(): 
 
@@ -30,14 +30,22 @@ def edit_datos():
     #form.set_user(current_user)
     form = EditDatosForm(next=request.args.get('next'))
     form.generate_groups(groups)
-    if form.validate_on_submit():
+    if request.method == 'POST':
         group = Project.query.filter_by(id=form.nextproject.data).first()
         current_user.projects = []
+        #group.users.append(current_user)
         current_user.projects.append(group)
         groups = [group,]
+        db.session.commit()
+        if group.children:
+		    return redirect(url_for('user.edit_datos'))
+        else:
+            flash('Datos actualizados correctamente', 'success')
+            return redirect(form.next.data or url_for('user.index'))
 
     return render_template('user_edit_datos.html', form=form,
                            current_user=current_user, groups=groups)
+
 
 
 @user.route('/<name>')

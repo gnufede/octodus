@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = 'Registrate para hacerte la orla' %}
+{% set page_title = 'Pasos para hacerte la orla' %}
 
 {% extends "layout.html" %}
 
@@ -8,6 +8,8 @@
 <div class="span6">	
 {{ proceso|safe }}
 </div>	
+{% if form %}
+{% set page_title = 'Registrate para hacerte la orla' %}
 <div class='span6'>
     <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ form.hidden_tag() }}
@@ -24,5 +26,6 @@
         </fieldset>
     </form>
 </div>
+{% endif %}
 {% endblock %}
 

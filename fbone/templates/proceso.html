@@ -1,5 +1,6 @@
+{% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = 'Proceso' %}
+{% set page_title = 'Registrate para hacerte la orla' %}
 
 {% extends "layout.html" %}
 
@@ -7,5 +8,21 @@
 <div class="span6">	
 {{ proceso|safe }}
 </div>	
+<div class='span6'>
+    <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <fieldset>
+            <legend>Ya tienes cuenta? <a href="{{ url_for('frontend.login') }}">Entra</a> por favor.</legend>
+            {{ render_input(form.code, 'xlarge') }}
+            {{ render_input(form.name, 'xlarge') }}
+            {{ render_input(form.surname, 'xlarge') }}
+            {{ render_input(form.email, 'xlarge') }}
+            {{ render_input(form.password, 'xlarge') }}
+            {{ render_input(form.password_again, 'xlarge') }}
+            {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
 {% endblock %}
 

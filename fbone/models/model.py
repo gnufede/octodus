@@ -72,27 +72,19 @@ class Project(db.Model):
 #    def __init__(self, name, term):
 #        self.name = name
 #        self.term = term
-
-    def create(self, node):
-        if self.depth is None:
-            self.depth = 0
-        if not self.activation_key:
-            self.activation_key = node.activation_key + self.term
-        if not self.name:
-            self.name = node.name
-        if not self.type:
-            self.type = node.type
+    def project_already_created(self,activation_key):
+        return len(db.session.query(Project).filter(Project.activation_key==activation_key).all())
         
-        for j in node.children:
-            project_already_created = db.session.query(Project).filter(Project.term==self.term).all()
-            if not project_already_created:
-               new_project = Project(term=self.term)
-               new_project.name = j.name
-               new_project.type = j.type
-               new_project.activation_key = j.activation_key + self.term
-               new_project.depth = self.depth + 1
-               self.children.append(new_project)
-               db.session.commit()
+    def create(self, node):
+        if not self.project_already_created(node.activation_key + self.term):
+           new_project = Project(term=self.term)
+           new_project.name = node.name
+           new_project.type = node.type
+           new_project.activation_key = node.activation_key + self.term
+           new_project.depth = node.depth
+           self.children.append(new_project)
+           db.session.commit()
+           for j in node.children:
                new_project.create(j)
     
     def __str__(self):

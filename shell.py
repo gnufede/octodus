@@ -52,12 +52,14 @@ def reset():
     group5.children.append(group6)
 
     project = Project(term="2012")
-    db.session.commit()
 
     db.session.add(user)
     db.session.add(proceso)
+    db.session.add(group)
+    db.session.add(group5)
     project.create(group) 
     project.create(group5) 
+    db.session.commit()
     user.projects.append(project)
     db.session.commit()
     #while node.parent:

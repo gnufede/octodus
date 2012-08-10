@@ -31,17 +31,18 @@ def edit_datos():
     form = EditDatosForm(next=request.args.get('next'))
     form.generate_groups(groups)
     if request.method == 'POST':
-        group = Project.query.filter_by(id=form.nextproject.data).first()
-        current_user.projects = []
+        if form.nextproject:
+            group = Project.query.filter_by(id=form.nextproject.data).first()
+            current_user.projects = []
         #group.users.append(current_user)
-        current_user.projects.append(group)
-        groups = [group,]
-        db.session.commit()
-        if group.children:
-		    return redirect(url_for('user.edit_datos'))
-        else:
-            flash('Datos actualizados correctamente', 'success')
-            return redirect(form.next.data or url_for('user.index'))
+            current_user.projects.append(group)
+            groups = [group,]
+            db.session.commit()
+            if group.children:
+                return redirect(url_for('user.edit_datos'))
+            else:
+                flash('Datos actualizados correctamente', 'success')
+        return redirect(form.next.data or url_for('user.index'))
 
     return render_template('user_edit_datos.html', form=form,
                            current_user=current_user, groups=groups)

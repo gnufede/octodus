@@ -107,7 +107,7 @@ class Nodo(Base): # Es la plantilla de titulos, cursos, universidades, etc.
 
 
 def main():
-    engine = create_engine("mysql://orlas:orlas@localhost/orlas")
+    engine = create_engine("mysql://efdigital_orlas:salro@localhost/efdigital_orlas")
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()

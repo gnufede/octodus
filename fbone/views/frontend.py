@@ -21,6 +21,7 @@ frontend = Blueprint('frontend', __name__)
 
 
 @frontend.route('/')
+@cached_response
 def index():
     if current_user.is_authenticated():
         return redirect(url_for('user.index'))

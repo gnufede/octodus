@@ -204,13 +204,13 @@ class Node(db.Model):
 
 
 
-def main():
-    engine = create_engine("mysql://orlas:salro@localhost/orlas")
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+#def main():
+#    engine = create_engine("mysql://efdigital_orlas:salro@localhost/efdigital_orlas")
+#    Base.metadata.create_all(engine)
+#    Session = sessionmaker(bind=engine)
+#    session = Session()
 
 
-if __name__ == "__main__":
-    main()
-    #pass
+#if __name__ == "__main__":
+#    #main()
+#    pass

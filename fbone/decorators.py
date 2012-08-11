@@ -16,3 +16,15 @@ def keep_login_url(func):
         g.keep_login_url = True
         return func(*args, **kwargs)
     return wrapper
+
+
+def cached_response(func):
+    """
+    Adds cache-control: public to responses
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        resp = make_response(f(*args, **kwargs))
+        resp.cache_control.public = True
+        return resp
+    return wrapper

@@ -6,18 +6,16 @@
 
 {% block body %}
 <div class='span12'>
-    <form class='form-stacked' method="POST" action="{{ url_for('user.editar_sesion') }}">
+    <form class='form-stacked' method="POST" action="{{ url_for('session.new_session_post') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
             <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
             
-            {{ render_input(form.begin, 'xlarge', value=current_user.name) }}
-            {{ render_input(form.surname, 'xlarge', value=current_user.surname) }}
-            {{ render_input(form.university, 'xlarge') }}
-            {{ render_input(form.title, 'xlarge') }}
-            {{ render_input(form.specialty, 'xlarge') }}
-            {{ render_input(form.group, 'xlarge') }}
+            {{ render_input(form.begin, 'xlarge') }}
+            {{ render_input(form.end, 'xlarge') }}
+            {{ render_input(form.block_duration, 'xlarge') }}
+            {{ render_input(form.block_capacity, 'xlarge') }}
             {{ render_action(form.submit) }}
         </fieldset>
     </form>

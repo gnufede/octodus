@@ -116,7 +116,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
     -->
     {% set jquery_path = url_for('static', filename='js/libs/jquery-1.7.2.min.js') %}
-    <script async >window.jQuery || document.write('<script async src="{{ jquery_path }}"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src="{{ jquery_path }}"><\/script>')</script>
     {% endblock %}
 
     {% block js_plugins %}
@@ -130,14 +130,14 @@
     <script async src="{{ url_for('static', filename='js/libs/bootstrap-alerts.js') }}"></script>
 <script async src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script>
 
-<!-- Library -->
+<!-- Library
 <script async type="text/javascript">
 $(document).ready(function() {
   // Handler for .ready() called.
         $('.textarea').wysihtml5();
 });
 </script>
-
+ -->
     {% endblock %}
 </body>
 </html>

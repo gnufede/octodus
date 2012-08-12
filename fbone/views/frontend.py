@@ -209,6 +209,7 @@ def reset_password():
     return render_template('reset_password.html', form=form, value=value)
 
 @frontend.route('/proceso')
+@cached_response
 def proceso():
     login_form = form = None
     if not current_user.is_authenticated():

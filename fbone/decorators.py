@@ -2,7 +2,7 @@
 
 from functools import wraps
 
-from flask import g, url_for, flash, redirect, Markup, request
+from flask import g, url_for, flash, redirect, Markup, request, make_response
 from flaskext.babel import gettext as _
 
 
@@ -24,7 +24,7 @@ def cached_response(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        resp = make_response(f(*args, **kwargs))
+        resp = make_response(func(*args, **kwargs))
         resp.cache_control.public = True
         return resp
     return wrapper

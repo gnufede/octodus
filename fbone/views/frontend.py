@@ -241,6 +241,9 @@ def edit_session():
     return render_template('edit_proceso.html', proceso=proceso.content)
 
 
+
+
+
 @frontend.route('/about')
 def about():
     return '<h1>About Page</h1>'

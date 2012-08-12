@@ -2,8 +2,23 @@
 
 from functools import wraps
 
-from flask import g, url_for, flash, redirect, Markup, request, make_response
+from flask import g, url_for, flash, redirect, Markup, request, make_response, abort
+from flask.ext.login import login_required, current_user
+from fbone.models import User
 from flaskext.babel import gettext as _
+
+
+def admin_required(func):
+    """
+    Verifies that current user is admin
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if current_user.is_admin():
+            return func(*args, **kwargs)
+        else:
+            abort(403)
+    return wrapper
 
 
 def keep_login_url(func):

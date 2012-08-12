@@ -5,7 +5,7 @@ from flask.ext.login import login_required, current_user
 
 from fbone.models import *
 from fbone.decorators import keep_login_url
-from fbone.forms import (NewSessionForm)
+from fbone.forms import (EditSessionForm)
 from fbone.extensions import db
 
 import datetime
@@ -21,7 +21,7 @@ def index():
 @session.route('/nueva_sesion')
 @login_required
 def new_session():
-    form = NewSessionForm(next=request.args.get('next'))
+    form = EditSessionForm(next=request.args.get('next'))
     #form.set_user(current_user)
     return render_template('session_new.html', form=form,
                            current_user=current_user)
@@ -29,7 +29,7 @@ def new_session():
 @session.route('/nueva_sesion', methods=['POST'])
 #@login_required #FIXME!!!
 def new_session_post():
-    form = NewSessionForm(next=request.args.get('next'))
+    form = EditSessionForm(next=request.args.get('next'))
     session = Session()
     session.begin = datetime.strptime(form.begin)
     session.end = datetime.strptime(form.end)

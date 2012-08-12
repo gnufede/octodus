@@ -1,0 +1,24 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Nueva Universidad') %}
+
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class='span12'>
+    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+       
+        <fieldset>
+             {{ render_input(form.name, 'xlarge', value=node.name) }}
+             {{ render_input(form.type, 'xlarge') }}
+             {{ render_input(form.activation_key, 'xlarge', value=node.activation_key) }}
+             {{ render_input(form.choosetype, 'xlarge', value = node.type) }}
+             
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+

@@ -6,6 +6,8 @@
 <div class="span6">	
 {% if current_user.is_admin() %}
 <ul>
+	<li><a href='{{ url_for('admin.new_group') }}'>Nueva Universidad</a> 
+	</li>
 	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
 	</li>
 </ul>

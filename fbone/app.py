@@ -8,7 +8,7 @@ from flaskext.babel import Babel
 from fbone import utils
 from fbone.models import User
 from fbone.config import DefaultConfig, APP_NAME
-from fbone.views import frontend, user, api
+from fbone.views import frontend, user, api, admin, session
 from fbone.extensions import db, mail, cache, login_manager
 
 
@@ -19,6 +19,8 @@ DEFAULT_BLUEPRINTS = (
     frontend,
     user,
     api,
+    admin,
+    session
 )
 
 
@@ -35,7 +37,7 @@ def create_app(config=None, app_name=None, blueprints=None):
     configure_hook(app)
     configure_blueprints(app, blueprints)
     configure_extensions(app)
-    configure_logging(app)
+    #configure_logging(app)
     configure_template_filters(app)
     configure_error_handlers(app)
 

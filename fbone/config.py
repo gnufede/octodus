@@ -6,7 +6,7 @@ APP_NAME = 'fbone'
 class BaseConfig(object):
 
     DEBUG = False
-    TESTING = False
+    TESTING = True
 
     # os.urandom(24)
     SECRET_KEY = 'secret key'

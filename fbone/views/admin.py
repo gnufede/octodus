@@ -16,7 +16,10 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required
 @admin_required
 def new_group():
-    types = db.session.query(Group.type).filter_by(depth=0).distinct()
+    depth = 0
+    if 'depth' in request.values:
+        depth = request.values['depth']
+    types = db.session.query(Group.type).filter_by(depth=depth).distinct()
     node = None
     form = NewGroupForm(request.form)
     form.set_types(types)

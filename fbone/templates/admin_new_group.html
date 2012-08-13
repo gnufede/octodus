@@ -3,12 +3,12 @@
 {% set page_title = _('Nueva Universidad') %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
-<script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
 
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class='span12'>
+<div class='span4' id="tree1"></div>
+<div class='span8'>
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
@@ -24,13 +24,29 @@
         </fieldset>
     </form>
 </div>
-<div class='span4' id="tree1" data-url="/admin/groups"></div>
+{% endblock %}
+
+{% block append_js %}
+<script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
 
 <script type="text/javascript">
-        $('#tree1').tree({
-             selectable: true
+$(document).ready(function() {
+    var $tree = $('#tree1')
+    $.getJSON(
+    '/admin/groups/',
+    function(data) {
+    var data_array = [];
+    for (var key in data){
+        data_array.push(data[key]);
+    }
+        $tree.tree({
+            data: data_array,
+            selectable: true
         });
-        var node = $tree.tree('getselectednode');
+    }
+    );
+    var node = $tree.tree('getselectednode');
+});
 </script>
 {% endblock %}
 

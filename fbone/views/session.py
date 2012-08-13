@@ -32,11 +32,17 @@ def new_session():
 @admin_required
 def new_session_post():
     form = EditSessionForm(next=request.args.get('next'))
-    session = Session()
-    session.begin = datetime.strptime(form.begin)
-    session.end = datetime.strptime(form.end)
-    session.block_duration = int(form.block_duration)
-    session.block_capacity = int(form.block_capacity)
+    if form.validate_on_submit():
+        session = Session()
+        session.begin = form.begin.data
+        session.end = form.end.data
+        session.block_duration = form.block_duration.data
+        session.block_capacity = form.block_capacity.data
+        db.session.add(session)
+        db.session.commit()
+        return redirect(url_for('user.index'))
+    return render_template('session_new.html', form=form,
+                           current_user=current_user)
 
 @session.route('/<name>')
 def pub(name):

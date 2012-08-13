@@ -53,17 +53,13 @@ def new_group():
 @admin_required
 def groups():
     if 'parent' in request.values:
-        node = request.values['parent']
-        node = Group.query.filter_by(id=node).first()
-        nodes = db.session.query(Group.id,Group.name).filter_by(parent=node).all()
-        
+        node_id = request.values['parent']
+        node = Group.query.filter_by(id=node_id).first()
+        tree = db.session.query(Group.id,Group.name).filter_by(parent=node).all()
     else:
-        tree = dict() 
-        #tree = []
-        nodes = Group.query.filter_by(depth=0)
-        for val in nodes:
-            tree[val.id] = val.jsonify()
+        tree = [(x.id, x.jsonify()) for x in Group.query.filter_by(depth=0)]
     return jsonify(tree)
+    
 
 
 @admin.route('/')

@@ -12,6 +12,8 @@ import datetime
 from werkzeug import (generate_password_hash, check_password_hash, cached_property)
 from flask.ext.login import UserMixin
 
+from flask import jsonify
+
 
 class Definitions(object):
     USER_TYPE_ADMIN = 1
@@ -196,13 +198,19 @@ class Node(db.Model):
                 backref=backref('parent', remote_side=[id])
                )
 
-    def jsonify(self):
+    def jsonify_OLD(self):
         children = dict()
         if len(self.children) >= 1:
             for val in self.children:
                 #children.append(val.jsonify)
                 children[val.id] = val.jsonify()
         return {'name':self.name, 'children':children}
+    
+    def jsonify(self):
+        #return "{'name':%s, 'id':%d, 'children':%s}" % (self.name, self.id, repr([x.jsonify() for x in self.children]))
+        #return jsonify(name=self.name, id=self.id, children=str([x.jsonify() for x in self.children]))
+        return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]}
+        
 #    def __init__(self, begin, end, parent_id=None):
 #        self.name = name
 #        self.activation_key = activation_key

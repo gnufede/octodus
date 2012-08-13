@@ -30,23 +30,19 @@
 <script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
 
 <script type="text/javascript">
-$(document).ready(function() {
-    var $tree = $('#tree1')
-    $.getJSON(
-    '/admin/groups/',
-    function(data) {
-    var data_array = [];
-    for (var key in data){
-        data_array.push(data[key]);
-    }
-        $tree.tree({
-            data: data_array,
-            selectable: true
+    $(document).ready(function() {
+        $.getJSON('/admin/groups', function(data) {
+            var data_array = [];
+            for (var key in data) {
+                data_array.push(data[key]);
+            }
+            $('#tree1').tree({
+                selectable: true,
+                data: data_array
+            });
         });
-    }
-    );
-    var node = $tree.tree('getselectednode');
-});
+        //var node = $tree.tree('getselectednode');
+    });
 </script>
 {% endblock %}
 

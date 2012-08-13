@@ -58,6 +58,7 @@ class Project(db.Model):
     name = db.Column(db.String(128))
     type = db.Column(db.String(128))    
     term = db.Column(db.String(32))
+    creation = db.Column(db.DateTime)
     users = relationship("User", secondary=projects_users, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))

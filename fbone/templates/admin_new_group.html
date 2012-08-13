@@ -2,6 +2,9 @@
 
 {% set page_title = _('Nueva Universidad') %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
+<script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
+
 {% extends 'layout.html' %}
 
 {% block body %}
@@ -10,6 +13,7 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
        
+
         <fieldset>
              {{ render_input(form.name, 'xlarge', value=node.name) }}
              {{ render_input(form.type, 'xlarge') }}
@@ -20,5 +24,13 @@
         </fieldset>
     </form>
 </div>
+<div class='span4' id="tree1" data-url="/admin/groups"></div>
+
+<script type="text/javascript">
+        $('#tree1').tree({
+             selectable: true
+        });
+        var node = $tree.tree('getselectednode');
+</script>
 {% endblock %}
 

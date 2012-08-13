@@ -196,6 +196,13 @@ class Node(db.Model):
                 backref=backref('parent', remote_side=[id])
                )
 
+    def jsonify(self):
+        children = dict()
+        if len(self.children) >= 1:
+            for val in self.children:
+                #children.append(val.jsonify)
+                children[val.id] = val.jsonify()
+        return {'name':self.name, 'children':children}
 #    def __init__(self, begin, end, parent_id=None):
 #        self.name = name
 #        self.activation_key = activation_key

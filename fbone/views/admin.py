@@ -58,8 +58,12 @@ def groups():
         nodes = db.session.query(Group.id,Group.name).filter_by(parent=node).all()
         
     else:
-        nodes = db.session.query(Group.id,Group.name).filter_by(depth=0).all()
-    return jsonify(nodes)
+        tree = dict() 
+        #tree = []
+        nodes = Group.query.filter_by(depth=0)
+        for val in nodes:
+            tree[val.id] = val.jsonify()
+    return jsonify(tree)
 
 
 @admin.route('/')

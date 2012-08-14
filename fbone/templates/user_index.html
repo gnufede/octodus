@@ -3,27 +3,27 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="span6">	
+<div class="span4">	
 {% if current_user.is_admin() %}
-<ul>
-	<li><a href='{{ url_for('admin.new_group') }}'>Nueva Universidad</a> 
-	</li>
-	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
-	</li>
-    <li><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a> 
-	</li>
+<div class="well" style="padding: 8px 0;">
+<ul class="nav nav-list">
+	<li><a href='{{ url_for('admin.new_group') }}'>Nueva Universidad</a></li>
+	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a></li>
+    <li class="divider"></li>
+    <li><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a></li>
 </ul>
 {% else %}
-<ul>
+<ul class="nav nav-list">
 	<li><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
 	</li>
 </ul>
 {% if current_user.is_coordinator() %}
-<ul>
+<ul class="nav nav-list">
 	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
 	</li>
 </ul>
 {% endif %}	
 {% endif %}	
+</div>
 </div>
 {% endblock %}

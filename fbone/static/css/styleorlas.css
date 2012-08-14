@@ -2,11 +2,12 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #FFFFFF url(../img/fondo.jpg) no-repeat center top fixed;
-	font-family: Arial, Helvetica, sans-serif;
+/*	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #534616;
+*/
 }
-
+/*
 h1, h2, h3 {
 	margin: 0;
 	padding: 0;
@@ -14,6 +15,7 @@ h1, h2, h3 {
 	font-weight: normal;
 	color: #534616;
 }
+
 
 h1 {
 	font-size: 2em;
@@ -48,7 +50,7 @@ a:hover {
 	margin: 0 auto;
 	padding: 0;
 }
-
+*/
 /* Header */
 
 #header {
@@ -101,7 +103,7 @@ a:hover {
 }
 
 /* Search */
-
+/*
 #search {
 	float: right;
 	width: 300px;
@@ -135,9 +137,9 @@ a:hover {
 	width: 50px;
 	height: 25px;
 }
-
+*/
 /* Menu */
-
+/*
 #menu {
 	width: 960px;
 	height: 50px;
@@ -180,9 +182,9 @@ a:hover {
 #menu a:hover {
 	text-decoration: underline;
 }
-
+*/
 /* Page */
-
+/*
 #page {
 	width: 960px;
 	margin: 0 auto;
@@ -194,9 +196,9 @@ a:hover {
 
 #page-bgbtm {
 }
-
+*/
 /* Content */
-
+/*
 #content {
 	float: right;
 	width: 670px;
@@ -255,9 +257,9 @@ a:hover {
 	font-size: 10px;
 	font-weight:  bold;
 }
-
+*/
 /* Sidebar */
-
+/*
 #sidebar {
 	float: left;
 	width: 240px;
@@ -320,9 +322,9 @@ a:hover {
 #sidebar a:hover {
 	text-decoration: underline;
 }
-
+*/
 /* Calendar */
-
+/*
 #calendar {
 }
 
@@ -341,9 +343,9 @@ a:hover {
 #calendar #next {
 	text-align: right;
 }
-
+*/
 /* Footer */
-
+/*
 #footer {
 	width: 960px;
 	height: 64px;
@@ -378,9 +380,9 @@ a:hover {
 	height: 20px;
 	width: 70px;
 }
-
+*/
 /* Formulario de pedido */
-
+/*
 form.pedido {
 	margin: 0;
 	padding: 50px 0 0 10px;
@@ -388,15 +390,11 @@ form.pedido {
 
 
 form.pedido fieldset {
-	/* margin: 0; */
 	padding: 8px 30px 8px 30px;
-	/* border: none; */
 }
 
 form.pedido label {
-	/* margin: 0; */
 	float:right;
-	/* border: none; */
 }
 
 form.pedido input {
@@ -407,3 +405,4 @@ form.pedido input {
 	font: normal 12px Arial, Helvetica, sans-serif;
 	color: #703522;
 }
+*/

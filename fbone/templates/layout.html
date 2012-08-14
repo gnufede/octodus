@@ -23,10 +23,10 @@
 	<div class="container" style="margin-top: 0;">
     	<div id="logo" style="margin-left: auto;"></div>
     	</div>
-    <div class="topbar-wrapper" style="z-index: 5;">
+    <div class="navbar-wrapper" style="z-index: 5;">
 
-        <header class="topbar" data-dropdown="dropdown" role='banner'>
-            <div class="topbar-inner">
+        <header class="navbar " data-dropdown="dropdown" role='banner' style="margin-bottom:0">
+            <div class="navbar-inner" style="border-radius:0">
                 <div class="container">
                 	{% if current_user.is_authenticated() %}
                 	  <h3><a class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
@@ -47,7 +47,9 @@
 						<li><a href="../static/login.html">Actos de graduación</a></li>
 						<li><a href="../static/bodas.html">Eventos y celebraciones</a></li>
 				    {% endif %}
+                    </ul>
 
+                 	  <ul class="nav pull-right">
                     {% if current_user.is_authenticated() %}
                     <!--ul class="nav secondary-nav"-->
                         <li class="dropdown">
@@ -61,19 +63,23 @@
                     </ul>
                     {% elif login_form is defined %}
                     <!--ul class="nav secondary-nav"-->
+						<li><a href='{{ url_for('frontend.login') }}'>Entrar</a></li>
+						<li><a href='{{ url_for('frontend.signup') }}'>Registrarse</a></li>
+                        <!--
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle">Entrar</a>                        
                         <ul class="dropdown-menu">
 						 <li><a href="{{ url_for('frontend.signup') }}">Registrarse</a></li>
 						 <li class="divider"></li>
-                         <form class='pull-right' method='POST' action='{{ url_for('frontend.login') }}'>
+                         <form class='navbar-form' method='POST' action='{{ url_for('frontend.login') }}'>
                         {{ login_form.hidden_tag() }}
                         {{ login_form.next }}
-                        {{ login_form.email(class_='input-small', placeholder='Email') }}
-                        {{ login_form.password(class_='input-small', placeholder='Contraseña') }}
-                        <button class='btn-grey' style="float:right; margin-right: 15px; margin-top: 8px;" type='submit'>Entrar</button>
-                    </form>
-                    				</ul>
+                        {{ login_form.email(class_='input-medium navbar-search pull-center', placeholder='Email') }}
+                        {{ login_form.password(class_='input-medium pull-center', placeholder='Contraseña') }}
+                        <button class='pull-right btn-primary' type='submit'>Entrar</button> 
+                    </form> 
+                     -->
+                    	</ul>
                  <!--/div-->
                         </ul>
                         </li>
@@ -122,19 +128,19 @@
 
     {% block js_script %}
 <script async src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
-    <script async src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script async src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script>
+    <!--script async src="{{ url_for('static', filename='js/script.js') }}"></script-->
     <script async src="{{ url_for('static', filename='js/libs/bootstrap-dropdown.js') }}"></script>
     <script async src="{{ url_for('static', filename='js/libs/bootstrap-alerts.js') }}"></script>
 <script async src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script>
 
-<!-- Library
+<!-- Library -->
 <script async type="text/javascript">
 $(document).ready(function() {
   // Handler for .ready() called.
         $('.textarea').wysihtml5();
 });
 </script>
- -->
     {% endblock %}
     {% block append_js %}
     {% endblock %}

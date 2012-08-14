@@ -83,8 +83,8 @@
             {% if messages %}
             <div id='flash_message_container'>
                 {% for category, msg in messages %}
-                    <div class="alert-message {{ category }}" data-alert>
-                      <a class="close" href="#">×</a>
+                    <div class="alert alert-{{ category }}" data-alert>
+                      <a class="close" data-dismiss="alert" href="#">×</a>
                       <p>{{ msg }}</p>
                     </div>
                 {% endfor %}

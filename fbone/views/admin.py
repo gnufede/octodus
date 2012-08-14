@@ -42,7 +42,7 @@ def new_group():
             node.activation_key = activation_key
             node.type = type
         if form.parent.data:
-            node.parent = form.parent.data
+            node.parent = Group.query(id=form.parent.data).first()
         
         db.session.commit()
         flash('Datos actualizados correctamente', 'success')

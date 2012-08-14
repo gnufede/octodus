@@ -13,11 +13,13 @@ from fbone.models import User, Project, Group
 class NewGroupForm(Form):
     #types = Group.query(Group.type).distinct()
     next = HiddenField()
+    parent = HiddenField()
   
     name = TextField("Nombre", [required()])
     type = TextField("Tipo nuevo")
     activation_key = TextField(u"Codigo de activación", [required()])
-    choosetype = SelectField("Tipos existentes")
+    #choosetype = SelectField("Tipos existentes")
+    choosetype = TextField("Tipos existentes")
    
 
     submit = SubmitField(_('Guardar'))

@@ -41,6 +41,8 @@ def new_group():
             node.name = name
             node.activation_key = activation_key
             node.type = type
+        if form.parent.data:
+            node.parent = form.parent.data
         
         db.session.commit()
         flash('Datos actualizados correctamente', 'success')
@@ -50,6 +52,14 @@ def new_group():
                            current_user=current_user, node=node)
 
 
+
+@admin.route('/grouptypes/', methods=['GET'])
+@login_required
+@admin_required
+def grouptypes():
+    types = db.session.query(Group.type,Group.type).distinct()
+    return jsonify(types)
+    
 
 @admin.route('/groups/', methods=['GET'])
 @login_required

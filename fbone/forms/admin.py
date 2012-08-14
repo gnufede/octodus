@@ -14,9 +14,10 @@ class NewGroupForm(Form):
     #types = Group.query(Group.type).distinct()
     next = HiddenField()
     parent = HiddenField()
+    group_id = HiddenField()
   
     name = TextField("Nombre", [required()])
-    type = TextField("Tipo nuevo")
+    #type = TextField("Tipo nuevo")
     activation_key = TextField(u"Codigo de activación", [required()])
     #choosetype = SelectField("Tipos existentes")
     choosetype = TextField("Tipos existentes")
@@ -27,8 +28,9 @@ class NewGroupForm(Form):
     
     def set_node (self, node):
         self.name.value = node.name
-        self.type.value = node.type
+        self.choosetype.value = node.type
         self.activation_key.value = node.activation_key
+        self.group_id.value = node.id
 
     def set_types (self, types):
         children = []

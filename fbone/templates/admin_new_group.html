@@ -11,15 +11,15 @@
 <div class='span8'>
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
         {{ form.hidden_tag() }}
+        {{ form.group_id }}
         {{ form.next }}
         {{ form.parent }}
        
 
         <fieldset>
-             {{ render_input(form.name, 'xlarge', value=node.name, style="height:18px") }}
-             {{ render_input(form.type, 'xlarge') }}
-             {{ render_input(form.activation_key, 'xlarge', value=node.activation_key) }}
-             {{ render_input(form.choosetype, 'xlarge', value = node.type) }}
+             {{ render_input(form.choosetype, 'xlarge', value = node.type, style="height:28px") }}
+             {{ render_input(form.name, 'xlarge', value=node.name, style="height:28px") }}
+             {{ render_input(form.activation_key, 'xlarge', value=node.activation_key, style="height:28px") }}
              
              {{ render_action(form.submit) }}
         </fieldset>
@@ -33,7 +33,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var types = $.getJSON('/admin/grouptypes', function(data) {
+            var group_id = jQuery.url.param("uni");
+            $('#group_id').val(group_id);
+            var types = $.getJSON('/admin/grouptypes', function(data) {
             var types_array = [];
             for (var key in data) {
                 types_array.push(data[key]);
@@ -52,6 +54,12 @@
                 selectable: true,
                 data: data_array
             });
+            $('#tree1').bind('tree.contextmenu', function(event) {
+                 // The clicked node is 'event.node'
+                 var node = event.node;
+                 window.location = '/admin/new_group?uni='+node.id
+             }
+            );
             // bind 'tree.click' event
            $('#tree1').bind('tree.click', function(event) {
                 // The clicked node is 'event.node'

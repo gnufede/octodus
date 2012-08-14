@@ -17,12 +17,9 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_required
 def new_group():
     depth = 0
-    if 'depth' in request.values:
-        depth = request.values['depth']
-    types = db.session.query(Group.type).filter_by(depth=depth).distinct()
+    parent = None
     node = None
     form = NewGroupForm(request.form)
-    form.set_types(types)
     if 'uni' in request.values:
         node = request.values['uni']
         node = Group.query.filter_by(id=node).first()
@@ -30,26 +27,36 @@ def new_group():
     if form.validate_on_submit():
         name = form.name.data
         activation_key = form.activation_key.data
-        if not form.type.data or form.type.data == "":
-            type = form.choosetype.data
-        else:
-            type = form.type.data
-        if not node:
-            node = Group(name=name, activation_key = activation_key,depth=0, type=type)
+        #if not form.type.data or form.type.data == "":
+        type = form.choosetype.data
+        if form.parent.data:
+            parent = Group.query.filter_by(id=form.parent.data).first()
+            depth = parent.depth + 1
+        #else:
+        #    type = form.type.data
+        
+        if not form.group_id.data or form.group_id.data == u'':
+            return redirect(url_for(form.group_id.data))
+            if parent:
+                node = Group(name=name, activation_key = activation_key,depth=depth, type=type, parent_id=parent.id)
+            else:
+                node = Group(name=name, activation_key = activation_key,depth=depth, type=type)
             db.session.add(node)
         else:
+            node = Group.query.filter_by(id=form.group_id.data).first()
             node.name = name
             node.activation_key = activation_key
             node.type = type
-        if form.parent.data:
-            node.parent = Group.query(id=form.parent.data).first()
+            node.depth = depth
+            if parent:
+                node.parent_id = parent.id
         
         db.session.commit()
         flash('Datos actualizados correctamente', 'success')
-        return redirect(form.next.data or url_for('admin.index'))
+        return redirect(form.next.data or url_for('admin.new_group'))
 
     return render_template('admin_new_group.html', form=form,
-                           current_user=current_user, node=node)
+                           current_user=current_user, node=node, group_id=node.id)
 
 
 

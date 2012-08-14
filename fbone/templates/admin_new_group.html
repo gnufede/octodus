@@ -12,6 +12,7 @@
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
+        {{ form.parent }}
        
 
         <fieldset>
@@ -55,8 +56,9 @@
            $('#tree1').bind('tree.click', function(event) {
                 // The clicked node is 'event.node'
                 var node = event.node;
-                alert(node.name);
+                //alert(node.id);
                 //TODO: set parent hidden value to node.name
+                $('#parent').val(node.id)
             });
         });
         //var node = $tree.tree('getselectednode');

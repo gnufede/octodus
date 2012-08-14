@@ -32,14 +32,16 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var types = $.getJSON('/admin/grouptypes', function(data){
+        var types = $.getJSON('/admin/grouptypes', function(data) {
             var types_array = [];
-            for (var key in data){
+            for (var key in data) {
                 types_array.push(data[key]);
             }
             $('#choosetype').attr('data-provide', 'typeahead');
-            $('#choosetype').typeahead(source=types_array);
+            $('#choosetype').typeahead({
+                'source': types_array
             });
+        });
         $.getJSON('/admin/groups', function(data) {
             var data_array = [];
             for (var key in data) {
@@ -50,15 +52,12 @@
                 data: data_array
             });
             // bind 'tree.click' event
-           $('#tree1').bind(
-              'tree.click',
-               function(event) {
-                   // The clicked node is 'event.node'
-                   var node = event.node;
-                   alert(node.name);
-                   //TODO: set parent hidden value to node.name
-               }
-           );
+           $('#tree1').bind('tree.click', function(event) {
+                // The clicked node is 'event.node'
+                var node = event.node;
+                alert(node.name);
+                //TODO: set parent hidden value to node.name
+            });
         });
         //var node = $tree.tree('getselectednode');
     });

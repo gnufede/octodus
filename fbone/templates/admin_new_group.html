@@ -28,12 +28,13 @@
 {% endblock %}
 
 {% block append_js %}
+<script async src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
 <script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
 <script async src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
-            var group_id = jQuery.url.param("uni");
+            var group_id = $.url().param('uni'); 
             $('#group_id').val(group_id);
             var types = $.getJSON('/admin/grouptypes', function(data) {
             var types_array = [];

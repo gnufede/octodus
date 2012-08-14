@@ -23,7 +23,6 @@ def new_group():
     if 'uni' in request.values:
         node = request.values['uni']
         node = Group.query.filter_by(id=node).first()
-        form.set_node(node)
     if form.validate_on_submit():
         name = form.name.data
         activation_key = form.activation_key.data
@@ -35,8 +34,7 @@ def new_group():
         #else:
         #    type = form.type.data
         
-        if not form.group_id.data or form.group_id.data == u'':
-            return redirect(url_for(form.group_id.data))
+        if not form.group_id.data or form.group_id.data == '':
             if parent:
                 node = Group(name=name, activation_key = activation_key,depth=depth, type=type, parent_id=parent.id)
             else:
@@ -50,13 +48,14 @@ def new_group():
             node.depth = depth
             if parent:
                 node.parent_id = parent.id
+                node.depth = parent.depth + 1
         
         db.session.commit()
         flash('Datos actualizados correctamente', 'success')
         return redirect(form.next.data or url_for('admin.new_group'))
 
     return render_template('admin_new_group.html', form=form,
-                           current_user=current_user, node=node, group_id=node.id)
+                           current_user=current_user, node=node)
 
 
 

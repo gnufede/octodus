@@ -6,17 +6,27 @@
     {% endif %}
 {% endmacro %}
 
-{% macro render_input(field, cls='', value='', style='') %}
+{%- macro render_textarea(name, cls, value='', height="610px", width="200px") -%}
+<textarea class="{{ cls }}" name="{{ name }}" style='width:610px; height: 200px;'>{{ value|safe }}</textarea>
+{%- endmacro %}
+
+{% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False) %}
 <div class='clearfix {% if field.errors %}error{% endif %}'>
+    {% if not nolabel %}}
     {{ field.label }}
+    {% endif %}
     <div class='input'>
         {% if field.errors %}
         {{ field(class_=cls~' error') }}
         {% else %}
         {% if value %}
-        {{ field(class_=cls,value=value, style=style) }}
+          {% if placeholder %}
+          {{ field(class_=cls,value=value, style=style, placeholder=placeholder) }}
+          {% else %}
+        {{ field(class_=cls,value=value, style=style ) }}
+        {% endif %}
         {% else %}
-        {{ field(class_=cls,style=style) }}
+        {{ field(class_=cls,style=style ) }}
         {% endif %}
         {% endif %}
         <span class="help-inline">
@@ -30,7 +40,7 @@
 
 {% macro render_action(field) %}
     <div class='actions'>
-        {{ field(class_='btn primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancel') }}</a>
+        {{ field(class_='btn btn-primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancel') }}</a>
     </div>
 {% endmacro %}
 

@@ -2,13 +2,17 @@
 
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
-                          ValidationError, required, equal_to, email, Label,
+                          ValidationError, required, equal_to, email, Label, TextAreaField,
                           length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.extensions import db
 from fbone.models import User, Project, Group
 
+class EditProcesoForm(Form):
+    next = HiddenField()
+    textarea = TextAreaField()
+    submit = SubmitField(_('Guardar'))
 
 class NewGroupForm(Form):
     #types = Group.query(Group.type).distinct()

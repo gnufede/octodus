@@ -221,15 +221,6 @@ def proceso():
                            form=form)
 
 
-@frontend.route('/edit_proceso')
-def edit_proceso():
-    user = current_user
-    if not user or not (user.type == 1) :
-        abort(403)
-    
-    proceso = Proceso.query.first()
-    return render_template('edit_proceso.html', proceso=proceso.content)
-
 
 @frontend.route('/edit_session')
 def edit_session():

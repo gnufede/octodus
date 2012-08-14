@@ -2,10 +2,10 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm
+from fbone.forms import NewGroupForm, EditProcesoForm
 from fbone.extensions import db
 
-from fbone.models import User, Group
+from fbone.models import User, Group, Proceso
 from fbone.decorators import keep_login_url, admin_required
 
 
@@ -79,6 +79,20 @@ def groups():
         tree = [(x.id, x.jsonify()) for x in Group.query.filter_by(depth=0)]
     return jsonify(tree)
     
+
+@admin.route('/edit_proceso', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_proceso():
+    form = EditProcesoForm(request.form)
+    #if form.validate_on_submit():
+    if request.method == 'POST':
+        proceso = Proceso.query.first()
+        proceso.content = form.textarea.data
+        db.session.commit()
+        return redirect(url_for('user.index'))
+    proceso = Proceso.query.first()
+    return render_template('edit_proceso.html', proceso=proceso.content, form=form)
 
 
 @admin.route('/')

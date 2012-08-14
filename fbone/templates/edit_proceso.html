@@ -1,6 +1,8 @@
+{% from "macros/_misc.html" import render_textarea ,render_input, render_action %}
 {% set page_title = 'Editar Proceso' %}
 
 <!-- wysihtml5 parser rules -->
+
 
 <style type="text/css" media="screen">
 	.btn.jumbo {
@@ -13,13 +15,24 @@
 		border-radius: 6px;
 	}
 </style>
+
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="hero-unit">	
-<hr/>
-<textarea class="textarea" id="some-textarea" placeholder="{{ proceso|safe }}" style="width: 610px; height: 200px"></textarea>
+<div class="span12">	
+
+<form class='form-stacked' method="POST" action="{{ url_for('admin.edit_proceso') }}">
+          {{ render_input( form.textarea, nolabel=True, cls='textarea', value=proceso|safe, style="width:610px; height:200px", placeholder=proceso|safe) }}
+          {{ render_action(form.submit) }}
+</form>
 </div>	
 
 {% endblock %}
-
+{% block append_js %}
+<script async type="text/javascript">
+$(document).ready(function() {
+  // Handler for .ready() called.
+        $('.textarea').wysihtml5();
+});
+</script>
+{% endblock%}

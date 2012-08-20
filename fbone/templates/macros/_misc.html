@@ -12,7 +12,7 @@
 
 {% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False) %}
 <div class='clearfix {% if field.errors %}error{% endif %}'>
-    {% if not nolabel %}}
+    {% if not nolabel %}
     {{ field.label }}
     {% endif %}
     <div class='input'>
@@ -40,7 +40,7 @@
 
 {% macro render_action(field) %}
     <div class='actions'>
-        {{ field(class_='btn btn-primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancel') }}</a>
+        {{ field(class_='btn btn-primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancelar') }}</a>
     </div>
 {% endmacro %}
 
@@ -95,7 +95,7 @@
                 {% for category, msg in messages %}
                     <div class="alert alert-{{ category }}" data-alert>
                       <a class="close" data-dismiss="alert" href="#">×</a>
-                      <p>{{ msg }}</p>
+                      {{ msg }}
                     </div>
                 {% endfor %}
             </div>

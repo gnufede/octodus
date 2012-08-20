@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
-from babel.messages import frontend as babel
+#from babel.messages import frontend as babel
 
 
 setup(
@@ -13,10 +13,6 @@ setup(
     packages=['fbone'],
     include_package_data=True,
     zip_safe=False,
-    cmdclass = {'compile_catalog': babel.compile_catalog,
-                'extract_messages': babel.extract_messages,
-                'init_catalog': babel.init_catalog,
-                'update_catalog': babel.update_catalog},
     install_requires=[
         'Flask',
         'Flask-SQLAlchemy',

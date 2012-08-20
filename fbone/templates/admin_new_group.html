@@ -7,8 +7,8 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class='span4' id="tree1"></div>
-<div class='span8'>
+<div class='span5 well' id="tree1"></div>
+<div class='span5'>
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
         {{ form.hidden_tag() }}
         {{ form.group_id }}
@@ -28,9 +28,9 @@
 {% endblock %}
 
 {% block append_js %}
-<script async src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
-<script async src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
-<script async src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {

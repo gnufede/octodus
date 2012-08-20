@@ -42,7 +42,7 @@ ul.tree div {
 }
 
 ul.tree .title {
-    color: #1C4257;
+    color: #08C;
     vertical-align: middle;
 }
 
@@ -126,18 +126,20 @@ ul.tree div {
     width: 100%; /* todo: why is this in here? */
     *width: auto; /* ie7 fix; issue 41 */
     position: relative;
+    margin: 5px;
 }
 
 ul.tree li.selected > div,
 ul.tree li.selected > div:hover {
-    background-color: #97BDD6;
-    background: -webkit-gradient(linear, left top, left bottom, from(#BEE0F5), to(#89AFCA));
-    background: -moz-linear-gradient(top, #BEE0F5, #89AFCA);
-    background: -ms-linear-gradient(top, #BEE0F5, #89AFCA);
-    background: -o-linear-gradient(top, #BEE0F5, #89AFCA);
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
-
+ul.tree li.selected > div .title {
+    background-color: #08C;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    color: #fff;
+}
 ul.tree .moving > div .title {
     outline: dashed 1px #0000ff;
 }

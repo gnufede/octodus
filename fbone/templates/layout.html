@@ -29,12 +29,12 @@
             <div class="navbar-inner" style="border-radius:0">
         <div class="container" style="width:980px;margin-left:auto;margin-right:auto;">
                 	{% if current_user.is_authenticated() %}
-                	  <h3><a class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
+                	  <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
                 	   <ul class="nav secondary-nav">
-                	   <li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-                	  <li><a href="../static/login.html">Actos de graduación</a></li>
+                	   <li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
+                	  <li id='actos' ><a href="../static/login.html">Actos de graduación</a></li>
                 	{% else %}
-                      <h3><a class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
+                      <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
                     
                     <!--form class="pull-left" action="{{ url_for('frontend.search') }}">
                         <input type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
@@ -42,10 +42,10 @@
                     <!--div class="nav-collapse"-->
                  	  <ul class="nav secondary-nav">
                 
-						<li><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-						<li><a href="../static/index.html">Fotoescuela</a></li>
-						<li><a href="../static/login.html">Actos de graduación</a></li>
-						<li><a href="../static/bodas.html">Eventos y celebraciones</a></li>
+						<li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
+						<li id='fotoescuea'><a href="../static/index.html">Fotoescuela</a></li>
+						<li id='actos'><a href="../static/login.html">Actos de graduación</a></li>
+						<li id='bodas'><a href="../static/bodas.html">Eventos y celebraciones</a></li>
 				    {% endif %}
                     </ul>
 
@@ -65,8 +65,8 @@
                     </ul>
                     {% elif login_form is defined %}
                     <!--ul class="nav secondary-nav"-->
-						<li><a href='{{ url_for('frontend.login') }}'>Entrar</a></li>
-						<li><a href='{{ url_for('frontend.signup') }}'>Registrarse</a></li>
+						<li id='login'><a href='{{ url_for('frontend.login') }}'>Entrar</a></li>
+						<li id='signup'><a href='{{ url_for('frontend.signup') }}'>Registrarse</a></li>
                         <!--
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle">Entrar</a>                        

@@ -11,8 +11,9 @@ from fbone.models import Session
 
 class EditSessionForm(Form):
     next = HiddenField()
-    begin = DateTimeField(_('Begin date'), [required()])
-    end = DateTimeField(_('End date'), [required()])
+    date = DateTimeField(_('Fecha'), [required()])
+    begin = DateTimeField(_('Hora de inicio'), [required()])
+    end = DateTimeField(_('Hora de fin'), [required()])
     block_duration = IntegerField(_('Block duration'), [required()])
     block_capacity = IntegerField(_('Block capacity'), [required()])
     submit = SubmitField(_('Save'))

@@ -12,8 +12,9 @@
         <fieldset>
             <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
             
-            {{ render_input(form.begin, 'xlarge') }}
-            {{ render_input(form.end, 'xlarge') }}
+            {{ render_input(form.date, 'xlarge', extra='calendar') }}
+            {{ render_input(form.begin, 'xlarge', extra='time') }}
+            {{ render_input(form.end, 'xlarge', extra='time') }}
             {{ render_input(form.block_duration, 'xlarge') }}
             {{ render_input(form.block_capacity, 'xlarge') }}
             {{ render_action(form.submit) }}
@@ -22,3 +23,19 @@
 </div>
 {% endblock %}
 
+{% block append_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/datepicker.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timepicker.css') }}">
+{% endblock %}
+
+{% block append_js %}
+<script  src="{{ url_for('static', filename='js/libs/bootstrap-timepicker.js') }}"></script>
+<script  src="{{ url_for('static', filename='js/libs/bootstrap-datepicker.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#date').datepicker();
+        $('#begin').timepicker({showMeridian:false});
+        $('#end').timepicker({showMeridian:false});
+    });
+</script>
+{% endblock %}

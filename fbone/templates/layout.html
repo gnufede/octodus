@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleorlas.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}">
     {% endblock %}
+    {% block append_css %}
+    {% endblock %}
 </head>
 <body style='padding-top: 4px; background-color: #FFF;'>
 	<div class="container" style="margin-top: 0;">

@@ -11,10 +11,13 @@ from fbone.models import Session
 
 class EditSessionForm(Form):
     next = HiddenField()
-    date = DateTimeField(_('Fecha'), [required()])
-    begin = DateTimeField(_('Hora de inicio'), [required()])
-    end = DateTimeField(_('Hora de fin'), [required()])
-    block_duration = IntegerField(_('Block duration'), [required()])
-    block_capacity = IntegerField(_('Block capacity'), [required()])
-    submit = SubmitField(_('Save'))
+    #date = DateTimeField(_('Fecha'), [required()])
+    #begin = DateTimeField(_('Hora de inicio'), [required()])
+    #end = DateTimeField(_('Hora de fin'), [required()])
+    date = TextField(_('Fecha'), [required()])
+    begin = TextField(_('Hora de inicio'), [required()])
+    end = TextField(_('Hora de fin'), [required()])
+    block_duration = IntegerField(_(u'Duración del bloque (minutos)'), [required()])
+    block_capacity = IntegerField(_(u'Personas por bloque'), [required()])
+    submit = SubmitField(_('Guardar'))
 

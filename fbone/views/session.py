@@ -22,10 +22,12 @@ def index():
 @login_required
 @admin_required
 def new_session():
+    date_today = datetime.date.today()
+    today_str = str(date_today.year) +"-"+ str(date_today.month) + "-" + str(date_today.day)
     form = EditSessionForm(next=request.args.get('next'))
     #form.set_user(current_user)
     return render_template('session_new.html', form=form,
-                           current_user=current_user)
+                           current_user=current_user, today=today_str, duration=10, capacity=4)
 
 @session.route('/nueva_sesion', methods=['POST'])
 @login_required #FIXME!!!
@@ -34,8 +36,8 @@ def new_session_post():
     form = EditSessionForm(next=request.args.get('next'))
     if form.validate_on_submit():
         session = Session()
-        session.begin = form.begin.data
-        session.end = form.end.data
+        session.begin = form.date.data+" "+form.begin.data+":00"
+        session.end = form.date.data+" "+form.end.data+":00"
         session.block_duration = form.block_duration.data
         session.block_capacity = form.block_capacity.data
         db.session.add(session)

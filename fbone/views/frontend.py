@@ -77,7 +77,7 @@ def login():
 
         else:
             flash(_('Lo sentimos, esa cuenta no existe'), 'error') #Sorry, there is no such account
-            return redirect(url_for('frontend.signup'),email=form.email.data)
+            return redirect(url_for('frontend.signup',email=form.email.data))
     if form.email.data:
         return render_template('login.html', form=form, tries=tries, email=form.email.data)
     return render_template('login.html', form=form, tries=tries)
@@ -114,7 +114,7 @@ def logout():
 @frontend.route('/signup', methods=['GET', 'POST'])
 def signup():
     login_form= LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'), email=request.args.get('email'))
 
     if form.validate_on_submit():
        

@@ -14,7 +14,7 @@
             <legend>Aún no tienes cuenta? <a href="{{ url_for('frontend.signup') }}">Regístrate</a> por favor.</legend>
             {% endif %}
             {% if tries -%}
-            <legend>Olvidaste la contraseña? <a href="{{ url_for('frontend.reset_password',value=form.data.login) }}">Recupera tu contraseña</a>.</legend>
+            <legend>Olvidaste la contraseña? <a href="{{ url_for('frontend.reset_password',value=form.data.email) }}">Recupera tu contraseña</a>.</legend>
             {% endif %}
             {{ render_input(form.email, 'xlarge', value=email) }}
             {{ render_input(form.password, 'xlarge') }}

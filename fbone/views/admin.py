@@ -2,16 +2,47 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm
+from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Proceso
+from fbone.models import User, Group, Proceso, Project
 from fbone.decorators import keep_login_url, admin_required
 
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
-    
+@admin.route('/new_project/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_project():
+    group = None
+    project = None
+    form = NewProjectForm(request.form)
+    if form.validate_on_submit():
+        term = form.term.data
+
+        if form.group.data:
+            group = Group.query.filter_by(id=form.group.data).first()
+        project = Project.query.filter_by(id=form.project_id.data).first()
+        if not form.project_id.data or form.project_id.data == '':
+            project = Project.query.filter_by(term=form.term.data,name='0').first()
+            if not project:
+                project = Project(term=term, name='0')
+                db.session.add(project)
+        else:
+            project = Project.query.filter_by(id=form.project_id.data).first()
+            project.term = term
+
+        if group:
+            project.create(group)
+        
+        db.session.commit()
+        flash('Datos actualizados correctamente', 'success')
+        return redirect(form.next.data or url_for('admin.new_project'))
+
+    return render_template('admin_new_project.html', form=form,
+                           current_user=current_user, project=project)
+
 @admin.route('/new_group/', methods=['GET', 'POST'])
 @login_required
 @admin_required

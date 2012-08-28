@@ -1,0 +1,59 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Nuevo Proyecto') %}
+
+
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class='span5 well' id="tree1"></div>
+<div class='span5'>
+    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_project') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        {{ form.group }}
+       
+
+        <fieldset>
+             {{ render_input(form.term, 'xlarge', value=project.term, style="height:28px") }}
+             
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block append_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
+{% endblock %}
+
+{% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.getJSON('/admin/groups', function(data) {
+            var data_array = [];
+            for (var key in data) {
+                data_array.push(data[key]);
+            }
+            $('#tree1').tree({
+                selectable: true,
+                data: data_array
+            });
+            // bind 'tree.click' event
+           $('#tree1').bind('tree.click', function(event) {
+                // The clicked node is 'event.node'
+                var node = event.node;
+                //alert(node.id);
+                //TODO: set parent hidden value to node.name
+                $('#group').val(node.id)
+            });
+        });
+        //var node = $tree.tree('getselectednode');
+    });
+</script>
+{% endblock %}
+

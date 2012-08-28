@@ -9,6 +9,13 @@ from flaskext.babel import gettext, lazy_gettext as _
 from fbone.extensions import db
 from fbone.models import User, Project, Group
 
+class NewProjectForm(Form):
+    next = HiddenField()
+    project_id = HiddenField()
+    group = HiddenField()
+    term = TextField(u"Año/Periodo", [required()])
+    submit = SubmitField(_('Guardar'))
+
 class EditProcesoForm(Form):
     next = HiddenField()
     textarea = TextAreaField()

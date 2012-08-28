@@ -8,6 +8,19 @@ from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import User, Project
 
+class EditDateForm(Form):
+    next = HiddenField()
+#    date = DateTimeField()
+    date = SelectField("Fecha de la cita")
+
+    submit = SubmitField(_('Save'))
+
+    def generate_dates (self, dates):
+        form_dates = []
+        for i in dates:
+            form_dates.append((i.id, i.begin))
+        self.date.choices = form_dates
+     
 
 class EditDatosForm(Form):
     next = HiddenField()
@@ -16,7 +29,6 @@ class EditDatosForm(Form):
     projects = FieldList(TextField(""))
     nextproject = SelectField("")
 
-    
     submit = SubmitField(_('Save'))
     
     

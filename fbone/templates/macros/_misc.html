@@ -10,24 +10,29 @@
 <textarea class="{{ cls }}" name="{{ name }}" style='width:610px; height: 200px;'>{{ value|safe }}</textarea>
 {%- endmacro %}
 
-{% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False) %}
+{% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False, extra='') %}
 <div class='clearfix {% if field.errors %}error{% endif %}'>
     {% if not nolabel %}
-    {{ field.label }}
+      {{ field.label }}
     {% endif %}
     <div class='input'>
         {% if field.errors %}
-        {{ field(class_=cls~' error') }}
+          {{ field(class_=cls~' error') }}
         {% else %}
-        {% if value %}
-          {% if placeholder %}
-          {{ field(class_=cls,value=value, style=style, placeholder=placeholder) }}
+          {% if value %}
+            {% if placeholder %}
+              {{ field(class_=cls,value=value, style=style, placeholder=placeholder) }}
+            {% else %}
+              {{ field(class_=cls,value=value, style=style ) }}
+            {% endif %}
           {% else %}
-        {{ field(class_=cls,value=value, style=style ) }}
+            {{ field(class_=cls,style=style ) }}
+          {% endif %}
         {% endif %}
-        {% else %}
-        {{ field(class_=cls,style=style ) }}
-        {% endif %}
+        {% if extra == 'time' %}
+        <i class="icon-time" style="margin: -2px 0 0 -22.5px; pointer-events: none; position: relative;"></i>
+        {% elif extra == 'calendar' %}
+        <i class="icon-calendar" style="margin: -2px 0 0 -22.5px; pointer-events: none; position: relative;"></i>
         {% endif %}
         <span class="help-inline">
             {% for error in field.errors %}

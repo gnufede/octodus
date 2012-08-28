@@ -54,3 +54,10 @@ class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
     submit = SubmitField(_('Reauthenticate'))
+
+
+
+
+class UserAppointmentForm(Form):
+    next = HiddenField()
+    session = HiddenField()

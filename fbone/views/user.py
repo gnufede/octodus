@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash
 from flask.ext.login import login_required, current_user
 
 from fbone.models import *
 from fbone.decorators import keep_login_url
-from fbone.forms import (EditDatosForm)
+from fbone.forms import (EditDatosForm, UserAppointmentForm)
 from fbone.extensions import db
 
 
@@ -56,3 +58,40 @@ def pub(name):
 
     user = User.query.filter_by(name=name).first_or_404()
     return render_template('user_pub.html', user=user)
+
+
+
+@user.route('/new_appointment', methods=['GET'])
+@login_required
+def new_appointment_get():
+    project = current_user.projects[-1] # FIXME
+    session_id = request.args.get('session_id', None)
+    form = UserAppointmentForm()
+    if not session_id:
+        # get all sessions for this project
+        return render_template('user_appointment.html', form=form, sessions=project.sessions)
+    else
+        # get all hours for this session
+        sess = Session.query.filter_by(id=session_id).first()
+        interval_timedelta = sess.end - sess.begin
+        interval_mins = interval_timedelta.total_seconds() / 60
+        all_hours = [ sess.begin + datetime.timedelta(minutes=x) for x in range(0, interval_mins, sess.block_duration) ]
+        all_hours_occupation = [ (h, len([ apn for apn in sess.appointments if apn.date == h ])) for h in all_hours ]
+        hours = [ (h, n) for (h, n) in all_hours_occupation if n < sess.block_capacity ]
+        return render_template('user_appointment.html', form=form, hours=hours, session=sess)
+        
+
+@user.route('/new_appointment', methods=['POST'])
+@login_required
+def new_appointment_post():
+    session_id = request.args.get('session_id', None)
+    appointment_date = request.args.get('appointment', None)
+    if not session_id or not appointment_date:
+        # TODO
+        pass
+    appointment = Appointment()
+    appointment.date = appointment_date
+    appointment.project = current_user.projects[-1] # FIXME
+    appointment.user = current_user
+    appointment.session = Session.query.filter_by(id=session_id).first()
+    db.session.commit()

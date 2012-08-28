@@ -1,0 +1,39 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Edita tus datos personales') %}
+
+{% extends 'layout.html' %}
+
+{% block body %}
+
+{% if sessions %}
+
+    {% for session in sessions %}
+    
+        <a href="{{ url_for('user.appointment') }}?session_id={{ session.id }}">{{ session.date }}</a>
+    
+    {% endfor %}
+
+{% elif hours %}
+
+<div class='span12'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.appointment') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        
+        {% for hour in hours %}
+        
+            <!--FIXME-->
+        
+            {{ render_input(p, 'xlarge', value=hour[0]) }}
+        
+        {% endfor %}
+        
+        {{ render_action(form.submit) }}
+        
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

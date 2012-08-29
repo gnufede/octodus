@@ -4,7 +4,7 @@
 
 {% extends 'layout.html' %}
 
-{% block body %}
+{% block append_js %}
 
 <!--
 {% if sessions %}
@@ -20,8 +20,21 @@
 -->
 
 {% if sessions_txt %}
-    
-    
+
+<p>Date: <input type="text" id="datepicker"></p>
+
+<script>
+    $(function() {
+        var dates = {{sessions_txt}}.map(function(d) {
+            return Date(d).getTime();
+        });
+        $('#datepicker').datepicker({
+            beforeShowDay: function(date) {
+                return [(date.getTime() in dates)];
+            }
+        });
+    });
+</script>
 
 {% elif hours %}
 

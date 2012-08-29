@@ -4,7 +4,7 @@
 
 {% extends 'layout.html' %}
 
-{% if sessions_txt %}
+{% if sessions %}
 
 {% block append_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
@@ -36,10 +36,18 @@
     });
     */
     function findID(sessions, date) {
-        for (var session in sessions) {
+       /* for (session in sessions) {
             if (session[0] == date) {
                 return session[1]; // session ID
             }
+        }
+        */
+        for (var i = 0; i< sessions.length; i++){
+            var session = sessions[i];
+            if (session[0] == date) {
+                return session[1]; // session ID
+            }
+
         }
         return null;
     }
@@ -61,15 +69,16 @@
             return s[0];
         });
         $('#datepicker').datepicker({
-            dateFormat: 'yyyy-mm-dd',
+            dateFormat: 'yy-mm-dd',
             beforeShowDay: function(d) {
                 var date = getISODate(d);
                 var ret = dates.indexOf(date) != -1;
                 return [ret];
             },
             onSelect: function(txtdate, inst) {
-                var url = {{url_for('user.new_appointment_post')}};
-                window.location = url + '?session_id=' + findID(txtdate);
+                var url = '{{url_for('user.new_appointment_post')}}';
+                var id = findID(sessions, txtdate);
+                window.location = url + '?session_id=' + id;
             }
         });
     });
@@ -80,11 +89,12 @@
 {% block body %}
 
 
-{% if sessions_txt %}
+{% if sessions %}
 
 
+<div class='span3'>
 <div id="datepicker"></div>
-
+</div>
 
 {% elif hours %}
 

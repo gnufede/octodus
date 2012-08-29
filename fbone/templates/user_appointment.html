@@ -103,14 +103,20 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
         
-        {% for hour in hours %}
-        
+        {#% for hour in hours %}
             <!--FIXME-->
-        
             {{ render_input(form.hour, 'xlarge', value=hour[0]) }}
+        {% endfor %#}
         
+        <div class='input'>
+        {% for hour in form.hour %}
+        <tr>
+            <td>{{ hour }}</td>
+            <td>{{ hour.label }}</td>
+        </tr>
         {% endfor %}
-        
+        </div>
+
         {{ render_action(form.submit) }}
         
     </form>

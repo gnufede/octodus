@@ -3,7 +3,7 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label,
-                          length)
+                          RadioField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import User, Project
@@ -73,4 +73,8 @@ class ReauthForm(Form):
 class UserAppointmentForm(Form):
     next = HiddenField()
     session = HiddenField()
-    hour = HiddenField()
+    hour = RadioField(_('Hora'))
+    submit = SubmitField(_('Confirmar'))
+
+    def set_hours(self, hours):
+        self.hour.choices = hours

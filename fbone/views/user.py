@@ -105,13 +105,30 @@ def new_appointment_get():
 @login_required
 def new_appointment_post():
     session_id = request.args.get('session_id', None)
-    appointment_date = request.args.get('appointment', None)
+    appointment_date = form.date.data
+    project =current_user.projects[-1] # FIXME
     if not session_id or not appointment_date:
         # TODO
-        pass
+        return redirect(url_for('user.new_appointment_get'))
+    previous_appointment = Appointment.query.filter_by(user=current_user, project=project).first()
+    if previous_appointment:
+        if previous_appointment.date < datetime.datetime.now():
+            #TODO #ERROR, permitimos cambiar fecha de appointment si ya ha ocurrido?
+            return redirect(form.next.data or url_for('user.index'))
+        #TODO elif si la fecha de modificación de appointments ya ha ocurrido, no dejamos cambiar el appointment
+        else:
+            appointment = previous_appointment
+
     appointment = Appointment()
     appointment.date = appointment_date
     appointment.project = current_user.projects[-1] # FIXME
     appointment.user = current_user
     appointment.session = Session.query.filter_by(id=session_id).first()
     db.session.commit()
+
+        
+
+
+
+
+

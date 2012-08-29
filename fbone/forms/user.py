@@ -73,3 +73,4 @@ class ReauthForm(Form):
 class UserAppointmentForm(Form):
     next = HiddenField()
     session = HiddenField()
+    hour = HiddenField()

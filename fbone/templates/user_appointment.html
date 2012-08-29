@@ -15,7 +15,7 @@
 
 
 <script>
-    
+    /*
     $(function() {
         var txtdates = {{sessions_txt|safe}};
         var dates = txtdates.map(function(d) {
@@ -27,6 +27,49 @@
                 var date = d.toDateString();
                 var ret = dates.indexOf(date) != -1;
                 return [ret];
+            },
+            onSelect: function(txtdate, inst) {
+                var url = {{url_for('user.new_appointment_post')}};
+                window.location = url + '?session_id=' + txtdate;
+            }
+        });
+    });
+    */
+    function findID(sessions, date) {
+        for (var session in sessions) {
+            if (session[0] == date) {
+                return session[1]; // session ID
+            }
+        }
+        return null;
+    }
+    
+    function pad(n) {
+        return n < 10 ? '0' + n : n;
+    }
+    
+    function getISODate(d) {
+        var year = d.getFullYear();
+        var month = pad(d.getMonth() + 1);
+        var day = pad(d.getDate());
+        return year + '-' + month + '-' + day;
+    }
+    
+    $(function() {
+        var sessions = {{sessions|safe}};
+        var dates = sessions.map(function(s) {
+            return s[0];
+        });
+        $('#datepicker').datepicker({
+            dateFormat: 'yyyy-mm-dd',
+            beforeShowDay: function(d) {
+                var date = getISODate(d);
+                var ret = dates.indexOf(date) != -1;
+                return [ret];
+            },
+            onSelect: function(txtdate, inst) {
+                var url = {{url_for('user.new_appointment_post')}};
+                window.location = url + '?session_id=' + findID(txtdate);
             }
         });
     });
@@ -40,7 +83,7 @@
 {% if sessions_txt %}
 
 
-<p>Date: <input type="text" id="datepicker"></p>
+<div id="datepicker"></div>
 
 
 {% elif hours %}

@@ -86,8 +86,11 @@ def new_appointment_get():
     form = UserAppointmentForm()
     if not session_id:
         # get all sessions for this project
-        return render_template('user_appointment.html', form=form, sessions=project.sessions)
-    else
+        sessions = [ s for s in project.sessions if s.begin > datetime.datetime.now() ]
+        #sessions = [ s for s in project.sessions] 
+        sessions_txt = [ s.begin.date().isoformat() for s in sessions]
+        return render_template('user_appointment.html', form=form, sessions=sessions, sessions_txt=sessions_txt)
+    else:
         # get all hours for this session
         sess = Session.query.filter_by(id=session_id).first()
         interval_timedelta = sess.end - sess.begin

@@ -9,9 +9,12 @@
 <!--
 {% if sessions %}
 
+<div class="span3 well">
+<ul>
+    <p>{{ sessions_txt }}</p>
     {% for session in sessions %}
     
-        <a href="{{ url_for('user.appointment') }}?session_id={{ session.id }}">{{ session.date }}</a>
+    <li> <a href="{{ url_for('user.new_appointment_get') }}?session_id={{ session.id }}">{{loop.length}} {{ session.begin }}</a> </li>
     
     {% endfor %}
 -->
@@ -23,7 +26,7 @@
 {% elif hours %}
 
 <div class='span12'>
-    <form class='form-stacked' method="POST" action="{{ url_for('user.appointment') }}">
+    <form class='form-stacked' method="POST" action="{{ url_for('user.new_appointment_post') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         

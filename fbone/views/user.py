@@ -130,7 +130,7 @@ def new_appointment_post():
     appointment.user = current_user
     appointment.session = Session.query.filter_by(id=session_id).first()
     db.session.commit()
-    flash('Cita confirmada correctamente', 'success')
+    flash('Cita confirmada correctamente ('+appointment_date+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
         

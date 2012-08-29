@@ -17,15 +17,15 @@
 <script>
     $(function() {
         var txtdates = {{sessions_txt|safe}};
-        /*var dates = txtdates.map(function(d) {
+        var dates = txtdates.map(function(d) {
             var date = new Date(d);
             return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
-        });*/
+        });
         $('#datepicker').datepicker({
             beforeShowDay: function(date) {
                 //var time = date.getTime();
                 var txtdate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
-                return [(txtdate in txtdates)];
+                return [(txtdate in dates)];
             }
         });
     });

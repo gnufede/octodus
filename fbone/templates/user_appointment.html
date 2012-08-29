@@ -16,13 +16,16 @@
 
 <script>
     $(function() {
-        var dates = {{sessions_txt|safe}}.map(function(d) {
-            return new Date(d);
-        });
+        var txtdates = {{sessions_txt|safe}};
+        /*var dates = txtdates.map(function(d) {
+            var date = new Date(d);
+            return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+        });*/
         $('#datepicker').datepicker({
             beforeShowDay: function(date) {
-                var time = date.getTime();
-                return [(time in dates)];
+                //var time = date.getTime();
+                var txtdate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+                return [(txtdate in txtdates)];
             }
         });
     });

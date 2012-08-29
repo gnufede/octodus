@@ -48,6 +48,7 @@ def search():
         page = int(request.args.get('page', 1))
         pagination = User.search(keywords).paginate(page, 1)
     else:
+        pagination = User.query.all()
         flash('Please input keyword(s)', 'error')
     return render_template('search.html', pagination=pagination,
                            keywords=keywords, login_form=login_form)

@@ -1,4 +1,4 @@
-{% from 'macros/_misc.html' import render_pagination, render_user_table %}
+{% from 'macros/_misc.html' import render_pagination, render_user_table, render_table %}
 
 {% extends 'layout.html' %}
 
@@ -10,19 +10,12 @@
 {% endif %}
 
 {% block body %}
-    {% if pagination and pagination.pages > 0 %}
+    {% if pagination and pagination.pages %}
         <p>{% trans total=pagination.total, keywords=keywords %}<strong>{{ total }}</strong> found for your search "<strong>{{ keywords }}</strong>".{% endtrans %}</p>
-        {{ render_user_table(pagination.items, 'zebra-striped') }}
+        {{ render_table(pagination.items, 'zebra-striped') }}
         {{ render_pagination(pagination, 'frontend.search') }}
     {% else %}
-        <p>{% trans keywords=keywords %}Sorry, Nothing found for your search "<strong>{{ keywords }}</strong>".{% endtrans %}</p>
-    {% trans %}
-    <p>Suggestions:</p>
-    <ul>
-       <li>Make sure all words are spelled correctly.</li>
-       <li>Try different keywords.</li>
-       <li>Try more general keywords.</li>
-    </ul>
-    {% endtrans %}
+
+        {{ render_table(pagination, 'zebra-striped', ['id','name', 'surname', 'email']) }}
     {% endif %}
 {% endblock %}

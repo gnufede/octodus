@@ -49,6 +49,37 @@
     </div>
 {% endmacro %}
 
+{% macro render_table(objects, class='', fields='') %}
+<table class='{{ class }}'>
+    <thead>
+        <tr>
+            {% if fields == ''%}
+            {% set f = objects[0].__dict__ %}
+            {% else %}
+            {% set f = fields %}
+            {% endif %}
+
+            {% for i in f %}
+            {% if i != "_sa_instance_state" %}
+            <td>{{ i }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in objects %}
+        <tr>
+            {% for j in f %}
+            {% if j != "_sa_instance_state" %}
+            <td>{{ object[j] }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}
+
 {% macro render_user_table(users, class='') %}
 <table class='{{ class }}'>
     <thead>

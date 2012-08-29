@@ -1,11 +1,12 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Edita tus datos personales') %}
+{% set page_title = _('Escoge cita para hacerte la foto') %}
 
 {% extends 'layout.html' %}
 
 {% block body %}
 
+<!--
 {% if sessions %}
 
     {% for session in sessions %}
@@ -13,6 +14,11 @@
         <a href="{{ url_for('user.appointment') }}?session_id={{ session.id }}">{{ session.date }}</a>
     
     {% endfor %}
+-->
+
+{% if sessions_txt %}
+    
+    
 
 {% elif hours %}
 

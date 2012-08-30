@@ -14,6 +14,7 @@ class EditSessionForm(Form):
     #date = DateTimeField(_('Fecha'), [required()])
     #begin = DateTimeField(_('Hora de inicio'), [required()])
     #end = DateTimeField(_('Hora de fin'), [required()])
+    id = HiddenField()
     start_date = TextField(_('Fecha de inicio'), [required()])
     end_date = TextField(_('Fecha de fin'), [required()])
     time_begin = TextField(_('Hora de inicio'), [required()])

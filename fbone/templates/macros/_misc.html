@@ -71,9 +71,12 @@
         <tr>
             {% for j in f %}
             {% if j != "_sa_instance_state" %}
-            <td>{{ object[j] }}</td>
+            <td><a href="{{object.id}}">{{ object[j] }}</a></td>
             {% endif %}
             {% endfor %}
+            <td><a href="del/{{object.id}}">
+            <i class="icon-remove"></i>
+            </a></td>
         </tr>
         {% endfor %}
     </tbody>

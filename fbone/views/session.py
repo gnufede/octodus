@@ -18,7 +18,8 @@ session = Blueprint('session', __name__, url_prefix='/session')
 @session.route('/')
 @login_required
 def index():
-    return render_template('user_index.html', current_user=current_user)
+    sessions = Session.query.all()
+    return render_template('session_index.html', sessions=sessions, current_user=current_user)
 
 @session.route('/nueva_sesion', methods=['GET'])
 @login_required
@@ -48,21 +49,41 @@ def new_session_post():
             dates = [begin_date,]
 
         for date in dates:
-            session = Session()
+            if form.id.data and form.id.data != '':
+                session = Session.query.filter_by(id=form.id.data).first()
+            else:
+                session = Session()
             session.begin = datetime.datetime(date.year, date.month, date.day, time_begin.hour, time_begin.minute)
             session.end = datetime.datetime(date.year, date.month, date.day, time_end.hour, time_end.minute)
             session.block_duration = form.block_duration.data
             session.block_capacity = form.block_capacity.data
             db.session.add(session)
         db.session.commit()
-        return redirect(url_for('user.index'))
+        return redirect(url_for('session.index'))
     return render_template('session_new.html', form=form,
                            current_user=current_user)
 
-@session.route('/<name>')
-def pub(name):
-    if current_user.is_authenticated() and current_user.name == name:
-        return redirect(url_for('user.index'))
+@session.route('/<id>')
+@login_required #FIXME!!!
+@admin_required
+def pub(id):
+    session = Session.query.filter_by(id=id).first_or_404()
+    form = EditSessionForm(next=request.args.get('next'))
+    form.start_date.data = session.begin
+    form.end_date.data = session.end
+    form.time_begin.data = session.begin.isoformat().split('T')[1]
+    form.time_end.data = session.end.isoformat().split('T')[1]
+    form.block_capacity.data = session.block_capacity
+    form.block_duration.data = session.block_duration
+    today_str = str(session.begin.year) +"-"+ str(session.begin.month) + "-" + str(session.begin.day)
+    form.id.data = session.id
+    return render_template('session_new.html', form=form, today=today_str, current_user=current_user, duration=form.block_duration.data, capacity=form.block_capacity.data)
 
-    user = User.query.filter_by(name=name).first_or_404()
-    return render_template('user_pub.html', user=user)
+@session.route('/del/<id>')
+@login_required 
+@admin_required
+def delete(id):
+    session = Session.query.filter_by(id=id).first_or_404()
+    db.session.delete(session)
+    db.session.commit()
+    return redirect(url_for('session.index'))

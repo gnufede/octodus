@@ -9,6 +9,7 @@
     <form class='form-stacked' method="POST" action="{{ url_for('session.new_session_post') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
+        {{ form.id }}
         <fieldset>
             <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
             
@@ -43,9 +44,16 @@
             format: 'yyyy-mm-dd',
             autoclose: true,
             weekStart: 1
-        });
-        $('#time_begin').timepicker({showMeridian:false, minuteStep:10});
-        $('#time_end').timepicker({showMeridian:false, minuteStep:10});
+            });
+        var time_end_value = $('#time_end').val();
+        var time_begin_value = $('#time_begin').val();
+        if (time_begin_value != ''){
+            $('#time_begin').timepicker({showMeridian:false, minuteStep:10, defaultTime:time_begin_value});
+            $('#time_end').timepicker({showMeridian:false, minuteStep:10, defaultTime:time_end_value});
+        }else{ 
+            $('#time_begin').timepicker({showMeridian:false, minuteStep:10});
+            $('#time_end').timepicker({showMeridian:false, minuteStep:10});
+            }
     });
 </script>
 {% endblock %}

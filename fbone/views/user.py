@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, current_app, g, redirect, url_for,
 from flask.ext.login import login_required, current_user
 
 from fbone.models import *
-from fbone.decorators import keep_login_url
+from fbone.decorators import keep_login_url, admin_required
 from fbone.forms import (EditDatosForm, EditDateForm, UserAppointmentForm)
 from fbone.extensions import db
 from sqlalchemy import Date, cast
@@ -67,6 +67,12 @@ def edit_datos():
                            current_user=current_user, groups=groups)
 
 
+@user.route('/list')
+@login_required
+@admin_required
+def list():
+    users = User.query.all()
+    return render_template('list.html', title="Usuarios", objects=users, current_user=current_user)
 
 @user.route('/<name>')
 def pub(name):
@@ -76,6 +82,14 @@ def pub(name):
     user = User.query.filter_by(name=name).first_or_404()
     return render_template('user_pub.html', user=user)
 
+@user.route('/del/<id>')
+@login_required 
+@admin_required
+def delete(id):
+    user = User.query.filter_by(id=id).first_or_404()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('user.list'))
 
 
 @user.route('/new_appointment', methods=['GET'])

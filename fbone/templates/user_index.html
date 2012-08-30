@@ -12,14 +12,16 @@
 	<li><a href='{{ url_for('admin.new_group') }}'>Nueva Universidad</a></li>
     <li class="divider"></li>
 	<li><a href='{{ url_for('admin.new_project') }}'>Nuevo Proyecto</a></li>
+	<li><a href='{#{ url_for('admin.project_set_session') }#}'>Asignar sesión fotográfica a Proyecto</a></li>
     <li class="divider"></li>
     <li><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a></li>
+    <li><a href='{{ url_for('session.index') }}'>Ver ocupación de sesión fotográfica</a></li>
 </ul>
 {% else %}
 <ul class="nav nav-list">
 	<li><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
 	</li>
-	<li><a href='{{ url_for('user.edit_date') }}'>Seleccionar Cita Fotográfica</a> 
+	<li><a href='{{ url_for('user.new_appointment_get') }}'>Seleccionar Cita Fotográfica</a> 
 	</li>
 </ul>
 {% if current_user.is_coordinator() %}

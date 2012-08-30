@@ -79,6 +79,19 @@ def pub(id):
     form.id.data = session.id
     return render_template('session_new.html', form=form, today=today_str, current_user=current_user, duration=form.block_duration.data, capacity=form.block_capacity.data)
 
+@session.route('/view/del/<id>')
+@login_required 
+@admin_required
+def delete(id):
+    appointment_user= request.args.get("user_id", None)
+    appointment_project = request.args.get("project_id", None)
+    session = Session.query.filter_by(id=id).first_or_404()
+    if appointment_user:
+        appointment = Appointment.query.filter_by(session_id=session.id, user_id=appointment_user, project_id=appointment_project).first()
+        db.session.delete(appointment)
+        db.session.commit()
+    return redirect(url_for('session.view',session.id))
+
 @session.route('/del/<id>')
 @login_required 
 @admin_required
@@ -87,3 +100,18 @@ def delete(id):
     db.session.delete(session)
     db.session.commit()
     return redirect(url_for('session.index'))
+
+@session.route('/view/<id>')
+@login_required 
+@admin_required
+def view(id):
+    session = Session.query.filter_by(id=id).first_or_404()
+    appointments = db.session.query(Appointment.date, Project.activation_key, User.name, User.surname, User.email, Appointment.session_id, Appointment.user_id, Appointment.project_id).\
+            filter(session.id == Appointment.session_id).\
+            filter(User.id == Appointment.user_id).\
+            filter(Project.id == Appointment.project_id).\
+            order_by(Appointment.date).\
+            all()
+           # filter(Session.id == session.id, ).\
+    #users = User.query.filter_by()
+    return render_template('list.html', objects=appointments, title="Citas para el "+session.begin.date().isoformat(), delete=[('session_id',-3), ('user_id',-2), ('project_id',-1)] , fields=['date', 'name', 'surname', 'email', 'activation_key' ])

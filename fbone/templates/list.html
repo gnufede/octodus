@@ -5,8 +5,15 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="span6">	
-    {{ render_table(objects,'zebra-striped') }}
+<div class="span8">
+    {% if not fields %}
+    {% set fields = ''%}
+    {% endif %}
+    {% if not delete %}
+    {% set delete = ''%}
+    {% endif %}
+    
+    {{ render_table(objects,'table-bordered table-striped', fields, delete) }}
 </div>
 {% endblock %}
 

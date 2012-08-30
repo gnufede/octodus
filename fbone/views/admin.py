@@ -11,6 +11,37 @@ from fbone.decorators import keep_login_url, admin_required
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
+@admin.route('/project/list')
+@login_required
+@admin_required
+def project_list():
+    return render_template('list.html', title="Proyectos", objects=Project.query.all(), fields=["id","activation_key", "term","type", "name"],current_user=current_user)
+
+@admin.route('/group/list')
+@login_required 
+@admin_required
+def group_list():
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), current_user=current_user)
+
+
+@admin.route('/group/del/<id>')
+@login_required 
+@admin_required
+def group_delete(id):
+    group = Group.query.filter_by(id=id).first_or_404()
+    db.session.delete(group)
+    db.session.commit()
+    return redirect(url_for('admin.group_list'))
+
+@admin.route('/project/del/<id>')
+@login_required 
+@admin_required
+def project_delete(id):
+    project = Project.query.filter_by(id=id).first_or_404()
+    db.session.delete(project)
+    db.session.commit()
+    return redirect(url_for('admin.project_list'))
+
 @admin.route('/new_project/', methods=['GET', 'POST'])
 @login_required
 @admin_required

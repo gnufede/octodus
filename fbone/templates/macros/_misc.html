@@ -49,8 +49,8 @@
     </div>
 {% endmacro %}
 
-{% macro render_table(objects, class='', fields='') %}
-<table class='{{ class }}'>
+{% macro render_table(objects, class='', fields='', delete='') %}
+<table class='table {{ class }}'>
     <thead>
         <tr>
             {% if fields == ''%}
@@ -60,8 +60,8 @@
             {% endif %}
 
             {% for i in f %}
-            {% if i != "_sa_instance_state" %}
-            <td>{{ i }}</td>
+            {% if i != "_sa_instance_state" and i != "_labels" %}
+            <th>{{ i }}</th>
             {% endif %}
             {% endfor %}
         </tr>
@@ -70,13 +70,23 @@
         {% for object in objects %}
         <tr>
             {% for j in f %}
-            {% if j != "_sa_instance_state" %}
-            <td><a href="{{object.id}}">{{ object[j] }}</a></td>
+            {% if j != "_sa_instance_state" and j != "_labels" %}
+                {% if delete == '' %}
+                 <td><a href="{{object.id}}">{{ object[j] }}</a></td>
+                 {% else %}
+                 <td><a href="#">{{ object[j] }}</a></td>
+                 {% endif %}
             {% endif %}
             {% endfor %}
-            <td><a href="del/{{object.id}}">
-            <i class="icon-remove"></i>
-            </a></td>
+                {% if delete == '' %}
+                <td><a href="view/{{object.id}}">
+                <i class="icon-eye-open"></i></a></td>
+                <td><a href="del/{{object.id}}">
+                <i class="icon-remove"></i></a></td>
+                 {% else %}
+                 <td><a href="del/{% for j in delete %}{% if loop.index0 == 0 %}{{object[j[1]]}}?{% else %}{{j[0]}}={{object[j[1]]}}&{%endif%}{% endfor %}">
+                <i class="icon-remove"></i></a></td>
+                 {% endif %}
         </tr>
         {% endfor %}
     </tbody>

@@ -7,15 +7,19 @@
 {% if current_user.is_admin() %}
 <div class="well" style="padding: 8px 0;">
 <ul class="nav nav-list">
-	<li><a href='{{ url_for('admin.edit_proceso') }}'>Editar Proceso</a></li>
-    <li class="divider"></li>
-	<li><a href='{{ url_for('admin.new_group') }}'>Nueva Universidad</a></li>
-    <li class="divider"></li>
-	<li><a href='{{ url_for('admin.new_project') }}'>Nuevo Proyecto</a></li>
-	<li><a href='{#{ url_for('admin.project_set_session') }#}'>Asignar sesión fotográfica a Proyecto</a></li>
-    <li class="divider"></li>
+    <li class='nav-header'>Usuarios</li>
+    <li><a href='{{ url_for('user.list') }}'>Lista de usuarios</a></li>
+    <li class='nav-header'>Grupos</li>
+	<li><a href='{{ url_for('admin.new_group') }}'>Nuevo grupo</a></li>
+    <li><a href='{{ url_for('admin.group_list') }}'>Lista de grupos</a></li>
+    <li class='nav-header'>Proyectos</li>
+	<li><a href='{{ url_for('admin.new_project') }}'>Nuevo proyecto</a></li>
+    <li><a href='{{ url_for('admin.project_list') }}'>Lista de proyectos</a></li>
+    <li class='nav-header'>Sesiones Fotográficas</li>
     <li><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a></li>
-    <li><a href='{{ url_for('session.index') }}'>Ver ocupación de sesión fotográfica</a></li>
+    <li><a href='{{ url_for('session.index') }}'>Lista de sesiones</a></li>
+    <li class='nav-header'>Otros</li>
+	<li><a href='{{ url_for('admin.edit_proceso') }}'>Editar página de proceso</a></li>
 </ul>
 {% else %}
 <ul class="nav nav-list">

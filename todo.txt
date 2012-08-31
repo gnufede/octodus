@@ -3,9 +3,9 @@ x- datepicker[1] y timepicker[2] para crear sesiones (Hecho)
 x- Colocar el ojo del fondo a la izquierda abajo y el fondo de debajo blanco (Hecho)
 x- Hover de los elementos de la barra de menú igual que el del elemento Login (Ya no aplica)
 x- Interfaz para crear proyectos
+x- Interfaz de usuario para apuntarse a una sesión de fotos 
+x- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proyectos
 - Validar en sesión que fecha fin > fecha inicio y hora fin> hora inicio //No tira, y no sé porqué
-- Interfaz de usuario para apuntarse a una sesión de fotos //(WIP)
-- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proyectos
 - Verificación de cuenta (con envío de email)
 - Corrección de email en el signup[3]
 - Dar opción al administrador a calcular cuántas horas/sesiones necesita para 

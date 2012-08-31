@@ -19,7 +19,13 @@ session = Blueprint('session', __name__, url_prefix='/session')
 @login_required
 def index():
     sessions = Session.query.all()
-    return render_template('session_index.html', sessions=sessions, current_user=current_user)
+    sessions2 = sessions[:]
+    for session in sessions2:
+        session.citas = len(session.appointments)
+        session.fecha_de_sesion = session.begin.date().isoformat()
+        session.inicio = session.begin.isoformat().split('T')[1].split('.')[0]
+        session.fin = session.end.isoformat().split('T')[1].split('.')[0]
+    return render_template('session_index.html', sessions=sessions2, fields=['id', 'fecha_de_sesion', 'inicio', 'fin', 'block_capacity', 'block_duration', 'citas'],current_user=current_user)
 
 @session.route('/nueva_sesion', methods=['GET'])
 @login_required

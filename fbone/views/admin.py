@@ -2,11 +2,12 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm
+from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Proceso, Project
+from fbone.models import User, Group, Proceso, Project, Session
 from fbone.decorators import keep_login_url, admin_required
+import datetime
 
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -15,7 +16,8 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @login_required
 @admin_required
 def project_list():
-    return render_template('list.html', title="Proyectos", objects=Project.query.all(), fields=["id","activation_key", "term","type", "name"],current_user=current_user)
+    objects = db.session.query(Project).filter(Project.name!='0').all()
+    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name"],current_user=current_user)
 
 @admin.route('/group/list')
 @login_required 
@@ -33,14 +35,29 @@ def group_delete(id):
     db.session.commit()
     return redirect(url_for('admin.group_list'))
 
-@admin.route('/project/del/<id>')
+@admin.route('/project_set_session/', methods=['GET', 'POST'])
 @login_required 
 @admin_required
-def project_delete(id):
-    project = Project.query.filter_by(id=id).first_or_404()
-    db.session.delete(project)
-    db.session.commit()
-    return redirect(url_for('admin.project_list'))
+def set_session():
+    sessions = Session.query.all()
+    sessions_from_today = [ session for session in sessions if session.begin > datetime.datetime.now() ]
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    form = SetSessionForm(request.form)
+    sessions_choices = [ (session.id, session.begin) for session in sessions_from_today]
+    projects_choices = [ (project.id, project.activation_key) for project in projects]
+    form.sessions_id.choices = sessions_choices
+    form.projects_id.choices = projects_choices
+    if request.method == 'POST':
+        for session_id in form.sessions_id.data:
+            session = Session.query.filter_by(id=session_id).first()
+            for project_id in form.projects_id.data:
+                project = Project.query.filter_by(id=project_id).first()
+                project.set_session(session)
+                
+        db.session.commit()
+        return redirect(url_for('admin.project_list'))
+    return render_template('admin_set_session.html', form=form,
+                           current_user=current_user)
 
 @admin.route('/new_project/', methods=['GET', 'POST'])
 @login_required
@@ -120,6 +137,14 @@ def new_group():
                            current_user=current_user, node=node)
 
 
+@admin.route('/group/<id>')
+@login_required 
+@admin_required
+def group_edit(id):
+    node = Group.query.filter_by(id=id).first()
+    form = NewGroupForm(request.form)
+    return render_template('admin_new_group.html', form=form,
+                           current_user=current_user, node=node)
 
 @admin.route('/grouptypes/', methods=['GET'])
 @login_required

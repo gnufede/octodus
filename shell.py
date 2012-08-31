@@ -35,32 +35,11 @@ def reset():
     proceso = Proceso(content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
 
     group = Group(name='Universidad de Vicalvaro', activation_key = "VICALVARO",depth=0, type='Universidad')
-    group1 = Group(name='Ingenieria Informatica', activation_key = "INFOR",depth=1, type='Titulacion')
-    group2 = Group(name='Especialista en HW', activation_key = "HW", depth=2, type='Especialidad')
-    group3 = Group(name='Especialista en SW', activation_key = "SW", depth=2, type='Especialidad')
-    group4 = Group(name='Tarde', activation_key = "TARDE", depth=3, type='Grupo')
 
-    group5 = Group(name='Universidad Complutense de Madrid', activation_key = "UCM",depth=0, type='Universidad')
-    group6 = Group(name='Periodismo', activation_key = "PERIODISMO",depth=1, type='Titulacion')
-
-    group7 = Group(name='Derecho', activation_key = "DERECHO",depth=1, type='Titulacion')
-    group.children.append(group1)
-    group.children.append(group7)
-    group1.children.append(group2)
-    group1.children.append(group3)
-    group2.children.append(group4)
-    group5.children.append(group6)
-
-    project = Project(term="2012")
 
     db.session.add(user)
     db.session.add(proceso)
     db.session.add(group)
-    db.session.add(group5)
-    project.create(group) 
-    project.create(group5) 
-    db.session.commit()
-    user.projects.append(project)
     db.session.commit()
     #while node.parent:
     #   print node.parent

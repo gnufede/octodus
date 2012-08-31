@@ -2,8 +2,8 @@
 
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, IntegerField,
                           PasswordField, SubmitField, TextField,DateTimeField,
-                          ValidationError, required, equal_to, email,
-                          length)
+                          ValidationError, required, equal_to, email, SelectMultipleField,
+                          length, widgets)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import Session
@@ -34,4 +34,22 @@ class EditSessionForm(Form):
        end_time = dateutil.parser.parse(field.time_end) 
        if (end_time-begin_time).seconds < 61:
            raise ValidationError, gettext(u'La hora de fin debe ser posterior a la de inicio')
+
+
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
+class SetSessionForm(Form):
+    next = HiddenField()
+    sessions_id = MultiCheckboxField()
+    projects_id = MultiCheckboxField()
+    submit = SubmitField(_('Guardar'))
 

@@ -89,6 +89,14 @@ class Project(db.Model):
            db.session.commit()
            for j in node.children:
                new_project.create(j)
+
+    def set_session(self, session):
+        if self.children:
+            for j in self.children:
+                j.set_session(session)
+        else:
+            self.sessions.append(session)
+            db.session.commit()
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)

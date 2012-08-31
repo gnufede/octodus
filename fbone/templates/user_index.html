@@ -1,32 +1,33 @@
-{% set page_title = current_user.name +' '+current_user.surname %}
+{#% set page_title = current_user.name +' '+current_user.surname %#}
 
 {% extends "layout.html" %}
 
-{% block body %}
-<div class="span4">	
+{% block menu %}
+<div class="span3">	
 {% if current_user.is_admin() %}
 <div class="well" style="padding: 8px 0;">
 <ul class="nav nav-list">
     <li class='nav-header'>Usuarios</li>
-    <li><a href='{{ url_for('user.list') }}'>Lista de usuarios</a></li>
+    <li id='user_list'><a href='{{ url_for('user.list') }}'>Lista de usuarios</a></li>
     <li class='nav-header'>Grupos</li>
-	<li><a href='{{ url_for('admin.new_group') }}'>Nuevo grupo</a></li>
-    <li><a href='{{ url_for('admin.group_list') }}'>Lista de grupos</a></li>
+	<li id='group_new'><a href='{{ url_for('admin.new_group') }}'>Nuevo grupo</a></li>
+    <li id='group_list'><a href='{{ url_for('admin.group_list') }}'>Lista de grupos</a></li>
     <li class='nav-header'>Proyectos</li>
-	<li><a href='{{ url_for('admin.new_project') }}'>Nuevo proyecto</a></li>
-    <li><a href='{{ url_for('admin.project_list') }}'>Lista de proyectos</a></li>
+	<li id='project_new'><a href='{{ url_for('admin.new_project') }}'>Nuevo proyecto</a></li>
+    <li id='project_list'><a href='{{ url_for('admin.project_list') }}'>Lista de proyectos</a></li>
     <li class='nav-header'>Sesiones Fotográficas</li>
-    <li><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a></li>
-    <li><a href='{{ url_for('session.index') }}'>Lista de sesiones</a></li>
-    <li><a href='{{ url_for('admin.set_session') }}'>Asignar proyectos a sesiones</a></li>
+    <li id='session_new'><a href='{{ url_for('session.new_session') }}'>Nueva sesión fotográfica</a></li>
+    <li id='session_list'><a href='{{ url_for('session.index') }}'>Lista de sesiones</a></li>
+    <li id='session_set'><a href='{{ url_for('admin.set_session') }}'>Asignar proyectos a sesiones</a></li>
     <li class='nav-header'>Otros</li>
-	<li><a href='{{ url_for('admin.edit_proceso') }}'>Editar página de proceso</a></li>
+	<li id='process_edit'><a href='{{ url_for('admin.edit_proceso') }}'>Editar página de proceso</a></li>
 </ul>
 {% else %}
+<div class="well" style="padding: 8px 0;">
 <ul class="nav nav-list">
-	<li><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
+	<li id="edit_data"><a href='{{ url_for('user.edit_datos') }}'>Editar Datos Personales</a> 
 	</li>
-	<li><a href='{{ url_for('user.new_appointment_get') }}'>Seleccionar Cita Fotográfica</a> 
+	<li id="select_date"><a href='{{ url_for('user.new_appointment_get') }}'>Seleccionar Cita Fotográfica</a> 
 	</li>
 </ul>
 {% if current_user.is_coordinator() %}
@@ -38,6 +39,8 @@
 {% endif %}	
 </div>
 </div>
+{% endblock %}
+{% block body %}
 {% endblock %}
 
 {% block append_js %}

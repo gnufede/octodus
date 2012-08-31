@@ -17,13 +17,13 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_required
 def project_list():
     objects = db.session.query(Project).filter(Project.name!='0').all()
-    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name"],current_user=current_user)
+    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name"], active='project_list', current_user=current_user)
 
 @admin.route('/group/list')
 @login_required 
 @admin_required
 def group_list():
-    return render_template('list.html', title="Grupos", objects=Group.query.all(), current_user=current_user)
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list',current_user=current_user)
 
 
 @admin.route('/group/del/<id>')

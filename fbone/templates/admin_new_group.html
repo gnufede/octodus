@@ -4,11 +4,11 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
 
-{% extends 'layout.html' %}
+{% extends 'user_index.html' %}
 
 {% block body %}
 <div class='span5 well' id="tree1"></div>
-<div class='span5'>
+<div class='span3'>
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
         {{ form.hidden_tag() }}
         {{ form.group_id }}
@@ -72,6 +72,7 @@
         });
         //var node = $tree.tree('getselectednode');
     });
+$('#group_new').addClass('active');
 </script>
 {% endblock %}
 

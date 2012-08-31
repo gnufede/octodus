@@ -3,11 +3,11 @@
 {% set page_title = _('Nuevo Proyecto') %}
 
 
-{% extends 'layout.html' %}
+{% extends 'user_index.html' %}
 
 {% block body %}
 <div class='span5 well' id="tree1"></div>
-<div class='span5'>
+<div class='span3'>
     <form class='form-stacked' method="POST" action="{{ url_for('admin.new_project') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
@@ -54,6 +54,7 @@
         });
         //var node = $tree.tree('getselectednode');
     });
+$('#project_new').addClass('active');
 </script>
 {% endblock %}
 

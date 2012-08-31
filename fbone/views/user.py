@@ -72,7 +72,7 @@ def edit_datos():
 @admin_required
 def list():
     users = User.query.all()
-    return render_template('list.html', title="Usuarios", objects=users, current_user=current_user)
+    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email'], active='user_list', current_user=current_user)
 
 @user.route('/<name>')
 def pub(name):

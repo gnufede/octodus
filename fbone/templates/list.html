@@ -2,7 +2,7 @@
 {#% set page_title = current_user.name +' '+current_user.surname %#}
 {% set page_title = title %}
 
-{% extends "layout.html" %}
+{% extends "user_index.html" %}
 
 {% block body %}
 <div class="span8">
@@ -19,6 +19,6 @@
 
 {% block append_js %}
 <script>
-    $('#index').addClass('active');
+    $('#{{ active }}').addClass('active');
 </script>
 {% endblock %}

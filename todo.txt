@@ -5,9 +5,10 @@ x- Hover de los elementos de la barra de menú igual que el del elemento Login (
 x- Interfaz para crear proyectos
 x- Interfaz de usuario para apuntarse a una sesión de fotos 
 x- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proyectos
+x- Corrección de email en el signup[3]
+- Añadir checkbox en datos de usuario: "Mi titulación/especialidad/grupo no sale en la lista..."
 - Validar en sesión que fecha fin > fecha inicio y hora fin> hora inicio //No tira, y no sé porqué
 - Verificación de cuenta (con envío de email)
-- Corrección de email en el signup[3]
 - Dar opción al administrador a calcular cuántas horas/sesiones necesita para 
   hacer las fotos a un grupo en función de la gente que hay en un proyecto
 

@@ -7,28 +7,39 @@
 {% if current_user.is_admin() %}
 <div class="well" style="padding: 8px 0;">
 <ul class="nav nav-list">
-    <li class='nav-header'>Usuarios
+    <li class='nav-header'>
+    <i class='icon-user'></i>
+    Usuarios
     </li>
     <li id='user_list'><a href='{{ url_for('user.list') }}'>
     <i class='icon-list'></i>
     Lista de usuarios
     </a>
     </li>
-    <li class='nav-header'>Grupos</li>
+    <li class="divider"></li>
+    <li class='nav-header'>
+    <i class='icon-th'></i>
+    Grupos</li>
 	<li id='group_new'><a href='{{ url_for('admin.new_group') }}'>
     <i class='icon-plus'></i>
     Nuevo grupo</a></li>
 <li id='group_list'><a href='{{ url_for('admin.group_list') }}'>
     <i class='icon-list'></i>
     Lista de grupos</a></li>
-    <li class='nav-header'>Proyectos</li>
+    <li class="divider"></li>
+    <li class='nav-header'>
+    <i class='icon-briefcase'></i>
+    Proyectos</li>
     <li id='project_new'><a href='{{ url_for('admin.new_project') }}'>
     <i class='icon-plus'></i>
     Nuevo proyecto</a></li>
 <li id='project_list'><a href='{{ url_for('admin.project_list') }}'>
     <i class='icon-list'></i>
     Lista de proyectos</a></li>
-    <li class='nav-header'>Sesiones Fotográficas</li>
+    <li class="divider"></li>
+<li class='nav-header'>
+    <i class='icon-camera'></i>
+Sesiones Fotográficas</li>
     <li id='session_new'><a href='{{ url_for('session.new_session') }}'>
     <i class='icon-plus'></i>
     Nueva sesión fotográfica</a></li>
@@ -37,8 +48,11 @@
     Lista de sesiones</a></li>
 <li id='session_set'><a href='{{ url_for('admin.set_session') }}'>
     <i class='icon-random'></i>
-    Asignar proyectos a sesiones</a></li>
-    <li class='nav-header'>Otros</li>
+    Asignar proyectos</a></li>
+    <li class="divider"></li>
+    <li class='nav-header'>
+    <i class='icon-asterisk'></i>
+    Otros</li>
     <li id='process_edit'><a href='{{ url_for('admin.edit_proceso') }}'>
     <i class='icon-pencil'></i>
         Editar página de proceso</a></li>
@@ -68,8 +82,8 @@
 {% block body %}
 {% endblock %}
 
-{% block append_js %}
+{% block append_js2 %}
 <script>
-    $('#index').addClass('active');
+    $('.active a i').addClass('icon-white');
 </script>
 {% endblock %}

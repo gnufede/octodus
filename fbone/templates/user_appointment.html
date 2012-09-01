@@ -71,6 +71,8 @@
             return s[0];
         });
         $('#datepicker').datepicker({
+            firstDay: 1,
+            minDate: sessions[0][0],
             dateFormat: 'yy-mm-dd',
             beforeShowDay: function(d) {
                 var date = getISODate(d);

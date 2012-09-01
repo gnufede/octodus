@@ -79,6 +79,8 @@
             {% endif %}
             {% endfor %}
                 {% if delete == '' %}
+                <td><a href="set/{{object.id}}">
+                <i class="icon-random"></i></a></td>
                 <td><a href="view/{{object.id}}">
                 <i class="icon-eye-open"></i></a></td>
                 <td><a href="del/{{object.id}}">

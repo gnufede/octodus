@@ -15,10 +15,7 @@ import dateutil.parser
 session = Blueprint('session', __name__, url_prefix='/session')
 
 
-@session.route('/')
-@login_required
-def index():
-    sessions = Session.query.all()
+def list(sessions):
     sessions2 = sessions[:]
     for session in sessions2:
         session.citas = len(session.appointments)
@@ -26,6 +23,19 @@ def index():
         session.inicio = session.begin.isoformat().split('T')[1].split('.')[0]
         session.fin = session.end.isoformat().split('T')[1].split('.')[0]
     return render_template('session_index.html', sessions=sessions2, fields=['id', 'fecha_de_sesion', 'inicio', 'fin', 'block_capacity', 'block_duration', 'citas'],current_user=current_user)
+
+@session.route('/')
+@login_required
+def index():
+    sessions = Session.query.all()
+    return list(sessions)
+
+@session.route('/list/<project>')
+@login_required
+def list_project(project):
+    project = db.session.query(Project).filter(Project.id==project).first()
+    sessions = project.sessions
+    return list(sessions)
 
 @session.route('/nueva_sesion', methods=['GET'])
 @login_required
@@ -98,6 +108,13 @@ def delete(id):
         db.session.commit()
     return redirect(url_for('session.view',session.id))
 
+@session.route('/set/<id>')
+@session.route('/list/set/<id>')
+@login_required 
+@admin_required
+def set(id):
+    return redirect("admin/session/set/"+id)
+
 @session.route('/del/<id>')
 @login_required 
 @admin_required
@@ -107,7 +124,14 @@ def delete(id):
     db.session.commit()
     return redirect(url_for('session.index'))
 
+#@session.route('/list/view/<id>')
+#@login_required 
+#@admin_required
+#def list_view(id):
+#    return redirect("session/view/"+id)
+
 @session.route('/view/<id>')
+@session.route('/list/view/<id>')
 @login_required 
 @admin_required
 def view(id):

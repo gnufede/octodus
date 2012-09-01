@@ -12,36 +12,17 @@ import datetime
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
-@admin.route('/project/list')
-@login_required
-@admin_required
-def project_list():
-    objects = db.session.query(Project).filter(Project.name!='0').all()
-    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name"], active='project_list', current_user=current_user)
+def render_projects(objects):
+    for object in objects:
+        object.sesiones = len(object.sessions)
+        object.usuarios = len(object.users)
+    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "usuarios"], active='project_list', current_user=current_user)
 
-@admin.route('/group/list')
-@login_required 
-@admin_required
-def group_list():
-    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list',current_user=current_user)
-
-
-@admin.route('/group/del/<id>')
-@login_required 
-@admin_required
-def group_delete(id):
-    group = Group.query.filter_by(id=id).first_or_404()
-    db.session.delete(group)
-    db.session.commit()
-    return redirect(url_for('admin.group_list'))
-
-@admin.route('/project_set_session/', methods=['GET', 'POST'])
-@login_required 
-@admin_required
-def set_session():
-    sessions = Session.query.all()
-    sessions_from_today = [ session for session in sessions if session.begin > datetime.datetime.now() ]
-    projects = db.session.query(Project).filter(Project.name!='0').all()
+def set_sessions(sessions, projects):
+    if len(sessions) > 1:
+        sessions_from_today = [ session for session in sessions if session.begin > datetime.datetime.now() ]
+    else:
+        sessions_from_today = sessions
     form = SetSessionForm(request.form)
     sessions_choices = [ (session.id, session.begin) for session in sessions_from_today]
     projects_choices = [ (project.id, project.activation_key) for project in projects]
@@ -58,6 +39,83 @@ def set_session():
         return redirect(url_for('admin.project_list'))
     return render_template('admin_set_session.html', form=form,
                            current_user=current_user)
+
+@admin.route('/project/list/<name>')
+@login_required
+@admin_required
+def project_list_name(name):
+    objects = db.session.query(Project).filter(Project.name!='0', Project.term==name).all()
+    return render_projects(objects)
+
+@admin.route('/project/list')
+@login_required
+@admin_required
+def project_list():
+    objects = db.session.query(Project).filter(Project.name!='0').all()
+    return render_projects(objects)
+
+@admin.route('/group/list')
+@login_required 
+@admin_required
+def group_list():
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list',current_user=current_user)
+
+
+@admin.route('/project/del/<id>')
+@login_required 
+@admin_required
+def project_delete(id):
+    project = Project.query.filter_by(id=id).first_or_404()
+    db.session.delete(project)
+    db.session.commit()
+    return redirect(url_for('admin.project_list'))
+
+@admin.route('/group/del/<id>')
+@login_required 
+@admin_required
+def group_delete(id):
+    group = Group.query.filter_by(id=id).first_or_404()
+    db.session.delete(group)
+    db.session.commit()
+    return redirect(url_for('admin.group_list'))
+
+@admin.route('/project/set/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session_id(id):
+    sessions = Session.query.all()
+    projects = [ db.session.query(Project).filter(Project.id==id).first(),]
+    return set_sessions(sessions, projects)
+
+@admin.route('/project_set_session/<term>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session_term(term):
+    sessions = Session.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0', Project.term==term).all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/project_set_session/', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session():
+    sessions = Session.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/session/set/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_project(id):
+    sessions = [Session.query.filter_by(id=id).first(), ]
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/project/view/<id>')
+@login_required 
+@admin_required
+def project_view(id):
+    return redirect('session/list/'+id)
 
 @admin.route('/new_project/', methods=['GET', 'POST'])
 @login_required

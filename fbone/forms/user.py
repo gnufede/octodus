@@ -24,17 +24,17 @@ class EditDateForm(Form):
 
 class EditDatosForm(Form):
     next = HiddenField()
-    surname = TextField(_('Surname'), [required()])
-    name = TextField(_('Name'), [required()])
+    surname = TextField(_('Apellidos'), [required()])
+    name = TextField(_('Nombre'), [required()])
     projects = FieldList(TextField(""))
     nextproject = SelectField("")
 
-    submit = SubmitField(_('Save'))
+    submit = SubmitField(_('Guardar'))
     
     
     def validate_nextproject(self, field):
         if Project.query.filter_by(id=field.data).first() is None:
-            raise ValidationError, gettext('This group does not exist')
+            raise ValidationError, gettext('Ese grupo no existe')
 
     
 

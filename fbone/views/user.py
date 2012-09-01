@@ -40,6 +40,7 @@ def edit_date():
 @user.route('/edit_datos', methods=['POST','GET'])
 @login_required
 def edit_datos(): 
+    commit = False
     project = current_user.projects[-1]
     groups = [project,]
     while project.depth > 0:
@@ -50,6 +51,12 @@ def edit_datos():
     form = EditDatosForm(next=request.args.get('next'))
     form.generate_groups(groups)
     if request.method == 'POST':
+        if form.name.data != current_user.name:
+            current_user.name = form.name.data
+            commit = True
+        if form.surname.data != current_user.surname:
+            current_user.surname = form.surname.data
+            commit = True
         if form.nextproject:
             group = Project.query.filter_by(id=form.nextproject.data).first()
             current_user.projects = []
@@ -61,6 +68,9 @@ def edit_datos():
                 return redirect(url_for('user.edit_datos'))
             else:
                 flash('Datos actualizados correctamente', 'success')
+        if commit:
+            db.session.commit()
+            flash('Datos actualizados correctamente', 'success')
         return redirect(form.next.data or url_for('user.index'))
 
     return render_template('user_edit_datos.html', form=form,
@@ -71,8 +81,15 @@ def edit_datos():
 @login_required
 @admin_required
 def list():
-    users = User.query.all()
-    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email'], active='user_list', current_user=current_user)
+    users2 = User.query.all()
+    users = users2[:]
+    for user in users:
+        user.cita = 'pedo'
+        if user.appointments:
+            user.cita = user.appointments[0].date
+        else:
+            user.cita = ''
+    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email', 'cita'], active='user_list', current_user=current_user)
 
 @user.route('/<name>')
 def pub(name):

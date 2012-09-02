@@ -3,11 +3,24 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label, TextAreaField,
-                          length)
+                          FileField, file_allowed, file_required,
+                          length) 
 from flaskext.babel import gettext, lazy_gettext as _
+from werkzeug import secure_filename
+
+from flask.ext.uploads import UploadSet, IMAGES
 
 from fbone.extensions import db
 from fbone.models import User, Project, Group
+
+images = UploadSet("images", IMAGES)
+
+class NewOfferForm(Form):
+    next = HiddenField()
+    photo = FileField("Foto",
+                       validators=[file_required(),
+                                   file_allowed(images, "Images only!")])
+    submit = SubmitField(_('Guardar'))
 
 class NewProjectForm(Form):
     next = HiddenField()

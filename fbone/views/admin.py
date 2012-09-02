@@ -2,12 +2,13 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm
+from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm
 from fbone.extensions import db
 
 from fbone.models import User, Group, Proceso, Project, Session
 from fbone.decorators import keep_login_url, admin_required
 import datetime
+from werkzeug import secure_filename
 
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -116,6 +117,39 @@ def set_project(id):
 @admin_required
 def project_view(id):
     return redirect('session/list/'+id)
+
+@admin.route('/new_offer/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_offer():
+    form = NewOfferForm()
+    if request.method == 'POST':
+        filename = secure_filename(form.photo.data)
+        if form.validate_on_submit():
+            flash(filename, 'success')
+        else:
+            flash(filename, 'error')
+    else:
+        filename = None
+        return render_template("admin_new_offer.html",
+                           form=form,
+                           filename=filename)
+    return redirect(url_for('admin.index'))
+    
+
+@admin.route('/offer/list', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def offer_list():
+    return redirect(url_for('admin.index'))
+
+@admin.route('/set_offer/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def set_offer():
+    return redirect(url_for('admin.index'))
+    
+
 
 @admin.route('/new_project/', methods=['GET', 'POST'])
 @login_required

@@ -33,6 +33,20 @@ projects_sessions = db.Table("projects_sessions", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("session_id", db.Integer, ForeignKey("sessions.id")))
 
+projects_offers = db.Table("projects_offers", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
+    db.Column("overriden_price", db.Float))
+
+class Offer(db.Model):
+    __tablename__ = "offers"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    description = db.Column(db.String(128))
+    price = db.Column(db.Float())
+    picture = db.Column(db.String(128))
+    type = db.Column(db.Integer)
+    default = db.Column(db.Integer)
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -61,6 +75,7 @@ class Project(db.Model):
     creation = db.Column(db.DateTime, default=db.func.now())
     users = relationship("User", secondary=projects_users, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
+    offers = relationship("Offer", secondary=projects_offers, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
     depth = db.Column(db.Integer)

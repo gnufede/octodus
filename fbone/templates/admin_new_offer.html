@@ -1,0 +1,27 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = filename %}
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span3'>
+    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_offer') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+
+        <fieldset>
+             {{ render_input(form.photo, 'xlarge') }}
+             
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    alert({{filename}});
+</script>
+{% endblock %}
+

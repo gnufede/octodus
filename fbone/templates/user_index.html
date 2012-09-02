@@ -48,7 +48,20 @@ Sesiones Fotográficas</li>
     Lista de sesiones</a></li>
 <li id='session_set'><a href='{{ url_for('admin.set_session') }}'>
     <i class='icon-random'></i>
-    Asignar proyectos</a></li>
+    Asignar a proyectos</a></li>
+    <li class="divider"></li>
+<li class='nav-header'>
+    <i class='icon-shopping-cart'></i>
+Ofertas</li>
+    <li id='offer_new'><a href='{{ url_for('admin.new_offer') }}'>
+    <i class='icon-plus'></i>
+    Nueva oferta</a></li>
+    <li id='offer_list'><a href='{{ url_for('admin.offer_list') }}'>
+    <i class='icon-list'></i>
+    Lista de ofertas</a></li>
+<li id='offer_set'><a href='{{ url_for('admin.set_offer') }}'>
+    <i class='icon-random'></i>
+    Asignar a proyectos</a></li>
     <li class="divider"></li>
     <li class='nav-header'>
     <i class='icon-asterisk'></i>

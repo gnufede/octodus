@@ -95,18 +95,15 @@ def pub(id):
     form.id.data = session.id
     return render_template('session_new.html', form=form, today=today_str, current_user=current_user, duration=form.block_duration.data, capacity=form.block_capacity.data)
 
-@session.route('/view/del/<id>')
+@session.route('/view/del/<session_id>')
 @login_required 
 @admin_required
-def delete_app(id):
-    appointment_user= request.args.get("user_id", None)
-    appointment_project = request.args.get("project_id", None)
-    session = Session.query.filter_by(id=id).first_or_404()
-    if appointment_user:
-        appointment = Appointment.query.filter_by(session_id=session.id, user_id=appointment_user, project_id=appointment_project).first()
-        #session.appointments.pop(appointment)
-        db.session.delete(appointment)
-        db.session.commit()
+def delete_appointment(session_id):
+    user_id = request.args.get("user_id", None)
+    project_id = request.args.get("project_id", None)
+    if session_id and user_id and project_id:
+        Appointment.query.filter_by(session_id=session_id, user_id=user_id, project_id=project_id).delete()
+        #db.session.commit() # No hace falta, lo hace solo
     return redirect('session/view/'+str(session.id))
 
 @session.route('/set/<id>')

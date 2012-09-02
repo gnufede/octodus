@@ -58,7 +58,7 @@ def project_list():
 @login_required 
 @admin_required
 def group_list():
-    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list',current_user=current_user)
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list', no_set_delete=True, current_user=current_user)
 
 
 @admin.route('/project/del/<id>')

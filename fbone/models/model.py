@@ -40,9 +40,9 @@ class Appointment(db.Model):
     user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
     session_id = db.Column(db.Integer, ForeignKey("sessions.id"), primary_key=True)
     date = db.Column(db.DateTime)
-    project = relationship("Project", backref="appointments")
-    user = relationship("User", backref="appointments")
-    session = relationship("Session", backref="appointments")
+    project = relationship("Project", backref=backref("appointments",cascade="all,delete,delete-orphan"))
+    user = relationship("User", backref=backref("appointments",cascade="all,delete,delete-orphan"))
+    session = relationship("Session", backref=backref('appointments', cascade='all,delete,delete-orphan'))
     
 #    def __init__(self, date):
 #        self.date = date

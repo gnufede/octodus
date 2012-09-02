@@ -142,6 +142,7 @@ def signup():
 @frontend.route('/change_password', methods=['GET', 'POST'])
 def change_password():
     user = None
+    email = None
     if 'activation_key' in request.values and 'email' in request.values:
         activation_key = request.values['activation_key']
         email = request.values['email']
@@ -170,11 +171,16 @@ def change_password():
         db.session.add(user)
         db.session.commit()
 
-        flash(_("Se ha cambiado tu contraseña, por favor, entra otra vez"), #Your password has been changed, please log in again
-              "success")
         session.pop('email', None)
         session.pop('activation_code', None)
-        return redirect(url_for("frontend.login",email=email))
+        if current_user.is_authenticated():
+            flash(_(u"Se ha cambiado tu contraseña correctamente"), #Your password has been changed, please log in again
+              "success")
+            return redirect(url_for("user.index",email=email))
+        else:
+            flash(_(u"Se ha cambiado tu contraseña, por favor, entra otra vez"), #Your password has been changed, please log in again
+              "success")
+            return redirect(url_for("frontend.login",email=email))
   
     return render_template("change_password.html", form=form)
 

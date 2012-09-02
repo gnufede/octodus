@@ -27,7 +27,7 @@ def list(sessions):
 @session.route('/')
 @login_required
 def index():
-    sessions = Session.query.all()
+    sessions = Session.query.order_by(Session.begin).all()
     return list(sessions)
 
 @session.route('/list/<project>')
@@ -60,7 +60,7 @@ def new_session_post():
         time_begin = dateutil.parser.parse(form.time_begin.data)
         time_end = dateutil.parser.parse(form.time_end.data)
 
-        dates = [date for date in (begin_date + datetime.timedelta(days) for days in range((end_date - begin_date).days)) if calendar.weekday(date.year, date.month, date.day) <= friday_weekday]
+        dates = [date for date in (begin_date + datetime.timedelta(days) for days in range((end_date - begin_date).days + 1)) if calendar.weekday(date.year, date.month, date.day) <= friday_weekday]
         if not dates:
             dates = [begin_date,]
 
@@ -98,15 +98,16 @@ def pub(id):
 @session.route('/view/del/<id>')
 @login_required 
 @admin_required
-def delete(id):
+def delete_app(id):
     appointment_user= request.args.get("user_id", None)
     appointment_project = request.args.get("project_id", None)
     session = Session.query.filter_by(id=id).first_or_404()
     if appointment_user:
         appointment = Appointment.query.filter_by(session_id=session.id, user_id=appointment_user, project_id=appointment_project).first()
+        #session.appointments.pop(appointment)
         db.session.delete(appointment)
         db.session.commit()
-    return redirect(url_for('session.view',session.id))
+    return redirect('session/view/'+str(session.id))
 
 @session.route('/set/<id>')
 @session.route('/list/set/<id>')

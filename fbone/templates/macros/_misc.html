@@ -49,7 +49,7 @@
     </div>
 {% endmacro %}
 
-{% macro render_table(objects, class='', fields='', delete='') %}
+{% macro render_table(objects, class='', fields='', delete='', no_set_delete=False) %}
 <table class='table {{ class }}'>
     <thead>
         <tr>
@@ -79,10 +79,12 @@
             {% endif %}
             {% endfor %}
                 {% if delete == '' %}
-                <td><a href="set/{{object.id}}">
-                <i class="icon-random"></i></a></td>
-                <td><a href="view/{{object.id}}">
-                <i class="icon-eye-open"></i></a></td>
+                    {% if not no_set_delete %}
+                    <td><a href="set/{{object.id}}">
+                    <i class="icon-random"></i></a></td>
+                    <td><a href="view/{{object.id}}">
+                    <i class="icon-eye-open"></i></a></td>
+                    {% endif %}
                 <td><a href="del/{{object.id}}">
                 <i class="icon-remove"></i></a></td>
                  {% else %}

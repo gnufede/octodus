@@ -117,6 +117,7 @@ def new_appointment_get():
     if not session_id:
         # get all sessions for this project
         sessions = [ [s.begin.date().isoformat(), int(s.id)] for s in project.sessions if s.begin > datetime.datetime.now() ]
+        sessions=sorted(sessions)
         return render_template('user_appointment.html', form=form, sessions=sessions)
     else:
         # get all hours for this session

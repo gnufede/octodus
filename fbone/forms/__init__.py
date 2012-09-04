@@ -3,5 +3,5 @@
 from fbone.forms.frontend import (SignupForm, LoginForm, RecoverPasswordForm,
                                   ChangePasswordForm, ReauthForm)
 from fbone.forms.user import (EditDatosForm, EditDateForm, UserAppointmentForm)
-from fbone.forms.admin import (NewGroupForm, EditProcesoForm, NewProjectForm, NewOfferForm)
+from fbone.forms.admin import (NewGroupForm, EditProcesoForm, NewProjectForm, NewOfferForm, SetOfferForm)
 from fbone.forms.session import (EditSessionForm, SetSessionForm)

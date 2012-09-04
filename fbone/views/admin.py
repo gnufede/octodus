@@ -2,22 +2,43 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm
+from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Proceso, Project, Session
+from fbone.models import User, Group, Proceso, Project, Session, Offer
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename
-
+import os
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
+UPLOAD_FOLDER = '/tmp/'
+admin.config = dict()
+admin.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def render_projects(objects):
     for object in objects:
         object.sesiones = len(object.sessions)
         object.usuarios = len(object.users)
     return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "usuarios"], active='project_list', current_user=current_user)
+
+def set_offers(offers, projects):
+    form = SetOfferForm(request.form)
+    offers_choices = [ (offer.id, offer.name) for offer in offers]
+    projects_choices = [ (project.id, project.activation_key) for project in projects]
+    form.offers_id.choices = offers_choices
+    form.projects_id.choices = projects_choices
+    if request.method == 'POST':
+        for offer_id in form.offers_id.data:
+            offer = Offer.query.filter_by(id=offer_id).first()
+            for project_id in form.projects_id.data:
+                project = Project.query.filter_by(id=project_id).first()
+                project.set_offer(offer)
+                
+        db.session.commit()
+        return redirect(url_for('admin.project_list'))
+    return render_template('admin_set_offer.html', form=form,
+                           current_user=current_user)
 
 def set_sessions(sessions, projects):
     if len(sessions) > 1:
@@ -80,6 +101,15 @@ def group_delete(id):
     db.session.commit()
     return redirect(url_for('admin.group_list'))
 
+@admin.route('/offer/del/<id>')
+@login_required 
+@admin_required
+def offer_delete(id):
+    offer = Offer.query.filter_by(id=id).first_or_404()
+    db.session.delete(offer)
+    db.session.commit()
+    return redirect(url_for('admin.offer_list'))
+
 @admin.route('/project/set/<id>', methods=['GET', 'POST'])
 @login_required 
 @admin_required
@@ -122,33 +152,48 @@ def project_view(id):
 @login_required
 @admin_required
 def new_offer():
-    form = NewOfferForm()
+    form = NewOfferForm(request.form)
     if request.method == 'POST':
-        filename = secure_filename(form.photo.data)
-        if form.validate_on_submit():
-            flash(filename, 'success')
-        else:
-            flash(filename, 'error')
+        file = request.files['picture']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(os.path.join(admin.root_path, '../static/offers/'), filename))
+            offer = Offer(name=form.name.data, description=form.description.data,
+                         type=form.type.data, price=form.price.data, picture=filename,
+                          default=form.default.data)
+            db.session.add(offer)
+            db.session.commit()
+
+            return redirect(url_for('admin.uploaded_file', id=offer.id))
     else:
         filename = None
         return render_template("admin_new_offer.html",
                            form=form,
                            filename=filename)
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('admin.offer_list'))
     
+@admin.route('/offer/view/<id>', methods=['GET', 'POST'])
+@admin.route('/offer/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def uploaded_file(id):
+    offer = Offer.query.filter_by(id=id).first()
+    return render_template("template.html", name=offer.name, description=offer.description, price=offer.price, filename=offer.picture)
 
 @admin.route('/offer/list', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def offer_list():
-    return redirect(url_for('admin.index'))
+    objects = db.session.query(Offer).all()
+    return render_template('list.html', title="Ofertas", objects=objects, active='offer_list', current_user=current_user)
 
 @admin.route('/set_offer/', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def set_offer():
-    return redirect(url_for('admin.index'))
-    
+    offers = Offer.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_offers(offers, projects)
 
 
 @admin.route('/new_project/', methods=['GET', 'POST'])

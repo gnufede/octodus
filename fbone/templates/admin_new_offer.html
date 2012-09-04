@@ -6,12 +6,17 @@
 
 {% block body %}
 <div class='span3'>
-    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_offer') }}">
+    <form class='form-stacked' enctype=multipart/form-data method="POST" action="{{ url_for('admin.new_offer') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
+        {{ form.default }}
 
         <fieldset>
-             {{ render_input(form.photo, 'xlarge') }}
+             {{ render_input(form.name, 'xlarge') }}
+             {{ render_input(form.picture, 'xlarge') }}
+             {{ render_input(form.type, 'xlarge') }}
+             {{ render_input(form.price, 'xlarge') }}
+             {{ render_input(form.description, 'xlarge') }}
              
              {{ render_action(form.submit) }}
         </fieldset>

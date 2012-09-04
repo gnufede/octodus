@@ -105,6 +105,14 @@ class Project(db.Model):
            for j in node.children:
                new_project.create(j)
 
+    def set_offer(self, offer):
+        if self.children:
+            for j in self.children:
+                j.set_offer(offer)
+        else:
+            self.offers.append(offer)
+            db.session.commit()
+
     def set_session(self, session):
         if self.children:
             for j in self.children:

@@ -9,7 +9,7 @@
 {% block body %}
 <div class='span5 well' id="tree1"></div>
 <div class='span3'>
-    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}">
+    <form class='form-stacked' method="POST" action="{{ url_for('admin.new_group') }}" autocomplete="off">
         {{ form.hidden_tag() }}
         {{ form.group_id }}
         {{ form.next }}

@@ -50,10 +50,12 @@
 {% endmacro %}
 
 {% macro render_table(objects, class='', fields='', delete='', no_set_delete=False) %}
+
+{% if objects|length >0 %}
 <table class='table {{ class }}'>
     <thead>
         <tr>
-            {% if fields == ''%}
+            {% if fields == '' %}
             {% set f = objects[0].__dict__ %}
             {% else %}
             {% set f = fields %}
@@ -95,6 +97,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 {% endmacro %}
 
 {% macro render_user_table(users, class='') %}

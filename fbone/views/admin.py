@@ -62,6 +62,18 @@ def set_sessions(sessions, projects):
     return render_template('admin_set_session.html', form=form,
                            current_user=current_user)
 
+@admin.route('/offers/<id>', methods=['GET'])
+@admin.route('/offers/', methods=['GET'])
+@login_required
+@admin_required
+def offers(id=None):
+    if id:
+        node = Offer.query.filter_by(id=id).first()
+        tree = db.session.query(Offer.id,Offer.name).filter_by(parent=node).all()
+    else:
+        tree = [(x.id, x.jsonify_full()) for x in Offer.query.filter_by(depth=0)]
+    return jsonify(tree)
+    
 @admin.route('/project/list/<name>')
 @login_required
 @admin_required
@@ -152,6 +164,8 @@ def project_view(id):
 @login_required
 @admin_required
 def new_offer():
+    depth = 0
+    parent = None
     form = NewOfferForm(request.form)
     if request.method == 'POST':
         file = request.files['picture']
@@ -161,6 +175,12 @@ def new_offer():
             offer = Offer(name=form.name.data, description=form.description.data,
                          type=form.type.data, price=form.price.data, picture=filename,
                           default=form.default.data)
+            if form.parent.data:
+                parent = Offer.query.filter_by(id=form.parent.data).first()
+                if parent:
+                    offer.parent_id = form.parent.data
+                    depth = parent.depth + 1
+            offer.depth = depth 
             db.session.add(offer)
             db.session.commit()
 

@@ -68,8 +68,6 @@ class ReauthForm(Form):
     submit = SubmitField(_('Reauthenticate'))
 
 
-
-
 class UserAppointmentForm(Form):
     next = HiddenField()
     session = HiddenField()
@@ -78,3 +76,11 @@ class UserAppointmentForm(Form):
 
     def set_hours(self, hours):
         self.hour.choices = hours
+
+class UserOfferForm(Form):
+    next = HiddenField()
+    options = RadioField(_('Oferta'))
+    submit = SubmitField(_('Confirmar'))
+
+    def set_options(self, options):
+        self.options.choices = options

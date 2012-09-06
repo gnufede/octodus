@@ -7,7 +7,7 @@ from flask.ext.login import login_required, current_user
 
 from fbone.models import *
 from fbone.decorators import keep_login_url, admin_required
-from fbone.forms import (EditDatosForm, EditDateForm, UserAppointmentForm)
+from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm)
 from fbone.extensions import db
 from sqlalchemy import Date, cast
 import datetime
@@ -26,7 +26,7 @@ def index():
 def edit_date(): 
     project = current_user.projects[-1]
     form = EditDateForm(next=request.args.get('next'))
-    if request.method == 'POST':
+    if request.method == 'post':
         date = Session.query.filter_by(id=form.date.data).first()
         appointment = Appointment(project=project,user=current_user,session=date,date=date.begin)
         db.session.add(appointment)
@@ -164,9 +164,22 @@ def new_appointment_post():
     flash('Cita confirmada correctamente ('+appointment_date+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
-        
+@user.route('/set_offer')
+@login_required
+def set_offer():
+    form = UserOfferForm()
+    project = current_user.projects[-1] #FIXME
+    if len(project.offers):
+        offers = project.offers
+    else:
+        offers = [project.offers, ]
+    if request.method == 'post':
+        #TODO: Take offers selected and insert them in the DB
+        return redirect(form.next.data or url_for('user.index'))
 
-
-
+    else:
+        form.set_options(offers)
+    return render_template('user_offer.html', form=form,
+                           current_user=current_user, offers=offers)
 
 

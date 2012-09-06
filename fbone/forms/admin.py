@@ -19,6 +19,7 @@ images = UploadSet("images", IMAGES)
 class NewOfferForm(Form):
     next = HiddenField()
     default = HiddenField()
+    parent = HiddenField()
     name = TextField(u'Nombre', [required()])
     description = TextAreaField(u'Descripción', [required()])
     price = FloatField(u'Precio')

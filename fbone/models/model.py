@@ -6,6 +6,7 @@ from fbone.extensions import db
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
+from flask import url_for
 
 import datetime
 
@@ -38,6 +39,12 @@ projects_offers = db.Table("projects_offers", db.metadata,
     db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
     db.Column("overriden_price", db.Float))
 
+offers_users = db.Table("offers_users", db.metadata,
+    db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("offer_type", db.Integer, ForeignKey("offers.type")),
+    db.Column("user_id", db.Integer, ForeignKey("users.id")))
+
 class Offer(db.Model):
     __tablename__ = "offers"
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +54,17 @@ class Offer(db.Model):
     picture = db.Column(db.String(128))
     type = db.Column(db.Integer)
     default = db.Column(db.Integer)
+    depth = db.Column(db.Integer)
+    parent_id = db.Column(db.Integer, ForeignKey("offers.id"))
+    children = relationship("Offer",
+                backref=backref('parent', remote_side=[id])
+               )
+
+    def jsonify(self):
+        return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]    }
+
+    def jsonify_full(self):
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
 
 class Appointment(db.Model):
     __tablename__ = "appointments"

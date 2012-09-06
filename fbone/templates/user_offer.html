@@ -1,0 +1,42 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Escoge Oferta') %}
+
+{% extends 'user_index.html' %}
+
+
+{% block append_js %}
+
+<script>
+    $("label").css({ 'display': 'inline' });
+    $('#select_offer').addClass('active');
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+
+<div class='span6'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        
+        <div class="input">
+        {% for option in form.options %}
+        <p>
+        <tr>
+            <td>{{ option }}</td>
+            <td><img src={{option.img}}> {{ option.label }}</td>
+        </tr>
+        </p>
+        {% endfor %}
+        </div>
+
+        {{ render_action(form.submit) }}
+        
+    </form>
+</div>
+
+
+{% endblock %}

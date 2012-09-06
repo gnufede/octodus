@@ -15,6 +15,7 @@
 
 
 <script>
+    $("label").css({ 'display': 'inline' });
     $('#select_date').addClass('active');
 
     /*
@@ -114,10 +115,12 @@
         
         <div class='input'>
         {% for hour in form.hour %}
+        <p>
         <tr>
             <td>{{ hour }}</td>
             <td>{{ hour.label }}</td>
         </tr>
+        </p>
         {% endfor %}
         </div>
 

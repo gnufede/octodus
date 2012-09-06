@@ -81,6 +81,10 @@ Ofertas</li>
     <i class='icon-calendar'></i>
         Seleccionar Cita Fotográfica</a> 
 	</li>
+    <li id="select_offer"><a href='{{ url_for('user.set_offer') }}'>
+    <i class='icon-shopping-cart'></i>
+        Seleccionar Oferta</a> 
+	</li>
 </ul>
 {% if current_user.is_coordinator() %}
 <ul class="nav nav-list">

@@ -2,20 +2,23 @@
 
 {% set page_title = filename %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
 {% extends 'user_index.html' %}
 
 {% block body %}
+<div class='span5 well' id="tree1"></div>
 <div class='span3'>
     <form class='form-stacked' enctype=multipart/form-data method="POST" action="{{ url_for('admin.new_offer') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         {{ form.default }}
+        {{ form.parent }}
 
         <fieldset>
-             {{ render_input(form.name, 'xlarge') }}
+             {{ render_input(form.name, 'xlarge', style="height:28px") }}
              {{ render_input(form.picture, 'xlarge') }}
-             {{ render_input(form.type, 'xlarge') }}
-             {{ render_input(form.price, 'xlarge') }}
+             {{ render_input(form.type, 'xlarge', style="height:28px") }}
+             {{ render_input(form.price, 'xlarge', style="height:28px") }}
              {{ render_input(form.description, 'xlarge') }}
              
              {{ render_action(form.submit) }}
@@ -25,8 +28,33 @@
 {% endblock %}
 
 {% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/tree.jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
 <script>
-    alert({{filename}});
+    $(document).ready(function() {
+        
+        $.getJSON('/admin/offers', function(data) {
+            var data_array = [];
+            for (var key in data) {
+                data_array.push(data[key]);
+            }
+            $('#tree1').tree({
+                selectable: true,
+                data: data_array
+            });
+            // bind 'tree.click' event
+           $('#tree1').bind('tree.click', function(event) {
+                // The clicked node is 'event.node'
+                var node = event.node;
+                //alert(node.id);
+                //TODO: set parent hidden value to node.name
+                $('#parent').val(node.id)
+            });
+        });
+        //var node = $tree.tree('getselectednode');
+    });
+$('#offer_new').addClass('active');
 </script>
 {% endblock %}
 

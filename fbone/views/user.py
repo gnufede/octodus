@@ -127,7 +127,7 @@ def new_appointment_get():
         all_hours = [ sess.begin + datetime.timedelta(minutes=x) for x in range(0, interval_mins, sess.block_duration) ]
         all_hours_occupation = [ (h, len([ apn for apn in sess.appointments if apn.date == h ])) for h in all_hours ]
         #hours = [ (h, n) for (h, n) in all_hours_occupation if n < sess.block_capacity ]
-        hours = [ (h, h) for (h, n) in all_hours_occupation if n < sess.block_capacity ]
+        hours = [ (h, str(h).split()[1])  for (h, n) in all_hours_occupation if n < sess.block_capacity ]
         form.set_hours(hours)
         form.session.data = session_id
         return render_template('user_appointment.html', form=form, hours=hours, session=sess)
@@ -161,7 +161,9 @@ def new_appointment_post():
     appointment.user = current_user
     appointment.session = Session.query.filter_by(id=session_id).first()
     db.session.commit()
-    flash('Cita confirmada correctamente ('+appointment_date+')', 'success')
+    time = appointment_date.split()[1]
+    (year, month, day) = appointment_date.split()[0].split('-')
+    flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
 @user.route('/set_offer')

@@ -12,11 +12,10 @@
 
 {% block append_js %}
 <script src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/jquery-ui-datepicker-es.js') }}"></script>
 
 
 <script>
-    $("label").css({ 'display': 'inline' });
-    $('#select_date').addClass('active');
 
     /*
     $(function() {
@@ -66,12 +65,23 @@
         return year + '-' + month + '-' + day;
     }
     
+    
     $(function() {
+    $("label").css({ 'display': 'inline' });
+    $('#select_date').addClass('active');
+    $('.active a i').addClass('icon-white');
+
+     {% if sessions %}
         var sessions = {{sessions|safe}};
         var dates = sessions.map(function(s) {
             return s[0];
         });
-        $('#datepicker').datepicker({
+        $('#datepicker').datepicker(
+        /*
+        $.datepicker.regional['es']
+        );
+*/
+        {
             firstDay: 1,
             minDate: sessions[0][0],
             dateFormat: 'yy-mm-dd',
@@ -86,6 +96,8 @@
                 window.location = url + '?session_id=' + id;
             }
         });
+        
+    {% endif %}
     });
 </script>
 {% endblock %}

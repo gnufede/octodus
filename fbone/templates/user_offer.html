@@ -23,14 +23,6 @@
         {{ form.next }}
         
         <div class="input">
-        {% for option in form.options %}
-        <p>
-        <tr>
-            <td>{{ option }}</td>
-            <td><img src={{option.img}}> {{ option.label }}</td>
-        </tr>
-        </p>
-        {% endfor %}
         </div>
 
         {{ render_action(form.submit) }}

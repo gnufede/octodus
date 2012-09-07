@@ -65,13 +65,28 @@ def set_sessions(sessions, projects):
 @admin.route('/offers/<id>', methods=['GET'])
 @admin.route('/offers/', methods=['GET'])
 @login_required
-@admin_required
 def offers(id=None):
-    if id:
-        node = Offer.query.filter_by(id=id).first()
-        tree = db.session.query(Offer.id,Offer.name).filter_by(parent=node).all()
+    project = None
+    if len(current_user.projects):
+        project = current_user.projects[-1] #FIXME
+    if project:
+        offers = project.offers
+        offer_ids = [str(offer.id) for offer in offers]
+        if id: 
+            if(str(id) in offer_ids):
+                node = Offer.query.filter_by(id=id).first()
+                tree = [(x.id, x.jsonify_full()) for x in node.children]
+            else:
+                tree = []
+        else:
+            tree = [(x.id, x.jsonify_full()) for x in offers]
+
     else:
-        tree = [(x.id, x.jsonify_full()) for x in Offer.query.filter_by(depth=0)]
+        if id:
+            node = Offer.query.filter_by(id=id).first()
+            tree = db.session.query(Offer.id,Offer.name).filter_by(parent=node).all()
+        else:
+            tree = [(x.id, x.jsonify_full()) for x in Offer.query.filter_by(depth=0)]
     return jsonify(tree)
     
 @admin.route('/project/list/<name>')
@@ -205,7 +220,7 @@ def uploaded_file(id):
 @admin_required
 def offer_list():
     objects = db.session.query(Offer).all()
-    return render_template('list.html', title="Ofertas", objects=objects, active='offer_list', current_user=current_user)
+    return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], active='offer_list', current_user=current_user)
 
 @admin.route('/set_offer/', methods=['GET', 'POST'])
 @login_required

@@ -112,7 +112,9 @@ class Project(db.Model):
         return len(db.session.query(Project).filter(Project.activation_key==activation_key).all())
         
     def create(self, node):
-        if not self.project_already_created(node.activation_key + self.term):
+        activation_key = node.activation_key + self.term
+        new_project = db.session.query(Project).filter(Project.activation_key==activation_key).first()
+        if not new_project:
             new_project = Project(term=self.term)
             new_project.name = node.name
             new_project.type = node.type

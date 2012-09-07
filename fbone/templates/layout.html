@@ -45,9 +45,8 @@
                  	  <ul class="nav secondary-nav">
                 
 						<li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-						<li id='fotoescuea'><a href="../static/index.html">Fotoescuela</a></li>
-						<li id='actos'><a href="../static/login.html">Actos de graduación</a></li>
-						<li id='bodas'><a href="../static/bodas.html">Eventos y celebraciones</a></li>
+						<li id='fotoescuela'><a href="{{ url_for('frontend.fotoescuela') }}">Fotoescuela</a></li>
+						<li id='bodas'><a href="{{ url_for('frontend.bodas') }}">Eventos y celebraciones</a></li>
 				    {% endif %}
                     </ul>
 

@@ -1,0 +1,41 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Bodas') %}
+
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="span12">	
+					<div class="entry">
+						<p>&nbsp;</p>
+						<p style="text-align: center"><img src="../static/img/bodas_img1.jpg" alt="" width="600" height="247" /></p>
+						<p style="text-align: center; font-weight: bold;">REPORTAJE ANALÓGICO</p>
+						<p style="text-align: center">Álbum y reportaje de 60 fotos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;420 €<br />
+						Álbum y reportaje de 100 fotos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;700 €<br />
+						Álbum y reportaje de 150 fotos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;900 €<br />
+						Fotos extras&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7 €<br />
+						Álbum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;60 €<br />
+						Vídeo editado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;450 €</p>
+						<p>&nbsp;</p>
+						<p style="text-align: center; font-weight: bold;">ÁLBUM DIGITAL</p>
+						<p style="text-align: center">Álbum de 60 hojas + 2 mini-álbumes + porta-album&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1399 €<br />
+							2 hojas extras&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;35 €<br />
+							Vídeo editado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;450 €</p>
+						<p>&nbsp;</p>
+						<p style="text-align: center">Reportaje personalizado, nos adaptamos a vuestra elección.<br />
+							Os damos la posibilidad de elegir las fotos que queréis incluir en el álbum.<br />
+							Reportaje sin límite de fotos.<br />
+							Cada álbum es único, no usamos plantillas.<br />
+							Retocamos las fotos sin coste adicional.<br />
+							Alta calidad en el resultado.</p>
+						<p>&nbsp;</p>
+						<p style="text-align: center"><img src="../static/img/bodas_img2.jpg" alt="" width="600" height="834" /></p>
+					</div>
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    $('#index').addClass('active');
+</script>
+{% endblock %}

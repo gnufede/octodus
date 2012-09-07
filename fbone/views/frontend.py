@@ -215,6 +215,18 @@ def reset_password():
 
     return render_template('reset_password.html', form=form, value=value)
 
+@frontend.route('/bodas')
+@cached_response
+def bodas():
+    return render_template('bodas.html')
+
+
+@frontend.route('/fotoescuela')
+@cached_response
+def fotoescuela():
+    return render_template('fotoescuela.html')
+
+
 @frontend.route('/proceso')
 @cached_response
 def proceso():

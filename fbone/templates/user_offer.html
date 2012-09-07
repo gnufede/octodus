@@ -12,10 +12,9 @@
     $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
     
-    var chosen_ids = [];
     var base_url = '/admin/offers/';
     
-    function retrieve() {
+    function retrieve(id) {
         
         var url = base_url;
         
@@ -23,13 +22,13 @@
         
         var lst = $('.my-new-list');
         
-        if (chosen_ids.length > 0) // We need to ask for an specific ID
-            url += String(chosen_ids[chosen_ids.length - 1]);
+        if (arguments.length > 0) // We need to ask for an specific ID
+            url += String(id);
         
         $.getJSON(url, function(data) {
         
             if ($.isEmptyObject(data)) {
-                //submit all chosen_ids?
+                //$('form').submit();
                 return;
             }
             
@@ -49,8 +48,7 @@
     
         $(':radio').live('click', function() {
             var id = $(this).val();
-            chosen_ids.push(id);
-            retrieve();
+            retrieve(id);
         });
         
         retrieve();

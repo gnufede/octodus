@@ -18,10 +18,6 @@
         
         var url = base_url;
         
-        $('.input').empty().append('<div class="my-new-list"></div>');
-        
-        var lst = $('.my-new-list');
-        
         if (arguments.length > 0) // We need to ask for an specific ID
             url += String(id);
         
@@ -31,6 +27,10 @@
                 //$('form').submit();
                 return;
             }
+        
+            $('.input').empty().append('<div class="my-new-list"></div>');
+        
+            var lst = $('.my-new-list');
             
             $.each(data, function(key, val) {
                 lst.append('<tr><td>');

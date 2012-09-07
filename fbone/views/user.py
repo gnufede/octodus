@@ -166,7 +166,7 @@ def new_appointment_post():
     flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
-@user.route('/set_offer')
+@user.route('/set_offer', methods=['GET', 'POST'])
 @login_required
 def set_offer():
     form = UserOfferForm()

@@ -1,0 +1,24 @@
+{% from 'macros/_misc.html' import render_table %}
+{#% set page_title = current_user.name +' '+current_user.surname %#}
+{% set page_title = title %}
+
+{% extends "user_index.html" %}
+
+{% block body %}
+<div class="span9">
+    {% if not fields %}
+    {% set fields = ''%}
+    {% endif %}
+    {% if not delete %}
+    {% set delete = ''%}
+    {% endif %}
+    
+    {{ render_table(objects,'table-bordered table-striped', fields, delete, no_set_delete) }}
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    $('#{{ active }}').addClass('active');
+</script>
+{% endblock %}

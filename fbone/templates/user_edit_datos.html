@@ -2,10 +2,10 @@
 
 {% set page_title = _('Edita tus datos personales') %}
 
-{% extends 'layout.html' %}
+{% extends 'user_index.html' %}
 
 {% block body %}
-<div class='span12'>
+<div class='span6'>
     <form class='form-stacked' method="POST" action="{{ url_for('user.edit_datos') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
@@ -29,3 +29,8 @@
 </div>
 {% endblock %}
 
+{% block append_js %}
+<script>
+    $('#edit_data').addClass('active');
+</script>
+{% endblock %}

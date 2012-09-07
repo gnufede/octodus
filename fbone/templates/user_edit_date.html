@@ -1,0 +1,26 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Elige fecha') %}
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span6'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.edit_date') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <fieldset>
+            
+             {{ render_input(form.date, 'xlarge') }}
+
+            {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    $('#select_date').addClass('active');
+</script>
+{% endblock %}

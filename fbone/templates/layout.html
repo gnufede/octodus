@@ -28,8 +28,8 @@
     <div class="navbar-wrapper" style="z-index: 5;">
 
         <header class="navbar " data-dropdown="dropdown" role='banner' style="margin-bottom:0">
-            <div class="navbar-inner" style="border-radius:0">
-        <div class="container" style="width:980px;margin-left:auto;margin-right:auto;">
+            <div class="navbar-inner" style="min-width:940px;border-radius:0">
+        <div class="container" style="max-width:980px;margin-left:auto;margin-right:auto;">
                 	{% if current_user.is_authenticated() %}
                 	  <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
                 	   <ul class="nav secondary-nav">
@@ -45,9 +45,8 @@
                  	  <ul class="nav secondary-nav">
                 
 						<li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-						<li id='fotoescuea'><a href="../static/index.html">Fotoescuela</a></li>
-						<li id='actos'><a href="../static/login.html">Actos de graduación</a></li>
-						<li id='bodas'><a href="../static/bodas.html">Eventos y celebraciones</a></li>
+						<li id='fotoescuela'><a href="{{ url_for('frontend.fotoescuela') }}">Fotoescuela</a></li>
+						<li id='bodas'><a href="{{ url_for('frontend.bodas') }}">Eventos y celebraciones</a></li>
 				    {% endif %}
                     </ul>
 
@@ -105,6 +104,8 @@
             </div>
 
             <div class="row">
+                {% block menu %}
+                {% endblock %}
                 {% block body %}
                 {% endblock %}
             </div>
@@ -143,6 +144,8 @@
 
     {% endblock %}
     {% block append_js %}
+    {% endblock %}
+    {% block append_js2 %}
     {% endblock %}
 </body>
 </html>

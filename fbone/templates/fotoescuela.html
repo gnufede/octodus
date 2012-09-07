@@ -1,0 +1,32 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Reportaje fotografia escolar.') %}
+
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="span8">	
+    <p>
+    Máxima Calidad al mínimo coste.
+    </p>
+
+    <p>
+Somos una empresa que realiza proyectos de calidad, en donde nos involucramos desde el principio, aportando no solo nuestros conocimientos técnicos, sino mucha creatividad. Contamos con una larga trayectoria en la realización de reportajes fotográficos escolares y orlas de fin de curso, trabajando con las más avanzadas tecnologías para ofrecer la mejor calidad y una gran variedad de diseños. Pero sobre todo ofrecemos flexibilidad, confianza y rapidez, adaptándonos a las necesidades de su Centro Escolar, pudiendo ofrecerle diferentes lotes de fotografías individuales, grupos, orlas de promoción, etc., según su demanda.
+    </p>
+
+    <p>
+Para ello contamos con un equipo especialista en fotografía que resolverá cualquier encargo fotográfico.
+    </p>
+
+    <p>
+No duden en contactar con nosotros.
+SEGURO QUE NUESTRA OFERTA LES INTERESA.
+    </p>
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    $('#index').addClass('active');
+</script>
+{% endblock %}

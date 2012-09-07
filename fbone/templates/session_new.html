@@ -2,19 +2,21 @@
 
 {% set page_title = _('Edita la sesion') %}
 
-{% extends 'layout.html' %}
+{% extends 'user_index.html' %}
 
 {% block body %}
-<div class='span12'>
+<div class='span4'>
     <form class='form-stacked' method="POST" action="{{ url_for('session.new_session_post') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
+        {{ form.id }}
         <fieldset>
             <!--legend>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</legend-->
             
-            {{ render_input(form.date, 'xlarge', extra='calendar', value=today) }}
-            {{ render_input(form.begin, 'xlarge', extra='time') }}
-            {{ render_input(form.end, 'xlarge', extra='time') }}
+            {{ render_input(form.start_date, 'xlarge', extra='calendar', value=today) }}
+            {{ render_input(form.end_date, 'xlarge', extra='calendar', value=today) }}
+            {{ render_input(form.time_begin, 'xlarge', extra='time') }}
+            {{ render_input(form.time_end, 'xlarge', extra='time') }}
             {{ render_input(form.block_duration, 'xlarge', value=duration) }}
             {{ render_input(form.block_capacity, 'xlarge', value=capacity) }}
             {{ render_action(form.submit) }}
@@ -33,13 +35,26 @@
 <script  src="{{ url_for('static', filename='js/libs/bootstrap-datepicker.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#date').datepicker({
+        $('#start_date').datepicker({
             format: 'yyyy-mm-dd',
             autoclose: true,
             weekStart: 1
         });
-        $('#begin').timepicker({showMeridian:false, minuteStep:10});
-        $('#end').timepicker({showMeridian:false, minuteStep:10});
+        $('#end_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            weekStart: 1
+            });
+        var time_end_value = $('#time_end').val();
+        var time_begin_value = $('#time_begin').val();
+        if (time_begin_value != ''){
+            $('#time_begin').timepicker({showMeridian:false, minuteStep:10, defaultTime:time_begin_value});
+            $('#time_end').timepicker({showMeridian:false, minuteStep:10, defaultTime:time_end_value});
+        }else{ 
+            $('#time_begin').timepicker({showMeridian:false, minuteStep:10});
+            $('#time_end').timepicker({showMeridian:false, minuteStep:10});
+            }
     });
+$('#session_new').addClass('active');
 </script>
 {% endblock %}

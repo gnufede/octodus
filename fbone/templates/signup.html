@@ -5,7 +5,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class='span12'>
+<div class='span10'>
     <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
@@ -24,7 +24,37 @@
 {% endblock %}
 
 {% block append_js %}
+<script  src="{{ url_for('static', filename='js/libs/mailcheck.min.js') }}"></script>
 <script>
     $('#signup').addClass('active');
+</script>
+
+<script>
+function changeEmail(suggestion){
+        $('#email').val(suggestion);
+  $('#email').next().text('');// callback code
+}
+/*var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
+var topLevelDomains = ["com", "net", "org"];
+
+var superStringDistance = function(string1, string2) {
+  // a string distance algorithm of your choosing
+}
+*/
+$('#email').on('blur', function() {
+  $('#email').next().text('');// callback code
+  $(this).mailcheck({
+    suggested: function(element, suggestion) {
+       if (suggestion){
+        var ayudita = $('#email').next();
+        $('<p>Quiso decir <a href="javascript:void(0)" onclick="changeEmail(\''+suggestion.full+'\');">'+suggestion.full+'</a>?</p>').appendTo(ayudita)
+        }
+    },
+    empty: function(element) {
+      // callback code
+    }
+  });
+});
+
 </script>
 {% endblock %}

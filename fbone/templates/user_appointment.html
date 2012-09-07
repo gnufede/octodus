@@ -1,0 +1,146 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Escoge cita para hacerte la foto') %}
+
+{% extends 'user_index.html' %}
+
+{% if sessions %}
+
+{% block append_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
+{% endblock %}
+
+{% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/jquery-ui-datepicker-es.js') }}"></script>
+
+
+<script>
+
+    /*
+    $(function() {
+        var txtdates = {{sessions_txt|safe}};
+        var dates = txtdates.map(function(d) {
+            var date = new Date(d);
+            return date.toDateString();
+        });
+        $('#datepicker').datepicker({
+            beforeShowDay: function(d) {
+                var date = d.toDateString();
+                var ret = dates.indexOf(date) != -1;
+                return [ret];
+            },
+            onSelect: function(txtdate, inst) {
+                var url = {{url_for('user.new_appointment_post')}};
+                window.location = url + '?session_id=' + txtdate;
+            }
+        });
+    });
+    */
+    function findID(sessions, date) {
+       /* for (session in sessions) {
+            if (session[0] == date) {
+                return session[1]; // session ID
+            }
+        }
+        */
+        for (var i = 0; i< sessions.length; i++){
+            var session = sessions[i];
+            if (session[0] == date) {
+                return session[1]; // session ID
+            }
+
+        }
+        return null;
+    }
+    
+    function pad(n) {
+        return n < 10 ? '0' + n : n;
+    }
+    
+    function getISODate(d) {
+        var year = d.getFullYear();
+        var month = pad(d.getMonth() + 1);
+        var day = pad(d.getDate());
+        return year + '-' + month + '-' + day;
+    }
+    
+    
+    $(function() {
+    $("label").css({ 'display': 'inline' });
+    $('#select_date').addClass('active');
+    $('.active a i').addClass('icon-white');
+
+     {% if sessions %}
+        var sessions = {{sessions|safe}};
+        var dates = sessions.map(function(s) {
+            return s[0];
+        });
+        $('#datepicker').datepicker(
+        /*
+        $.datepicker.regional['es']
+        );
+*/
+        {
+            firstDay: 1,
+            minDate: sessions[0][0],
+            dateFormat: 'yy-mm-dd',
+            beforeShowDay: function(d) {
+                var date = getISODate(d);
+                var ret = dates.indexOf(date) != -1;
+                return [ret];
+            },
+            onSelect: function(txtdate, inst) {
+                var url = '{{url_for('user.new_appointment_post')}}';
+                var id = findID(sessions, txtdate);
+                window.location = url + '?session_id=' + id;
+            }
+        });
+        
+    {% endif %}
+    });
+</script>
+{% endblock %}
+{% endif %}
+
+{% block body %}
+
+
+{% if sessions %}
+
+
+<div class='span3'>
+<div id="datepicker"></div>
+</div>
+
+{% elif hours %}
+
+<div class='span6'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.new_appointment_post') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        
+        {#% for hour in hours %}
+            <!--FIXME-->
+            {{ render_input(form.hour, 'xlarge', value=hour[0]) }}
+        {% endfor %#}
+        
+        <div class='input'>
+        {% for hour in form.hour %}
+        <p>
+        <tr>
+            <td>{{ hour }}</td>
+            <td>{{ hour.label }}</td>
+        </tr>
+        </p>
+        {% endfor %}
+        </div>
+
+        {{ render_action(form.submit) }}
+        
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

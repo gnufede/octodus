@@ -1,0 +1,78 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Escoge Oferta') %}
+
+{% extends 'user_index.html' %}
+
+
+{% block append_js %}
+
+<script>
+
+    $("label").css({'display': 'inline'});
+    $('#select_offer').addClass('active');
+    
+    var base_url = '/admin/offers/';
+    
+    function retrieve(id) {
+        
+        var url = base_url;
+        
+        if (arguments.length > 0) // We need to ask for an specific ID
+            url += String(id);
+        
+        $.getJSON(url, function(data) {
+        
+            if ($.isEmptyObject(data)) {
+                //$('form').submit();
+                return;
+            }
+        
+            $('.input').empty().append('<div class="my-new-list"></div>');
+        
+            var lst = $('.my-new-list');
+            
+            $.each(data, function(key, val) {
+                lst.append('<tr><td>');
+                lst.append('<input class="clickable" type="radio" name="options" id="' + key + '" value=' + key + '>');
+                lst.append('</td><td>');
+                lst.append('<label for="' + key + '" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">' + val.price + ' € </div><div class="description"> ' + val.description + '</div><div class="image"><img src=' + val.img + '></div> </label>');
+                lst.append('</td></tr>');
+            });
+            
+        });
+        
+    }
+    
+    $(function() {
+    
+        $(':radio').live('click', function() {
+            var id = $(this).val();
+            retrieve(id);
+        });
+        
+        retrieve();
+        
+    });
+    
+</script>
+{% endblock %}
+
+{% block body %}
+
+
+<div class='span6'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        
+        <div class="input">
+        </div>
+
+        {{ render_action(form.submit) }}
+        
+    </form>
+</div>
+
+
+{% endblock %}

@@ -3,26 +3,38 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label,
-                          length)
+                          RadioField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import User, Project
 
+class EditDateForm(Form):
+    next = HiddenField()
+#    date = DateTimeField()
+    date = SelectField("Fecha de la cita")
+
+    submit = SubmitField(_('Save'))
+
+    def generate_dates (self, dates):
+        form_dates = []
+        for i in dates:
+            form_dates.append((i.id, i.begin))
+        self.date.choices = form_dates
+     
 
 class EditDatosForm(Form):
     next = HiddenField()
-    surname = TextField(_('Surname'), [required()])
-    name = TextField(_('Name'), [required()])
+    surname = TextField(_('Apellidos'), [required()])
+    name = TextField(_('Nombre'), [required()])
     projects = FieldList(TextField(""))
     nextproject = SelectField("")
 
-    
-    submit = SubmitField(_('Save'))
+    submit = SubmitField(_('Guardar'))
     
     
     def validate_nextproject(self, field):
         if Project.query.filter_by(id=field.data).first() is None:
-            raise ValidationError, gettext('This group does not exist')
+            raise ValidationError, gettext('Ese grupo no existe')
 
     
 
@@ -54,3 +66,21 @@ class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
     submit = SubmitField(_('Reauthenticate'))
+
+
+class UserAppointmentForm(Form):
+    next = HiddenField()
+    session = HiddenField()
+    hour = RadioField(_('Hora'))
+    submit = SubmitField(_('Confirmar'))
+
+    def set_hours(self, hours):
+        self.hour.choices = hours
+
+class UserOfferForm(Form):
+    next = HiddenField()
+    options = RadioField(_('Oferta'))
+    submit = SubmitField(_('Confirmar'))
+
+    def set_options(self, options):
+        self.options.choices = options

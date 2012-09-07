@@ -26,5 +26,6 @@ setup(
         'Flask-Login',
         'MySQL-python',
         'nose',
+        'python-dateutil',
     ]
 )

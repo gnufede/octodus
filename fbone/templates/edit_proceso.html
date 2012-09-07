@@ -16,10 +16,10 @@
 	}
 </style>
 
-{% extends "layout.html" %}
+{% extends "user_index.html" %}
 
 {% block body %}
-<div class="span12">	
+<div class="span8">	
 
 <form class='form-stacked' method="POST" action="{{ url_for('admin.edit_proceso') }}">
           {{ render_input( form.textarea, nolabel=True, cls='textarea', value=proceso|safe, style="width:610px; height:200px", placeholder=proceso|safe) }}
@@ -34,5 +34,6 @@ $(document).ready(function() {
   // Handler for .ready() called.
         $('.textarea').wysihtml5();
 });
+$('#process_edit').addClass('active');
 </script>
 {% endblock%}

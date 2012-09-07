@@ -2,14 +2,235 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm
+from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Proceso, Project
+from fbone.models import User, Group, Proceso, Project, Session, Offer
 from fbone.decorators import keep_login_url, admin_required
-
+import datetime
+from werkzeug import secure_filename
+import os
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
+UPLOAD_FOLDER = '/tmp/'
+admin.config = dict()
+admin.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def render_projects(objects):
+    for object in objects:
+        object.sesiones = len(object.sessions)
+        object.usuarios = len(object.users)
+    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "usuarios"], active='project_list', current_user=current_user)
+
+def set_offers(offers, projects):
+    form = SetOfferForm(request.form)
+    offers_choices = [ (offer.id, offer.name) for offer in offers]
+    projects_choices = [ (project.id, project.activation_key) for project in projects]
+    form.offers_id.choices = offers_choices
+    form.projects_id.choices = projects_choices
+    if request.method == 'POST':
+        for offer_id in form.offers_id.data:
+            offer = Offer.query.filter_by(id=offer_id).first()
+            for project_id in form.projects_id.data:
+                project = Project.query.filter_by(id=project_id).first()
+                project.set_offer(offer)
+                
+        db.session.commit()
+        return redirect(url_for('admin.project_list'))
+    return render_template('admin_set_offer.html', form=form,
+                           current_user=current_user)
+
+def set_sessions(sessions, projects):
+    if len(sessions) > 1:
+        sessions_from_today = [ session for session in sessions if session.begin > datetime.datetime.now() ]
+    else:
+        sessions_from_today = sessions
+    form = SetSessionForm(request.form)
+    sessions_choices = [ (session.id, session.begin) for session in sessions_from_today]
+    projects_choices = [ (project.id, project.activation_key) for project in projects]
+    form.sessions_id.choices = sessions_choices
+    form.projects_id.choices = projects_choices
+    if request.method == 'POST':
+        for session_id in form.sessions_id.data:
+            session = Session.query.filter_by(id=session_id).first()
+            for project_id in form.projects_id.data:
+                project = Project.query.filter_by(id=project_id).first()
+                project.set_session(session)
+                
+        db.session.commit()
+        return redirect(url_for('admin.project_list'))
+    return render_template('admin_set_session.html', form=form,
+                           current_user=current_user)
+
+@admin.route('/offers/<id>', methods=['GET'])
+@admin.route('/offers/', methods=['GET'])
+@login_required
+def offers(id=None):
+    project = None
+    if len(current_user.projects):
+        project = current_user.projects[-1] #FIXME
+    if project:
+        offers = project.offers
+        offer_ids = [str(offer.id) for offer in offers]
+        if id: 
+            if(str(id) in offer_ids):
+                node = Offer.query.filter_by(id=id).first()
+                tree = [(x.id, x.jsonify_full()) for x in node.children]
+            else:
+                tree = []
+        else:
+            offers = [offer for offer in offers if offer.depth == 0]
+            tree = [(x.id, x.jsonify_full()) for x in offers]
+
+    else:
+        if id:
+            node = Offer.query.filter_by(id=id).first()
+            tree = db.session.query(Offer.id,Offer.name).filter_by(parent=node).all()
+        else:
+            tree = [(x.id, x.jsonify_full()) for x in Offer.query.filter_by(depth=0)]
+    return jsonify(tree)
+    
+@admin.route('/project/list/<name>')
+@login_required
+@admin_required
+def project_list_name(name):
+    objects = db.session.query(Project).filter(Project.name!='0', Project.term==name).all()
+    return render_projects(objects)
+
+@admin.route('/project/list')
+@login_required
+@admin_required
+def project_list():
+    objects = db.session.query(Project).filter(Project.name!='0').all()
+    return render_projects(objects)
+
+@admin.route('/group/list')
+@login_required 
+@admin_required
+def group_list():
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list', no_set_delete=True, current_user=current_user)
+
+
+@admin.route('/project/del/<id>')
+@login_required 
+@admin_required
+def project_delete(id):
+    project = Project.query.filter_by(id=id).first_or_404()
+    db.session.delete(project)
+    db.session.commit()
+    return redirect(url_for('admin.project_list'))
+
+@admin.route('/group/del/<id>')
+@login_required 
+@admin_required
+def group_delete(id):
+    group = Group.query.filter_by(id=id).first_or_404()
+    db.session.delete(group)
+    db.session.commit()
+    return redirect(url_for('admin.group_list'))
+
+@admin.route('/offer/del/<id>')
+@login_required 
+@admin_required
+def offer_delete(id):
+    offer = Offer.query.filter_by(id=id).first_or_404()
+    db.session.delete(offer)
+    db.session.commit()
+    return redirect(url_for('admin.offer_list'))
+
+@admin.route('/project/set/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session_id(id):
+    sessions = Session.query.all()
+    projects = [ db.session.query(Project).filter(Project.id==id).first(),]
+    return set_sessions(sessions, projects)
+
+@admin.route('/project_set_session/<term>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session_term(term):
+    sessions = Session.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0', Project.term==term).all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/project_set_session/', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_session():
+    sessions = Session.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/session/set/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_project(id):
+    sessions = [Session.query.filter_by(id=id).first(), ]
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_sessions(sessions, projects)
+
+@admin.route('/project/view/<id>')
+@login_required 
+@admin_required
+def project_view(id):
+    return redirect('session/list/'+id)
+
+@admin.route('/new_offer/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_offer():
+    depth = 0
+    parent = None
+    form = NewOfferForm(request.form)
+    if request.method == 'POST':
+        file = request.files['picture']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(os.path.join(admin.root_path, '../static/offers/'), filename))
+            offer = Offer(name=form.name.data, description=form.description.data,
+                         type=form.type.data, price=form.price.data, picture=filename,
+                          default=form.default.data)
+            if form.parent.data:
+                parent = Offer.query.filter_by(id=form.parent.data).first()
+                if parent:
+                    offer.parent_id = form.parent.data
+                    depth = parent.depth + 1
+            offer.depth = depth 
+            db.session.add(offer)
+            db.session.commit()
+
+            return redirect(url_for('admin.uploaded_file', id=offer.id))
+    else:
+        filename = None
+        return render_template("admin_new_offer.html",
+                           form=form,
+                           filename=filename)
+    return redirect(url_for('admin.offer_list'))
+    
+@admin.route('/offer/view/<id>', methods=['GET', 'POST'])
+@admin.route('/offer/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def uploaded_file(id):
+    offer = Offer.query.filter_by(id=id).first()
+    return render_template("template.html", name=offer.name, description=offer.description, price=offer.price, filename=offer.picture)
+
+@admin.route('/offer/list', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def offer_list():
+    objects = db.session.query(Offer).all()
+    return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], active='offer_list', current_user=current_user)
+
+@admin.route('/set_offer/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def set_offer():
+    offers = Offer.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_offers(offers, projects)
+
 
 @admin.route('/new_project/', methods=['GET', 'POST'])
 @login_required
@@ -89,6 +310,14 @@ def new_group():
                            current_user=current_user, node=node)
 
 
+@admin.route('/group/<id>')
+@login_required 
+@admin_required
+def group_edit(id):
+    node = Group.query.filter_by(id=id).first()
+    form = NewGroupForm(request.form)
+    return render_template('admin_new_group.html', form=form,
+                           current_user=current_user, node=node)
 
 @admin.route('/grouptypes/', methods=['GET'])
 @login_required

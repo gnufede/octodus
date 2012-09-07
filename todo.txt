@@ -3,14 +3,22 @@ x- datepicker[1] y timepicker[2] para crear sesiones (Hecho)
 x- Colocar el ojo del fondo a la izquierda abajo y el fondo de debajo blanco (Hecho)
 x- Hover de los elementos de la barra de menú igual que el del elemento Login (Ya no aplica)
 x- Interfaz para crear proyectos
-- Interfaz para /ver/editar/cancelar sesiones de fotos
+x- Interfaz de usuario para apuntarse a una sesión de fotos 
+x- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proyectos
+x- Corrección de email en el signup[3]
+- Poner fechas en español
+- Crear página con info de mandar un correo al administrador.
+- Añadir checkbox en datos de usuario: "Mi titulación/especialidad/grupo no sale en la lista...", que acabe mandándote a la página de mandar el correo.
+- Validar en sesión que fecha fin > fecha inicio y hora fin> hora inicio //No tira, y no sé porqué
 - Verificación de cuenta (con envío de email)
-- Corrección de email en el signup[3]
 - Dar opción al administrador a calcular cuántas horas/sesiones necesita para 
   hacer las fotos a un grupo en función de la gente que hay en un proyecto
 
-
-
+Bugs:
+- Sesiones: Sale solo la primera, las siguientes no se pueden elegir: Ordenar en new_appointment por fecha las sesiones: 2013 sale antes que 2012 y eso da problemas.
+- Asignar proyectos en grupos recursivamente
+- Permitir crear grupos en servidor definitivo
+- Seleccionar gente para enviar emails, o a todos a la vez
 
 [1]: https://github.com/eternicode/bootstrap-datepicker 
 [2]: http://jdewit.github.com/bootstrap-timepicker/ 

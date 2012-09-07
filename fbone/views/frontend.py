@@ -48,6 +48,7 @@ def search():
         page = int(request.args.get('page', 1))
         pagination = User.search(keywords).paginate(page, 1)
     else:
+        pagination = User.query.all()
         flash('Please input keyword(s)', 'error')
     return render_template('search.html', pagination=pagination,
                            keywords=keywords, login_form=login_form)
@@ -77,7 +78,7 @@ def login():
 
         else:
             flash(_('Lo sentimos, esa cuenta no existe'), 'error') #Sorry, there is no such account
-            return redirect(url_for('frontend.signup'),email=form.email.data)
+            return redirect(url_for('frontend.signup',email=form.email.data))
     if form.email.data:
         return render_template('login.html', form=form, tries=tries, email=form.email.data)
     return render_template('login.html', form=form, tries=tries)
@@ -114,7 +115,7 @@ def logout():
 @frontend.route('/signup', methods=['GET', 'POST'])
 def signup():
     login_form= LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'), email=request.args.get('email'))
 
     if form.validate_on_submit():
        
@@ -141,6 +142,7 @@ def signup():
 @frontend.route('/change_password', methods=['GET', 'POST'])
 def change_password():
     user = None
+    email = None
     if 'activation_key' in request.values and 'email' in request.values:
         activation_key = request.values['activation_key']
         email = request.values['email']
@@ -169,11 +171,16 @@ def change_password():
         db.session.add(user)
         db.session.commit()
 
-        flash(_("Se ha cambiado tu contraseña, por favor, entra otra vez"), #Your password has been changed, please log in again
-              "success")
         session.pop('email', None)
         session.pop('activation_code', None)
-        return redirect(url_for("frontend.login",email=email))
+        if current_user.is_authenticated():
+            flash(_(u"Se ha cambiado tu contraseña correctamente"), #Your password has been changed, please log in again
+              "success")
+            return redirect(url_for("user.index",email=email))
+        else:
+            flash(_(u"Se ha cambiado tu contraseña, por favor, entra otra vez"), #Your password has been changed, please log in again
+              "success")
+            return redirect(url_for("frontend.login",email=email))
   
     return render_template("change_password.html", form=form)
 
@@ -207,6 +214,18 @@ def reset_password():
             flash(_('Lo sentimos, no hay ningún usuario con esa dirección'), 'error') #Sorry, no user found for that email address
 
     return render_template('reset_password.html', form=form, value=value)
+
+@frontend.route('/bodas')
+@cached_response
+def bodas():
+    return render_template('bodas.html')
+
+
+@frontend.route('/fotoescuela')
+@cached_response
+def fotoescuela():
+    return render_template('fotoescuela.html')
+
 
 @frontend.route('/proceso')
 @cached_response

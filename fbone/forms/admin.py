@@ -3,11 +3,31 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label, TextAreaField,
-                          length)
+                          FileField, file_allowed, file_required, FloatField, IntegerField,
+                           SelectMultipleField,
+                          length, widgets) 
 from flaskext.babel import gettext, lazy_gettext as _
+from werkzeug import secure_filename
+
+from flask.ext.uploads import UploadSet, IMAGES
 
 from fbone.extensions import db
 from fbone.models import User, Project, Group
+
+images = UploadSet("images", IMAGES)
+
+class NewOfferForm(Form):
+    next = HiddenField()
+    default = HiddenField()
+    parent = HiddenField()
+    name = TextField(u'Nombre', [required()])
+    description = TextAreaField(u'Descripción', [required()])
+    price = FloatField(u'Precio')
+    type = IntegerField(u'Tipo')
+    picture = FileField("Foto",
+                       validators=[file_required(),
+                                   file_allowed(images, "Images only!")])
+    submit = SubmitField(_('Guardar'))
 
 class NewProjectForm(Form):
     next = HiddenField()
@@ -64,3 +84,23 @@ class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
     submit = SubmitField(_('Reauthenticate'))
+
+
+
+
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
+class SetOfferForm(Form):
+    next = HiddenField()
+    offers_id = MultiCheckboxField()
+    projects_id = MultiCheckboxField()
+    submit = SubmitField(_('Guardar'))

@@ -1,0 +1,17 @@
+{% from 'macros/_misc.html' import render_table %}
+{#% set page_title = current_user.name +' '+current_user.surname %#}
+{% set page_title = "Sesiones de fotos" %}
+
+{% extends "user_index.html" %}
+
+{% block body %}
+<div class="span8">	
+    {{ render_table(sessions,'table-striped table-bordered', fields) }}
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    $('#session_list').addClass('active');
+</script>
+{% endblock %}

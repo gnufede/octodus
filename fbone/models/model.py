@@ -6,6 +6,7 @@ from fbone.extensions import db
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
+from flask import url_for
 
 import datetime
 
@@ -33,6 +34,37 @@ projects_sessions = db.Table("projects_sessions", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
     db.Column("session_id", db.Integer, ForeignKey("sessions.id")))
 
+projects_offers = db.Table("projects_offers", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
+    db.Column("overriden_price", db.Float))
+
+offers_users = db.Table("offers_users", db.metadata,
+    db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("offer_type", db.Integer, ForeignKey("offers.type")),
+    db.Column("user_id", db.Integer, ForeignKey("users.id")))
+
+class Offer(db.Model):
+    __tablename__ = "offers"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    description = db.Column(db.String(128))
+    price = db.Column(db.Float())
+    picture = db.Column(db.String(128))
+    type = db.Column(db.Integer, nullable=False, index=True)
+    default = db.Column(db.Integer)
+    depth = db.Column(db.Integer)
+    parent_id = db.Column(db.Integer, ForeignKey("offers.id"))
+    children = relationship("Offer",
+                backref=backref('parent', remote_side=[id])
+               )
+
+    def jsonify(self):
+        return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]    }
+
+    def jsonify_full(self):
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -40,9 +72,9 @@ class Appointment(db.Model):
     user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
     session_id = db.Column(db.Integer, ForeignKey("sessions.id"), primary_key=True)
     date = db.Column(db.DateTime)
-    project = relationship("Project", backref="appointments")
-    user = relationship("User", backref="appointments")
-    session = relationship("Session", backref="appointments")
+    project = relationship("Project", backref=backref("appointments",cascade="all,delete,delete-orphan"))
+    user = relationship("User", backref=backref("appointments",cascade="all,delete,delete-orphan"))
+    session = relationship("Session", backref=backref('appointments', cascade='all,delete,delete-orphan'))
     
 #    def __init__(self, date):
 #        self.date = date
@@ -58,9 +90,10 @@ class Project(db.Model):
     name = db.Column(db.String(128))
     type = db.Column(db.String(128))    
     term = db.Column(db.String(32))
-    creation = db.Column(db.DateTime)
+    creation = db.Column(db.DateTime, default=db.func.now())
     users = relationship("User", secondary=projects_users, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
+    offers = relationship("Offer", secondary=projects_offers, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
     depth = db.Column(db.Integer)
@@ -89,6 +122,22 @@ class Project(db.Model):
             db.session.commit()
         for j in node.children:
             new_project.create(j)
+
+    def set_offer(self, offer):
+        if self.children:
+            for j in self.children:
+                j.set_offer(offer)
+        else:
+            self.offers.append(offer)
+            db.session.commit()
+
+    def set_session(self, session):
+        if self.children:
+            for j in self.children:
+                j.set_session(session)
+        else:
+            self.sessions.append(session)
+            db.session.commit()
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)

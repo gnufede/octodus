@@ -52,7 +52,7 @@ class Offer(db.Model):
     description = db.Column(db.String(128))
     price = db.Column(db.Float())
     picture = db.Column(db.String(128))
-    type = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.Integer, nullable=False, index=True)
     default = db.Column(db.Integer)
     depth = db.Column(db.Integer)
     parent_id = db.Column(db.Integer, ForeignKey("offers.id"))

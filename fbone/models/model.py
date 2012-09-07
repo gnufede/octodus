@@ -80,15 +80,15 @@ class Project(db.Model):
         
     def create(self, node):
         if not self.project_already_created(node.activation_key + self.term):
-           new_project = Project(term=self.term)
-           new_project.name = node.name
-           new_project.type = node.type
-           new_project.activation_key = node.activation_key + self.term
-           new_project.depth = node.depth
-           self.children.append(new_project)
-           db.session.commit()
-           for j in node.children:
-               new_project.create(j)
+            new_project = Project(term=self.term)
+            new_project.name = node.name
+            new_project.type = node.type
+            new_project.activation_key = node.activation_key + self.term
+            new_project.depth = node.depth
+            self.children.append(new_project)
+            db.session.commit()
+        for j in node.children:
+            new_project.create(j)
     
     def __str__(self):
         s = "PROJECT %s (id %d)\n" % (self.year, self.id)

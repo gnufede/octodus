@@ -8,29 +8,55 @@
 {% block append_js %}
 
 <script>
-    $("label").css({ 'display': 'inline' });
+
+    $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
-
-    var input = $('.input')
-    $.getJSON('../admin/offers', function(data) {
-      var items = [];
-
-      $.each(data, function(key, val) {
-        items.push('<tr>');
-        items.push('<td>');
-        items.push('<input type="radio" name="options" id="' + key + '" value=' + key + '>');
-        items.push('</td>');
-        items.push('<td>');
-        items.push('<label for="'+key+'" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">'+val.price+' € </div><div class="description"> '+val.description+'</div><div class="image"><img src='+val.img+'></div> </label>');
-        items.push('</td>');
-        items.push('<tr>');
-      });
-
-      $('<div/>', {
-        'class': 'my-new-list',
-        html: items.join('')
-      }).appendTo(input);
+    
+    var chosen_ids = [];
+    var base_url = '/admin/offers/';
+    
+    function retrieve() {
+        
+        var url = base_url;
+        
+        $('.input').empty().append('<div class="my-new-list"></div>');
+        
+        var lst = $('.my-new-list');
+        
+        if (chosen_ids.length > 0) // We need to ask for an specific ID
+            url += String(chosen_ids[chosen_ids.length - 1]);
+        
+        $.getJSON(url, function(data) {
+        
+            if ($.isEmptyObject(data)) {
+                //submit all chosen_ids?
+                return;
+            }
+            
+            $.each(data, function(key, val) {
+                lst.append('<tr><td>');
+                lst.append('<input class="clickable" type="radio" name="options" id="' + key + '" value=' + key + '>');
+                lst.append('</td><td>');
+                lst.append('<label for="' + key + '" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">' + val.price + ' € </div><div class="description"> ' + val.description + '</div><div class="image"><img src=' + val.img + '></div> </label>');
+                lst.append('</td></tr>');
+            });
+            
+        });
+        
+    }
+    
+    $(function() {
+    
+        $(':radio').live('click', function() {
+            var id = $(this).val();
+            chosen_ids.push(id);
+            retrieve();
+        });
+        
+        retrieve();
+        
     });
+    
 </script>
 {% endblock %}
 

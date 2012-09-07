@@ -64,7 +64,7 @@ class Offer(db.Model):
         return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]    }
 
     def jsonify_full(self):
-        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
 
 class Appointment(db.Model):
     __tablename__ = "appointments"

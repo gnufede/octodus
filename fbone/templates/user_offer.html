@@ -11,6 +11,26 @@
     $("label").css({ 'display': 'inline' });
     $('#select_offer').addClass('active');
 
+    var input = $('.input')
+    $.getJSON('../admin/offers', function(data) {
+      var items = [];
+
+      $.each(data, function(key, val) {
+        items.push('<tr>');
+        items.push('<td>');
+        items.push('<input type="radio" name="options" id="' + key + '" value=' + key + '>');
+        items.push('</td>');
+        items.push('<td>');
+        items.push('<label for="'+key+'" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">'+val.price+' € </div><div class="description"> '+val.description+'</div><div class="image"><img src='+val.img+'></div> </label>');
+        items.push('</td>');
+        items.push('<tr>');
+      });
+
+      $('<div/>', {
+        'class': 'my-new-list',
+        html: items.join('')
+      }).appendTo(input);
+    });
 </script>
 {% endblock %}
 

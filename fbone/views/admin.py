@@ -79,6 +79,7 @@ def offers(id=None):
             else:
                 tree = []
         else:
+            offers = [offer for offer in offers if offer.depth == 0]
             tree = [(x.id, x.jsonify_full()) for x in offers]
 
     else:

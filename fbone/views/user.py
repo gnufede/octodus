@@ -177,6 +177,10 @@ def set_offer():
         offers = [project.offers, ]
     if request.method == 'post':
         #TODO: Take offers selected and insert them in the DB
+        for form_offer in form.offers:
+            offer = Offers.query.get(int(form_offer.data))
+            current_user.offers.append(offer, project)
+        db.session.commit()
         return redirect(form.next.data or url_for('user.index'))
 
     else:

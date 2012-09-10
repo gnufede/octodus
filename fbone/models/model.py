@@ -39,11 +39,16 @@ projects_offers = db.Table("projects_offers", db.metadata,
     db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
     db.Column("overriden_price", db.Float))
 
-offers_users = db.Table("offers_users", db.metadata,
-    db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
-    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
-    db.Column("offer_type", db.Integer, ForeignKey("offers.type")),
-    db.Column("user_id", db.Integer, ForeignKey("users.id")))
+class OfferSelection(db.Model):
+    __tablename__ = "offers_users"
+    project_id = db.Column(db.Integer, ForeignKey("projects.id"), primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
+    offer_id = db.Column(db.Integer, ForeignKey("offers.id"), primary_key=True)
+    offer_type = db.Column(db.Integer, ForeignKey("offers.type"), primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.now())
+    project = relationship("Project", backref=backref("offer_selection",cascade="all,delete,delete-orphan"))
+    user = relationship("User", backref=backref("offer_selection",cascade="all,delete,delete-orphan"))
+    offer = relationship("Offer", primaryjoin="Offer.id==OfferSelection.offer_id", backref=backref('offer_selection', cascade='all,delete,delete-orphan'))
 
 class Offer(db.Model):
     __tablename__ = "offers"

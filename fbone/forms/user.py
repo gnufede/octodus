@@ -3,7 +3,7 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label,
-                          RadioField, length)
+                          RadioField, SelectMultipleField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import User, Project
@@ -79,7 +79,7 @@ class UserAppointmentForm(Form):
 
 class UserOfferForm(Form):
     next = HiddenField()
-    options = RadioField(_('Oferta'))
+    options = SelectMultipleField(_('Oferta'))
     submit = SubmitField(_('Confirmar'))
 
     def set_options(self, options):

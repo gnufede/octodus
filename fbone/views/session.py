@@ -103,7 +103,7 @@ def delete_appointment(session_id):
     project_id = request.args.get("project_id", None)
     if session_id and user_id and project_id:
         Appointment.query.filter_by(session_id=session_id, user_id=user_id, project_id=project_id).delete()
-        #db.session.commit() # No hace falta, lo hace solo
+        db.session.commit() # No hace falta, lo hace solo
     return redirect('session/view/'+str(session_id))
 
 @session.route('/set/<id>')

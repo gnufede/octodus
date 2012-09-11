@@ -7,6 +7,11 @@ x- Interfaz de usuario para apuntarse a una sesión de fotos
 x- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proyectos
 x- Corrección de email en el signup[3]
 x- Poner fechas en español
+x- Permitir crear grupos en servidor definitivo
+- Arreglar el envío de email
+- Página de resumen del pedido al terminar de elegir las ofertas
+- Pasar precios de las ofertas a tipo decimal 
+- Interfaz para borrar, clonar y modificar ofertas de un proyecto (añadir ya se puede)
 - Crear página con info de mandar un correo al administrador.
 - Añadir checkbox en datos de usuario: "Mi titulación/especialidad/grupo no sale en la lista...", que acabe mandándote a la página de mandar el correo.
 - Validar la disponibilidad de la hora en el servidor cuando el usuario pide cita
@@ -15,11 +20,7 @@ x- Poner fechas en español
 - Dar opción al administrador a calcular cuántas horas/sesiones necesita para 
   hacer las fotos a un grupo en función de la gente que hay en un proyecto
 - Seleccionar gente para enviar emails, o a todos a la vez
-x- Permitir crear grupos en servidor definitivo
 
-Bugs:
-x- Sesiones: Sale solo la primera, las siguientes no se pueden elegir: Ordenar en new_appointment por fecha las sesiones: 2013 sale antes que 2012 y eso da problemas. (Hecho, a falta de probarlo)
-- Asignar proyectos en grupos recursivamente
 
 [1]: https://github.com/eternicode/bootstrap-datepicker 
 [2]: http://jdewit.github.com/bootstrap-timepicker/ 

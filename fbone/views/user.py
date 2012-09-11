@@ -123,7 +123,11 @@ def new_appointment_get():
         # get all hours for this session
         sess = Session.query.filter_by(id=session_id).first()
         interval_timedelta = sess.end - sess.begin
-        interval_mins = int(interval_timedelta.total_seconds() / 60)
+        #hack so it works in python2.6
+        td = interval_timedelta
+        total_seconds = (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
+        interval_mins = int(total_seconds / 60) 
+                        #int(interval_timedelta.total_seconds() / 60)
         all_hours = [ sess.begin + datetime.timedelta(minutes=x) for x in range(0, interval_mins, sess.block_duration) ]
         all_hours_occupation = [ (h, len([ apn for apn in sess.appointments if apn.date == h ])) for h in all_hours ]
         #hours = [ (h, n) for (h, n) in all_hours_occupation if n < sess.block_capacity ]

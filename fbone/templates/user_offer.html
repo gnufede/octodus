@@ -19,7 +19,9 @@
         var url = base_url;
         
         if (arguments.length > 0) // We need to ask for an specific ID
-            url += String(id);
+        url += String(id);
+        else
+        url += 'type/'+String({{form.type.data}})
         
         $.getJSON(url, function(data) {
         
@@ -28,16 +30,13 @@
                 return;
             }
         
-            $('.input').empty().append('<div class="my-new-list"></div>');
-        
-            var lst = $('.my-new-list');
+        $('.input').empty().append('<div class="my-new-list"><ul></ul></div>');
+    
+            var lst = $('.my-new-list ul');
             
             $.each(data, function(key, val) {
-                lst.append('<tr><td>');
-                lst.append('<input class="clickable" type="radio" name="options" id="' + key + '" value=' + key + '>');
-                lst.append('</td><td>');
-                lst.append('<label for="' + key + '" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">' + val.price + ' € </div><div class="description"> ' + val.description + '</div><div class="image"><img src=' + val.img + '></div> </label>');
-                lst.append('</td></tr>');
+                lst.append('<li style="display:inline-block"><input class="clickable" type="radio" name="options" id="' + key + '" value=' + key + '>' +
+                '<label for="' + key + '" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">' + val.price + ' € </div><div class="description"> ' + val.description + '</div><div class="image"><img style="max-width:128px" src=' + val.img + '></div> </label></li>');
             });
             
         });

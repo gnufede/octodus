@@ -166,26 +166,30 @@ def new_appointment_post():
     flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
-@user.route('/set_offer', methods=['GET', 'POST'])
+@user.route('/set_offer/<type>', methods=['GET', 'POST'])
+@user.route('/set_offer/', methods=['GET', 'POST'])
 @login_required
-def set_offer():
+def set_offer(type=1):
     form = UserOfferForm()
+    form.set_offer_type(type)
     project = current_user.projects[-1] #FIXME
-    if len(project.offers):
-        offers = project.offers
-    else:
-        offers = [project.offers, ]
-    if request.method == 'post':
-        #TODO: Take offers selected and insert them in the DB
-        for form_offer in form.offers:
-            offer = Offers.query.get(int(form_offer.data))
-            current_user.offers.append(offer, project)
-        db.session.commit()
-        return redirect(form.next.data or url_for('user.index'))
 
-    else:
-        form.set_options(offers)
+    if request.method == 'POST':
+        offer = Offer.query.get(int(form.options.data))
+        previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
+        if previous_offer:
+            offer_selection = previous_offer
+            offer_selection.offer_id = offer.id
+        else:
+            offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+            db.session.add(offer_selection)
+        db.session.commit()
+        next_offer = Offer.query.filter_by(type=offer.type+1).first()
+        if next_offer:
+            return redirect(url_for('user.set_offer', type=type+1))
+        flash('Oferta seleccionada correctamente', 'success')
+        return redirect(form.next.data or url_for('user.index'))
     return render_template('user_offer.html', form=form,
-                           current_user=current_user, offers=offers)
+                           current_user=current_user)
 
 

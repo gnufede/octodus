@@ -90,6 +90,21 @@ def offers(id=None):
             tree = [(x.id, x.jsonify_full()) for x in Offer.query.filter_by(depth=0)]
     return jsonify(tree)
     
+@admin.route('/offers/type/<type>', methods=['GET'])
+@login_required
+def offers_types(type=1):
+    project = None
+    tree = []
+    if len(current_user.projects):
+        project = current_user.projects[-1] #FIXME
+    if project:
+        offers = project.offers
+        offer_types = [str(offer.type) for offer in offers]
+        if(str(type) in offer_types):
+            nodes = [offer for offer in offers if (offer.depth == 0 and str(offer.type)==str(type))]
+            tree = [(x.id, x.jsonify_full()) for x in nodes]
+    return jsonify(tree)
+    
 @admin.route('/project/list/<name>')
 @login_required
 @admin_required

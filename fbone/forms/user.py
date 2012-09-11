@@ -79,8 +79,9 @@ class UserAppointmentForm(Form):
 
 class UserOfferForm(Form):
     next = HiddenField()
-    options = SelectMultipleField(_('Oferta'))
+    options = RadioField(_('Oferta'))
     submit = SubmitField(_('Confirmar'))
+    type = HiddenField()
 
-    def set_options(self, options):
-        self.options.choices = options
+    def set_offer_type(self, type):
+        self.type.data = type

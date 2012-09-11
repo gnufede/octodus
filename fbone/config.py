@@ -9,7 +9,7 @@ class BaseConfig(object):
     TESTING = True
 
     # os.urandom(24)
-    SECRET_KEY = 'secret key'
+    SECRET_KEY = 'w\xcb?\x00\xdf\x16_\x11\xb5+\xce\xdc\xa3\xf1\xa3\xa3X\x1d\t\xe5\x19\xbb=\xe4'
 
 
 class DefaultConfig(BaseConfig):

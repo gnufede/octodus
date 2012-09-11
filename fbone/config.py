@@ -41,12 +41,12 @@ class DefaultConfig(BaseConfig):
     # Email (Flask-email)
     # https://bitbucket.org/danjac/flask-mail/issue/3/problem-with-gmails-smtp-server
     MAIL_DEBUG = DEBUG
-    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_SERVER = 'smtp.webfaction.com'
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
-    MAIL_USERNAME = 'efdigitalorlas.test'
-    MAIL_PASSWORD = 'EFDOtest'
-    DEFAULT_MAIL_SENDER = '%s@gmail.com' % MAIL_USERNAME
+    MAIL_USERNAME = 'efdigital'
+    MAIL_PASSWORD = 'a0e11dbe'
+    DEFAULT_MAIL_SENDER = '%s@mail.webfaction.com' % MAIL_USERNAME
 
 
 class TestConfig(BaseConfig):

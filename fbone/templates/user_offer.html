@@ -4,10 +4,23 @@
 
 {% extends 'user_index.html' %}
 
+{% block append_css %}
+<style type='text/css'>
+    .labeled.focused
+    {
+        background-color: #EEEEEE;
+        font-style: italic;
+    }
+</style>
+{% endblock %}
 
 {% block append_js %}
+<script type='text/javascript'>
 
-<script>
+    function updateSelectedStyle() {
+        $(':radio').removeClass('focused').next().removeClass('focused');
+        $(':radio:checked').addClass('focused').next().addClass('focused');
+    }
 
     $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
@@ -27,16 +40,17 @@
         
             if ($.isEmptyObject(data)) {
                 //$('form').submit();
+                $(':radio.clickable#'+String(id)).next().addClass('focused')
                 return;
             }
         
-        $('.input').empty().append('<div class="my-new-list"><ul></ul></div>');
+        $('.input').empty().append('<div class="thumbnails"><ul></ul></div>');
     
-            var lst = $('.my-new-list ul');
+            var lst = $('.thumbnails ul');
             
             $.each(data, function(key, val) {
-                lst.append('<li style="display:inline-block"><input class="clickable" type="radio" name="options" id="' + key + '" value=' + key + '>' +
-                '<label for="' + key + '" style="display:inline-block"><div class="name"><b>' + val.name + '</b> </div><div class="price">' + val.price + ' € </div><div class="description"> ' + val.description + '</div><div class="image"><img style="max-width:128px" src=' + val.img + '></div> </label></li>');
+                lst.append('<li class="input" style="display:inline-block; padding-right:20px; padding-bottom:20px;"><input class="clickable" type="radio" name="options" style="display:none" id="' + key + '" value=' + key + '>' +
+                    '<label class="labeled" for="' + key + '" style="display:inline-block; max-width:190px"><div class="thumbnail"><img style="width:190px" src=' + val.img + '> <div class="name"><h3>' + val.name + '</h3> </div><div class="price"><b>' + val.price + ' € (IVA no incluido)</b></div><hr style="margin:10px 0;"/><div class="description" style="margin-bottom:10px;"> ' + val.description + '</div></div></label></li>');
             });
             
         });
@@ -60,7 +74,7 @@
 {% block body %}
 
 
-<div class='span6'>
+<div class='span9'>
     <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}

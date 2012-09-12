@@ -15,6 +15,7 @@ x- Permitir crear grupos en servidor definitivo
 - Crear página con info de mandar un correo al administrador.
 - Añadir checkbox en datos de usuario: "Mi titulación/especialidad/grupo no sale en la lista...", que acabe mandándote a la página de mandar el correo.
 - Validar la disponibilidad de la hora en el servidor cuando el usuario pide cita
+--- SEGUNDA ENTREGA ---
 - Validar en sesión que fecha fin > fecha inicio y hora fin> hora inicio //No tira, y no sé porqué
 - Verificación de cuenta (con envío de email)
 - Dar opción al administrador a calcular cuántas horas/sesiones necesita para 

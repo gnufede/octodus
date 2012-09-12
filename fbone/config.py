@@ -48,6 +48,8 @@ class DefaultConfig(BaseConfig):
     MAIL_PASSWORD = 'a0e11dbe'
     DEFAULT_MAIL_SENDER = '%s@mail.webfaction.com' % MAIL_USERNAME
 
+    TESTING = False
+
 
 class TestConfig(BaseConfig):
     TESTING = True

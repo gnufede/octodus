@@ -15,14 +15,16 @@ import dateutil.parser
 session = Blueprint('session', __name__, url_prefix='/session')
 
 
-def list(sessions):
+def list(sessions, actions=None):
     sessions2 = sessions[:]
+    if not actions:
+        actions = [['Editar', "edit", 'icon-pencil'], ['Asignar a Proyectos', "set", 'icon-hand-right'], ['Ver citas', "view", 'icon-eye-open'], ['Borrar',"del",'icon-trash']]
     for session in sessions2:
         session.citas = len(session.appointments)
         session.fecha_de_sesion = session.begin.date().isoformat()
         session.inicio = session.begin.isoformat().split('T')[1].split('.')[0]
         session.fin = session.end.isoformat().split('T')[1].split('.')[0]
-    return render_template('session_index.html', sessions=sessions2, fields=['id', 'fecha_de_sesion', 'inicio', 'fin', 'block_capacity', 'block_duration', 'citas'],current_user=current_user)
+    return render_template('session_index.html', sessions=sessions2, fields=['id', 'fecha_de_sesion', 'inicio', 'fin', 'block_capacity', 'block_duration', 'citas'], actions=actions ,current_user=current_user)
 
 @session.route('/')
 @login_required
@@ -30,12 +32,13 @@ def index():
     sessions = Session.query.order_by(Session.begin).all()
     return list(sessions)
 
-@session.route('/list/<project>')
+@session.route('/list/<project_id>')
 @login_required
-def list_project(project):
-    project = db.session.query(Project).filter(Project.id==project).first()
+def list_project(project_id):
+    project = db.session.query(Project).filter(Project.id==project_id).first()
     sessions = project.sessions
-    return list(sessions)
+    actions = [['Quitar del proyecto',"del/"+project_id+'/session','icon-trash']]
+    return list(sessions,actions)
 
 @session.route('/nueva_sesion', methods=['GET'])
 @login_required
@@ -79,7 +82,7 @@ def new_session_post():
     return render_template('session_new.html', form=form,
                            current_user=current_user)
 
-@session.route('/<id>')
+@session.route('/edit/<id>')
 @login_required #FIXME!!!
 @admin_required
 def pub(id):
@@ -112,6 +115,17 @@ def delete_appointment(session_id):
 @admin_required
 def set(id):
     return redirect("admin/session/set/"+id)
+
+@session.route('/list/del/<project_id>/session/<id>')
+@session.route('/del/<project_id>/session/<id>')
+@login_required 
+@admin_required
+def remove_from_project(project_id, id):
+    project = Project.query.filter_by(id=project_id).first()
+    session = Session.query.filter_by(id=id).first()
+    project.sessions.remove(session)
+    db.session.commit()
+    return redirect('session/list/'+str(project_id))
 
 @session.route('/del/<id>')
 @login_required 

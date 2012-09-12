@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="span8">	
-    {{ render_table(sessions,'table-striped table-bordered', fields) }}
+    {{ render_table(sessions,'table-striped table-bordered', fields, actions=actions) }}
 </div>
 {% endblock %}
 

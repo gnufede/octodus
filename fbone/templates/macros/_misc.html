@@ -49,7 +49,7 @@
     </div>
 {% endmacro %}
 
-{% macro render_table(objects, class='', fields='', delete='', no_set_delete=False) %}
+{% macro render_table(objects, class='', fields='', delete='', no_set_delete=False, actions='') %}
 
 {% if objects|length >0 %}
 <table class='table {{ class }}'>
@@ -74,30 +74,46 @@
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
                 {% if delete == '' %}
-                 <td><a href="{{object.id}}">{{ object[j] }}</a></td>
+                 <td>{{ object[j] }}</td>
                  {% else %}
                  <td><a href="#">{{ object[j] }}</a></td>
                  {% endif %}
             {% endif %}
             {% endfor %}
-                {% if delete == '' %}
-                    {% if not no_set_delete %}
-                    <td><a href="set/{{object.id}}">
-                    <i class="icon-random"></i></a></td>
-                    <td><a href="view/{{object.id}}">
-                    <i class="icon-eye-open"></i></a></td>
-                    {% endif %}
-                <td><a href="del/{{object.id}}">
-                <i class="icon-remove"></i></a></td>
-                 {% else %}
+                {% if delete != '' %}
                  <td><a href="del/{% for j in delete %}{% if loop.index0 == 0 %}{{object[j[1]]}}?{% else %}{{j[0]}}={{object[j[1]]}}&{%endif%}{% endfor %}">
                 <i class="icon-remove"></i></a></td>
+                 {% else %}
+            {% for action in actions %}
+            <td><a href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}}"></i></a></td>
+            {% endfor %}
                  {% endif %}
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% endif %}
+{% endmacro %}
+
+{% macro render_old(users, class='') %}
+                {% if delete == '' %}
+                    {% if not no_set_delete %}
+                    <td><a href="set/{{object.id}}" title="Asignar">
+                    <i class="icon-hand-right"></i></a></td>
+                    <td><a href="view/{{object.id}}">
+                    <i class="icon-eye-open" title="Ver"></i></a></td>
+                    <td><a href="edit/{{object.id}}">
+                    <i class="icon-pencil" title="Editar"></i></a></td>
+                    <td><a href="clone/{{object.id}}">
+                    <i class="icon-share-alt" title="Clonar"></i></a></td>
+                    {% endif %}
+                <td><a href="del/{{object.id}}" title="Borrar">
+                <i class="icon-trash"></i></a></td>
+                 {% else %}
+                 <td><a href="del/{% for j in delete %}{% if loop.index0 == 0 %}{{object[j[1]]}}?{% else %}{{j[0]}}={{object[j[1]]}}&{%endif%}{% endfor %}">
+                <i class="icon-remove"></i></a></td>
+                 {% endif %}
 {% endmacro %}
 
 {% macro render_user_table(users, class='') %}

@@ -13,7 +13,7 @@
     {% set delete = ''%}
     {% endif %}
     
-    {{ render_table(objects,'table-bordered table-striped', fields, delete, no_set_delete) }}
+    {{ render_table(objects,'table-bordered table-striped', fields, delete, no_set_delete, actions) }}
 </div>
 {% endblock %}
 

@@ -46,7 +46,8 @@ class DefaultConfig(BaseConfig):
     MAIL_USE_SSL = False
     MAIL_USERNAME = 'efdigital'
     MAIL_PASSWORD = 'a0e11dbe'
-    DEFAULT_MAIL_SENDER = '%s@mail.webfaction.com' % MAIL_USERNAME
+    #DEFAULT_MAIL_SENDER = '%s@mail.webfaction.com' % MAIL_USERNAME
+    DEFAULT_MAIL_SENDER = 'efdigital@efdigitalorlas.com'
 
     TESTING = False
 

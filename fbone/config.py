@@ -42,8 +42,9 @@ class DefaultConfig(BaseConfig):
     # https://bitbucket.org/danjac/flask-mail/issue/3/problem-with-gmails-smtp-server
     MAIL_DEBUG = DEBUG
     MAIL_SERVER = 'smtp.webfaction.com'
+    MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USE_SSL = True
+    MAIL_USE_SSL = False
     MAIL_USERNAME = 'efdigital'
     MAIL_PASSWORD = 'a0e11dbe'
     #DEFAULT_MAIL_SENDER = '%s@mail.webfaction.com' % MAIL_USERNAME

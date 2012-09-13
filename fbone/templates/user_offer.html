@@ -75,7 +75,7 @@
 
 
 <div class='span9'>
-    <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer') }}">
+    <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer', type_id=form.type.data) }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         

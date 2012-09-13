@@ -170,27 +170,36 @@ def new_appointment_post():
     flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
-@user.route('/set_offer/<type>', methods=['GET', 'POST'])
+@user.route('/set_offer/<type_id>', methods=['GET', 'POST'])
 @user.route('/set_offer/', methods=['GET', 'POST'])
 @login_required
-def set_offer(type=1):
+def set_offer(type_id=1):
     form = UserOfferForm()
-    form.set_offer_type(type)
+    form.set_offer_type(type_id)
     project = current_user.projects[-1] #FIXME
 
     if request.method == 'POST':
-        offer = Offer.query.get(int(form.options.data))
-        previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
-        if previous_offer:
-            offer_selection = previous_offer
-            offer_selection.offer_id = offer.id
+        next_offer = Offer.query.filter_by(type=str(int(type_id)+1)).first()
+        if form.options.data != u'None':
+            offer = Offer.query.get(int(form.options.data))
+            previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
+            if previous_offer:
+                offer_selection = previous_offer
+                offer_selection.offer_id = offer.id
+            else:
+                offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+                db.session.add(offer_selection)
+            db.session.commit()
+    
+            if next_offer:
+                return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
         else:
-            offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
-            db.session.add(offer_selection)
-        db.session.commit()
-        next_offer = Offer.query.filter_by(type=offer.type+1).first()
-        if next_offer:
-            return redirect(url_for('user.set_offer', type=type+1))
+            if (type_id == '2'):
+                if next_offer:
+                    return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
+            else:
+                return redirect(url_for('user.set_offer', type_id=type_id))
+
         flash('Oferta seleccionada correctamente', 'success')
         return redirect(form.next.data or url_for('user.index'))
     return render_template('user_offer.html', form=form,

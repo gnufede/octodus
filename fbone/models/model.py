@@ -125,16 +125,16 @@ class Project(db.Model):
             new_project.type = node.type
             new_project.activation_key = node.activation_key + self.term
             new_project.depth = node.depth
-            if node.parent:
-                parent_activation_key = node.parent.activation_key + self.term
-                parent_project = db.session.query(Project).filter(Project.activation_key==parent_activation_key).first()
-                if parent_project:
-                    parent_project.children.append(new_project)
-                else:
-                    self.children.append(new_project)
+        if node.parent:
+            parent_activation_key = node.parent.activation_key + self.term
+            parent_project = db.session.query(Project).filter(Project.activation_key==parent_activation_key).first()
+            if parent_project:
+                parent_project.children.append(new_project)
             else:
-                    self.children.append(new_project)
-            db.session.commit()
+                self.children.append(new_project)
+        else:
+            self.children.append(new_project)
+        db.session.commit()
         for j in node.children:
             new_project.create(j)
 

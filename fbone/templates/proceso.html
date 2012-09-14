@@ -22,6 +22,7 @@
             {{ render_input(form.email, 'xlarge') }}
             {{ render_input(form.password, 'xlarge') }}
             {{ render_input(form.password_again, 'xlarge') }}
+            {{ render_input(form.nocode, 'xlarge', labelAfter=True) }}
             {{ render_action(form.submit) }}
         </fieldset>
     </form>
@@ -32,6 +33,8 @@
 {% block append_js %}
 <script>
     $('#orlas').addClass('active');
+    $('label[for="nocode"]').css('display','inline-block');
+    $('.actions').css('margin-top','12px');
 </script>
 <script  src="{{ url_for('static', filename='js/libs/mailcheck.min.js') }}"></script>
 

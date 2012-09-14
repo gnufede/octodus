@@ -10,9 +10,9 @@
 <textarea class="{{ cls }}" name="{{ name }}" style='width:610px; height: 200px;'>{{ value|safe }}</textarea>
 {%- endmacro %}
 
-{% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False, extra='') %}
+{% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False, extra='', labelAfter=False) %}
 <div class='clearfix {% if field.errors %}error{% endif %}'>
-    {% if not nolabel %}
+    {% if not nolabel and not labelAfter%}
       {{ field.label }}
     {% endif %}
     <div class='input'>
@@ -34,6 +34,9 @@
         {% elif extra == 'calendar' %}
         <i class="icon-calendar" style="margin: -2px 0 0 -22.5px; pointer-events: none; position: relative;"></i>
         {% endif %}
+    {% if labelAfter%}
+      {{ field.label }}
+    {% endif %}
         <span class="help-inline">
             {% for error in field.errors %}
             <span>{{ error }}</span>

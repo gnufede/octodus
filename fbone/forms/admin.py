@@ -18,6 +18,8 @@ images = UploadSet("images", IMAGES)
 
 class NewOfferForm(Form):
     next = HiddenField()
+    id = HiddenField()
+    copy = HiddenField()
     default = HiddenField()
     parent = HiddenField()
     name = TextField(u'Nombre', [required()])

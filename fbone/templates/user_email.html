@@ -1,0 +1,21 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Mándanos un email') %}
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span6'>
+    <p>
+    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+    con cualquier duda que tengas, y con la información acerca de tu Universidad/titulación/especialidad 
+    para que ayudarnos a seguir dando el mejor servicio posible.
+    </p>
+
+    <p>
+    Te responderemos lo antes posible con un <b>código de grupo personalizado</b> para que puedas distribuirlo a tus compañeros y podáis 
+    tener vuestra propia orla u orlín.
+    </p>
+</div>
+{% endblock %}
+

@@ -224,31 +224,66 @@ def set_project(id):
 def project_view_sessions(id):
     return redirect('session/list/'+id)
 
-@admin.route('/new_offer/', methods=['GET', 'POST'])
+@admin.route('/offer/copy/<id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def new_offer():
+def copy_offer(id=None):
+    offer = db.session.query(Offer).get(id)
+    if id:
+        form = NewOfferForm(request.form, obj=offer)
+        form.copy.data = True
+        return render_template("admin_new_offer.html",
+                           form=form,
+                           filename=offer.picture)
+
+@admin.route('/new_offer/', methods=['GET', 'POST'])
+@admin.route('/offer/edit/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_offer(id=None):
+    offer = None
+    if id:
+        offer = db.session.query(Offer).get(id)
+        form = NewOfferForm(request.form, obj=offer)
+    else:
+        form = NewOfferForm(request.form)
     depth = 0
     parent = None
-    form = NewOfferForm(request.form)
+
     if request.method == 'POST':
+        if form.id.data:
+            offer = db.session.query(Offer).get(form.id.data)
+            prev_offer = offer
+        if not form.id.data or form.copy.data:
+            offer = Offer(name=form.name.data, description=form.description.data,
+                     type=form.type.data, price=form.price.data,
+                      default=form.default.data)
+        else:
+            offer.name = form.name.data
+            offer.type = form.type.data
+            offer.description = form.description.data
+            offer.price = form.price.data
+            offer.default = form.default.data
+        if form.parent.data:
+            parent = Offer.query.filter_by(id=form.parent.data).first()
+            if parent:
+                offer.parent_id = form.parent.data
+                depth = parent.depth + 1
+        offer.depth = depth 
         file = request.files['picture']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(os.path.join(admin.root_path, '../static/offers/'), filename))
-            offer = Offer(name=form.name.data, description=form.description.data,
-                         type=form.type.data, price=form.price.data, picture=filename,
-                          default=form.default.data)
-            if form.parent.data:
-                parent = Offer.query.filter_by(id=form.parent.data).first()
-                if parent:
-                    offer.parent_id = form.parent.data
-                    depth = parent.depth + 1
-            offer.depth = depth 
+            offer.picture = filename
+        else:
+            if form.copy.data or form.id.data:
+                offer.picture = prev_offer.picture
+            else:
+                return redirect(url_for('admin.offer_list'))
+        if not id: #FIXME cuando hay que hacer add?
             db.session.add(offer)
-            db.session.commit()
-
-            return redirect(url_for('admin.offer_list'))
+        db.session.commit()
+        return redirect(url_for('admin.offer_list'))
     else:
         filename = None
         return render_template("admin_new_offer.html",
@@ -275,7 +310,7 @@ def offer_list(id=None):
         project = Project.query.filter_by(id=id).first()
         objects = project.offers
     else:
-        actions=[['Asignar Proyectos', "set", 'icon-hand-right'], ['Ver', "view", 'icon-eye-open'], ['Editar', "edit", 'icon-pencil'], ['Borrar',"del",'icon-trash']]
+        actions=[['Asignar Proyectos', "set", 'icon-hand-right'], ['Ver', "view", 'icon-eye-open'], ['Editar', "edit", 'icon-pencil'], ['Clonar', "copy", 'icon-share-alt'], ['Borrar',"del",'icon-trash']]
         objects = db.session.query(Offer).all()
     return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], actions=actions , active='offer_list', current_user=current_user)
 

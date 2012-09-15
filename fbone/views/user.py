@@ -21,6 +21,11 @@ user = Blueprint('user', __name__, url_prefix='/user')
 def index():
     return render_template('user_index.html', current_user=current_user)
 
+@user.route('/ayuda')
+@login_required
+def ayuda():
+    return render_template('user_email.html', current_user=current_user)
+
 @user.route('/edit_date', methods=['POST','GET'])
 @login_required
 def edit_date(): 
@@ -51,6 +56,8 @@ def edit_datos():
     form = EditDatosForm(next=request.args.get('next'))
     form.generate_groups(groups)
     if request.method == 'POST':
+        if form.incorrect.data:
+            return redirect(url_for('user.ayuda'))
         if form.name.data != current_user.name:
             current_user.name = form.name.data
             commit = True

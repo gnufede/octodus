@@ -37,6 +37,12 @@ def index():
                            signup_form=signup_form, current_user=current_user)
 
 
+@frontend.route('/email')
+@cached_response
+def email():
+    return render_template('email.html')
+
+
 @frontend.route('/search')
 def search():
     login_form = None
@@ -117,24 +123,26 @@ def signup():
     login_form= LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'), email=request.args.get('email'))
 
-    if form.validate_on_submit():
-       
-        activation_key = form.code.data
-        group = Project.query.filter_by(activation_key=activation_key).first()
-        if group:
-            user = User()
-            form.populate_obj(user)            
-            group.users.append(user)
-
-            db.session.add(user)
-            
-            db.session.commit()
-
-            if login_user(user):
-                return redirect(form.next.data or url_for('user.index'))
+    if form.validate_on_submit() or request.method == 'POST':
+        if form.nocode.data:
+            return redirect(url_for('frontend.email'))
         else:
-            flash(_("Codigo no valido"), #Invalid code
-              "error")
+            activation_key = form.code.data
+            group = Project.query.filter_by(activation_key=activation_key).first()
+            if group:
+                user = User()
+                form.populate_obj(user)            
+                group.users.append(user)
+     
+                db.session.add(user)
+                
+                db.session.commit()
+     
+                if login_user(user):
+                    return redirect(form.next.data or url_for('user.index'))
+            else:
+                flash(_("Codigo no valido"), #Invalid code
+                  "error")
 
     return render_template('signup.html', form=form, login_form=login_form)
 

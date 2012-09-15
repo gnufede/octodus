@@ -32,9 +32,9 @@
         var url = base_url;
         
         if (arguments.length > 0) // We need to ask for an specific ID
-        url += String(id);
-        else
-        url += 'type/'+String({{form.type.data}})
+            url += String(id);
+        /*else
+            url += 'type/' + String({{form.type.data}})*/
         
         $.getJSON(url, function(data) {
         

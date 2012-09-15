@@ -55,7 +55,8 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     description = db.Column(db.String(128))
-    price = db.Column(db.Float())
+    #price = db.Column(db.Float())
+    price = db.Column(db.Numeric(6, 2))
     picture = db.Column(db.String(128))
     type = db.Column(db.Integer, nullable=False, index=True)
     default = db.Column(db.Integer)
@@ -69,7 +70,7 @@ class Offer(db.Model):
         return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]    }
 
     def jsonify_full(self):
-        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': float(self.price), 'children': [x.jsonify() for x in self.children]    }
 
 class Appointment(db.Model):
     __tablename__ = "appointments"

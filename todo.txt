@@ -8,10 +8,10 @@ x- Interfaz para /ver/editar/cancelar sesiones de fotos y relacionarlas con proy
 x- Corrección de email en el signup[3]
 x- Poner fechas en español
 x- Permitir crear grupos en servidor definitivo
-- Arreglar el envío de email
-- Página de resumen del pedido al terminar de elegir las ofertas
-- Pasar precios de las ofertas a tipo decimal 
-- Validar la disponibilidad de la hora en el servidor cuando el usuario pide cita
+x- Arreglar el envío de email
+x- Página de resumen del pedido al terminar de elegir las ofertas
+x- Pasar precios de las ofertas a tipo decimal 
+x- Validar la disponibilidad de la hora en el servidor cuando el usuario pide cita
 - Interfaz para borrar, clonar y modificar ofertas de un proyecto (añadir ya se puede)
 - Crear página con info de mandar un correo al administrador.
 - Añadir checkbox en datos de usuario: "Mi titulación/especialidad/grupo no sale en la lista...", que acabe mandándote a la página de mandar el correo.

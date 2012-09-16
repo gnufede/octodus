@@ -1,0 +1,31 @@
+<html>
+
+{% trans select_offer_url=url_for('user.set_offer', email=user.email, activation_key=user.activation_key, _external=True), user=user.name %}
+<p>
+Estimado/a {{user}}:
+</p>
+
+<p>
+Desde E.F. Digital Orlas queremos informarte de que ya puedes seleccionar tu oferta.
+</p>
+
+<p>
+Si lo deseas, puedes hacerlo ahora mismo, siguiendo el siguiente enlace: 
+</p>
+
+<p>
+<a href="{{ select_offer_url }}">Seleccionar oferta en E.F. Digital Orlas</a>
+</p>
+
+<p>
+Recuerda hacerlo cuanto antes, por favor, pero elige bien!
+</p>
+
+<p>
+Afectuosamente,
+</p>
+<p>
+E.F. Digital Orlas.
+</p>
+{% endtrans %}
+</html>

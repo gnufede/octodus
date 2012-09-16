@@ -51,7 +51,8 @@ class DefaultConfig(BaseConfig):
     DEFAULT_MAIL_SENDER = 'efdigital@efdigitalorlas.com'
 
     TESTING = False
-
+    #TESTING = True
+    
 
 class TestConfig(BaseConfig):
     TESTING = True

@@ -220,4 +220,21 @@ def set_offer(type_id=1):
     return render_template('user_offer.html', form=form,
                            current_user=current_user)
 
+@user.route('/save_user_choice', methods=['POST'])
+@login_required
+def save_user_choice():
+    #TODO: comprobar que el usuario no haya guardado ya
+    form = UserOfferForm()
+    project = current_user.projects[-1] #FIXME
+    for oid in form.type.data.split(','):
+        print 'saving offer id', oid
+        offer_id = int(oid.strip())
+        offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
+        choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+        db.session.add(choice)
+        db.session.commit()
+    return render_template('user_offer.html', form=form, current_user=current_user)
+
+
+
 

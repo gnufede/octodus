@@ -5,6 +5,8 @@
 {% extends 'user_index.html' %}
 
 {% block append_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.ie.css') }}">
 <style type='text/css'>
     .labeled.focused
     {
@@ -37,7 +39,7 @@
 	    $('#confirm').dialog({
 	        autoOpen: false,
 		    resizable: false,
-		    height: 140,
+		    height: 170,
 		    modal: true,
 		    buttons: {
 			    Continuar: function() {

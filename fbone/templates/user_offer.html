@@ -77,14 +77,14 @@
     });
     
     function retrieveByID(id) {
-        retrieve(id, false);
+        retrieve(id, false, false);
     }
     
     function retrieveByType(type) {
-        retrieve(type, true);
+        retrieve(type, true, true);
     }
     
-    function retrieve(num, byType) {
+    function retrieve(num, byType, showPrice) {
         
         var url = base_url;
         var id = String(num);
@@ -122,8 +122,15 @@
             var lst = $('.thumbnails ul');
             
             $.each(data, function(key, val) {
-                lst.append('<li class="input" style="display:inline-block; padding-right:20px; padding-bottom:20px;"><input class="clickable" type="radio" name="options" style="display:none" id="' + key + '" value=' + key + '>' +
-                    '<label class="labeled" for="' + key + '" style="display:inline-block; max-width:190px"><div class="thumbnail"><img style="width:190px" src=' + val.img + '> <div class="name"><h3>' + val.name + '</h3> </div><div class="price"><b>' + val.price + ' € (IVA no incluido)</b></div><hr style="margin:10px 0;"/><div class="description" style="margin-bottom:10px;"> ' + val.description + '</div></div></label></li>');
+                    html = '<li class="input" style="display:inline-block; padding-right:20px; padding-bottom:20px;"><input class="clickable" type="radio" name="options" style="display:none" id="' + key + '" value=' + key + '>' +
+                    '<label class="labeled" for="' + key + '" style="display:inline-block; max-width:190px"><div class="thumbnail"><img style="width:190px" src=' + val.img + '> <div class="name"><h3>' + val.name + '</h3> </div>' 
+                    if (showPrice) {
+                        html = html + 
+                        '<div class="price"><b>' + val.price + ' € (IVA no incluido)</b></div>'
+                    }
+                   html = html + 
+                   '<hr style="margin:10px 0;"/><div class="description" style="margin-bottom:10px;"> ' + val.description + '</div></div></label></li>'
+                    lst.append(html);
             });
             
         });

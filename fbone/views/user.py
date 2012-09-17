@@ -233,7 +233,7 @@ def save_user_choice():
         choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()
-    return render_template('user_offer.html', form=form, current_user=current_user)
+    return redirect(form.next.data or url_for('user.index'))
 
 
 

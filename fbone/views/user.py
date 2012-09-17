@@ -21,6 +21,11 @@ user = Blueprint('user', __name__, url_prefix='/user')
 def index():
     return render_template('user_index.html', current_user=current_user)
 
+@user.route('/ayuda')
+@login_required
+def ayuda():
+    return render_template('user_email.html', current_user=current_user)
+
 @user.route('/edit_date', methods=['POST','GET'])
 @login_required
 def edit_date(): 
@@ -51,6 +56,8 @@ def edit_datos():
     form = EditDatosForm(next=request.args.get('next'))
     form.generate_groups(groups)
     if request.method == 'POST':
+        if form.incorrect.data:
+            return redirect(url_for('user.ayuda'))
         if form.name.data != current_user.name:
             current_user.name = form.name.data
             commit = True
@@ -149,6 +156,14 @@ def new_appointment_post():
         # TODO
         flash('Datos actualizados incorrectamente', 'error')
         return redirect(url_for('user.new_appointment_get'))
+    
+    # Count appointments in this slot
+    count = Appointment.query.filter_by(session_id=session_id, project_id=project.id, date=appointment_date).count()
+    sess = Session.query.filter_by(id=session_id).first()
+    if count >= sess.block_capacity:
+        flash('La hora elegida ya está llena', 'error')
+        return redirect(form.next.data or url_for('user.index'))
+    
     previous_appointment = Appointment.query.filter_by(user=current_user, project=project).first()
     if previous_appointment:
         if previous_appointment.date < datetime.datetime.now():
@@ -170,30 +185,56 @@ def new_appointment_post():
     flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 
-@user.route('/set_offer/<type>', methods=['GET', 'POST'])
+@user.route('/set_offer/<type_id>', methods=['GET', 'POST'])
 @user.route('/set_offer/', methods=['GET', 'POST'])
 @login_required
-def set_offer(type=1):
+def set_offer(type_id=1):
     form = UserOfferForm()
-    form.set_offer_type(type)
+    form.set_offer_type(type_id)
     project = current_user.projects[-1] #FIXME
 
     if request.method == 'POST':
-        offer = Offer.query.get(int(form.options.data))
-        previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
-        if previous_offer:
-            offer_selection = previous_offer
-            offer_selection.offer_id = offer.id
+        next_offer = Offer.query.filter_by(type=str(int(type_id)+1)).first()
+        if form.options.data != u'None':
+            offer = Offer.query.get(int(form.options.data))
+            previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
+            if previous_offer:
+                offer_selection = previous_offer
+                offer_selection.offer_id = offer.id
+            else:
+                offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+                db.session.add(offer_selection)
+            db.session.commit()
+    
+            if next_offer:
+                return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
         else:
-            offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
-            db.session.add(offer_selection)
-        db.session.commit()
-        next_offer = Offer.query.filter_by(type=offer.type+1).first()
-        if next_offer:
-            return redirect(url_for('user.set_offer', type=type+1))
+            if (type_id == '2'):
+                if next_offer:
+                    return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
+            else:
+                return redirect(url_for('user.set_offer', type_id=type_id))
+
         flash('Oferta seleccionada correctamente', 'success')
         return redirect(form.next.data or url_for('user.index'))
     return render_template('user_offer.html', form=form,
                            current_user=current_user)
+
+@user.route('/save_user_choice', methods=['POST'])
+@login_required
+def save_user_choice():
+    #TODO: comprobar que el usuario no haya guardado ya
+    form = UserOfferForm()
+    project = current_user.projects[-1] #FIXME
+    for oid in form.type.data.split(','):
+        print 'saving offer id', oid
+        offer_id = int(oid.strip())
+        offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
+        choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+        db.session.add(choice)
+        db.session.commit()
+    return render_template('user_offer.html', form=form, current_user=current_user)
+
+
 
 

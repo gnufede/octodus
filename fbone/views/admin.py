@@ -19,8 +19,9 @@ admin.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def render_projects(objects):
     for object in objects:
         object.sesiones = len(object.sessions)
+        object.ofertas = len(object.offers)
         object.usuarios = len(object.users)
-    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "usuarios"], active='project_list', current_user=current_user)
+    return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "ofertas","usuarios"], actions=[['Ver Sesiones', "view_session", 'icon-camera'], ['Asignar Sesiones', "set_session", 'icon-hand-right'], ['Ver Ofertas', "view_offer", 'icon-shopping-cart'], ['Asignar Ofertas', "set_offer", 'icon-hand-right'], ['Borrar',"del",'icon-trash']], active='project_list', current_user=current_user)
 
 def set_offers(offers, projects):
     form = SetOfferForm(request.form)
@@ -61,6 +62,16 @@ def set_sessions(sessions, projects):
         return redirect(url_for('admin.project_list'))
     return render_template('admin_set_session.html', form=form,
                            current_user=current_user)
+
+@admin.route('/offer/<project_id>/del/<offer_id>', methods=['GET'])
+@login_required
+def remove_offer(project_id, offer_id):
+    project = Project.query.filter_by(id=project_id).first()
+    offer = Offer.query.filter_by(id=offer_id).first()
+    project.offers.remove(offer)
+    db.session.commit()
+    return redirect('/offers/'+project_id)
+
 
 @admin.route('/offers/<id>', methods=['GET'])
 @admin.route('/offers/', methods=['GET'])
@@ -123,7 +134,7 @@ def project_list():
 @login_required 
 @admin_required
 def group_list():
-    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list', no_set_delete=True, current_user=current_user)
+    return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list', actions=[['Editar', "edit", 'icon-pencil'], ['Borrar',"del",'icon-trash']], current_user=current_user)
 
 
 @admin.route('/project/del/<id>')
@@ -153,7 +164,29 @@ def offer_delete(id):
     db.session.commit()
     return redirect(url_for('admin.offer_list'))
 
-@admin.route('/project/set/<id>', methods=['GET', 'POST'])
+@admin.route('/offer/set/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_offer_id(id):
+    projects = Project.query.all()
+    offers = [ db.session.query(Offer).filter(Offer.id==id).first(),]
+    return set_offers(offers, projects)
+
+@admin.route('/project/set_offer/<id>', methods=['GET', 'POST'])
+@login_required 
+@admin_required
+def set_project_offer_id(id):
+    offers = Offer.query.all()
+    projects = [ db.session.query(Project).filter(Project.id==id).first(),]
+    return set_offers(offers, projects)
+
+@admin.route('/project/view_offer/<id>')
+@login_required 
+@admin_required
+def project_view_offers(id):
+    return redirect('admin/offer/'+id)
+
+@admin.route('/project/set_session/<id>', methods=['GET', 'POST'])
 @login_required 
 @admin_required
 def set_session_id(id):
@@ -185,37 +218,72 @@ def set_project(id):
     projects = db.session.query(Project).filter(Project.name!='0').all()
     return set_sessions(sessions, projects)
 
-@admin.route('/project/view/<id>')
+@admin.route('/project/view_session/<id>')
 @login_required 
 @admin_required
-def project_view(id):
+def project_view_sessions(id):
     return redirect('session/list/'+id)
 
-@admin.route('/new_offer/', methods=['GET', 'POST'])
+@admin.route('/offer/copy/<id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def new_offer():
+def copy_offer(id=None):
+    offer = db.session.query(Offer).get(id)
+    if id:
+        form = NewOfferForm(request.form, obj=offer)
+        form.copy.data = True
+        return render_template("admin_new_offer.html",
+                           form=form,
+                           filename=offer.picture)
+
+@admin.route('/new_offer/', methods=['GET', 'POST'])
+@admin.route('/offer/edit/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_offer(id=None):
+    offer = None
+    if id:
+        offer = db.session.query(Offer).get(id)
+        form = NewOfferForm(request.form, obj=offer)
+    else:
+        form = NewOfferForm(request.form)
     depth = 0
     parent = None
-    form = NewOfferForm(request.form)
+
     if request.method == 'POST':
+        if form.id.data:
+            offer = db.session.query(Offer).get(form.id.data)
+            prev_offer = offer
+        if not form.id.data or form.copy.data:
+            offer = Offer(name=form.name.data, description=form.description.data,
+                     type=form.type.data, price=form.price.data,
+                      default=form.default.data)
+        else:
+            offer.name = form.name.data
+            offer.type = form.type.data
+            offer.description = form.description.data
+            offer.price = form.price.data
+            offer.default = form.default.data
+        if form.parent.data:
+            parent = Offer.query.filter_by(id=form.parent.data).first()
+            if parent:
+                offer.parent_id = form.parent.data
+                depth = parent.depth + 1
+        offer.depth = depth 
         file = request.files['picture']
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(os.path.join(admin.root_path, '../static/offers/'), filename))
-            offer = Offer(name=form.name.data, description=form.description.data,
-                         type=form.type.data, price=form.price.data, picture=filename,
-                          default=form.default.data)
-            if form.parent.data:
-                parent = Offer.query.filter_by(id=form.parent.data).first()
-                if parent:
-                    offer.parent_id = form.parent.data
-                    depth = parent.depth + 1
-            offer.depth = depth 
+            offer.picture = filename
+        else:
+            if form.copy.data or form.id.data:
+                offer.picture = prev_offer.picture
+            else:
+                return redirect(url_for('admin.offer_list'))
+        if not id: #FIXME cuando hay que hacer add?
             db.session.add(offer)
-            db.session.commit()
-
-            return redirect(url_for('admin.uploaded_file', id=offer.id))
+        db.session.commit()
+        return redirect(url_for('admin.offer_list'))
     else:
         filename = None
         return render_template("admin_new_offer.html",
@@ -224,19 +292,27 @@ def new_offer():
     return redirect(url_for('admin.offer_list'))
     
 @admin.route('/offer/view/<id>', methods=['GET', 'POST'])
-@admin.route('/offer/<id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def uploaded_file(id):
     offer = Offer.query.filter_by(id=id).first()
     return render_template("template.html", name=offer.name, description=offer.description, price=offer.price, filename=offer.picture)
 
-@admin.route('/offer/list', methods=['GET', 'POST'])
+@admin.route('/offer/', methods=['GET', 'POST'])
+@admin.route('/offer/<id>/', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def offer_list():
-    objects = db.session.query(Offer).all()
-    return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], active='offer_list', current_user=current_user)
+def offer_list(id=None):
+    offers = None
+    actions = None
+    if id:
+        actions=[['Quitar del Proyecto',"del",'icon-trash']]
+        project = Project.query.filter_by(id=id).first()
+        objects = project.offers
+    else:
+        actions=[['Asignar Proyectos', "set", 'icon-hand-right'], ['Ver', "view", 'icon-eye-open'], ['Editar', "edit", 'icon-pencil'], ['Clonar', "copy", 'icon-share-alt'], ['Borrar',"del",'icon-trash']]
+        objects = db.session.query(Offer).all()
+    return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], actions=actions , active='offer_list', current_user=current_user)
 
 @admin.route('/set_offer/', methods=['GET', 'POST'])
 @login_required
@@ -325,6 +401,7 @@ def new_group():
                            current_user=current_user, node=node)
 
 
+@admin.route('/group/edit/<id>')
 @admin.route('/group/<id>')
 @login_required 
 @admin_required

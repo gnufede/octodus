@@ -25,6 +25,7 @@ class SignupForm(Form):
     password = PasswordField(u'Contraseña', [required(), length(min=6, max=56)]) #Password
     password_again = PasswordField(_(u'Contraseña otra vez'), [required(), equal_to('password')]) #Password again
     email = TextField(_(u'Dirección de email'), [required(), email(message=_(u'Vamos a informarte vía emails, danos el tuyo por favor'))]) #Email address #A valid email address is required
+    nocode = BooleanField(_(u'No tengo código para registrarme'))
     submit = SubmitField(_(u'Registrarse')) #Signup
 
     def validate_email(self, field):

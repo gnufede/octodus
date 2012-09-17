@@ -22,6 +22,7 @@
              {{ render_input(form.nextproject, 'xlarge') }}
             {% endif %}
 
+            {{ render_input(form.incorrect, 'xlarge', labelAfter=True) }}
 
             {{ render_action(form.submit) }}
         </fieldset>
@@ -32,5 +33,7 @@
 {% block append_js %}
 <script>
     $('#edit_data').addClass('active');
+    $('label[for="incorrect"]').css('display','inline-block');
+    $('.actions').css('margin-top','12px');
 </script>
 {% endblock %}

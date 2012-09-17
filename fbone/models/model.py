@@ -55,7 +55,8 @@ class Offer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     description = db.Column(db.String(128))
-    price = db.Column(db.Float())
+    #price = db.Column(db.Float())
+    price = db.Column(db.Numeric(6, 2))
     picture = db.Column(db.String(128))
     type = db.Column(db.Integer, nullable=False, index=True)
     default = db.Column(db.Integer)
@@ -69,7 +70,7 @@ class Offer(db.Model):
         return {'id': self.id, 'name': self.name, 'children': [x.jsonify() for x in self.children]    }
 
     def jsonify_full(self):
-        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': self.price, 'children': [x.jsonify() for x in self.children]    }
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description, 'price': float(self.price), 'children': [x.jsonify() for x in self.children]    }
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -125,8 +126,16 @@ class Project(db.Model):
             new_project.type = node.type
             new_project.activation_key = node.activation_key + self.term
             new_project.depth = node.depth
+        if node.parent:
+            parent_activation_key = node.parent.activation_key + self.term
+            parent_project = db.session.query(Project).filter(Project.activation_key==parent_activation_key).first()
+            if parent_project:
+                parent_project.children.append(new_project)
+            else:
+                self.children.append(new_project)
+        else:
             self.children.append(new_project)
-            db.session.commit()
+        db.session.commit()
         for j in node.children:
             new_project.create(j)
 

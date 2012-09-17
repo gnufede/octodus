@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = filename %}
+{% set page_title = 'Crea o edita ofertas' %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
 {% extends 'user_index.html' %}
@@ -11,6 +11,8 @@
     <form class='form-stacked' enctype=multipart/form-data method="POST" action="{{ url_for('admin.new_offer') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
+        {{ form.id }}
+        {{ form.copy }}
         {{ form.default }}
         {{ form.parent }}
 

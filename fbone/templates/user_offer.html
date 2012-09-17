@@ -5,6 +5,8 @@
 {% extends 'user_index.html' %}
 
 {% block append_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.ie.css') }}">
 <style type='text/css'>
     .labeled.focused
     {
@@ -15,6 +17,7 @@
 {% endblock %}
 
 {% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
 <script type='text/javascript'>
 
     function updateSelectedStyle() {
@@ -25,26 +28,96 @@
     $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
     
-    var base_url = '/admin/offers/';
+    var base_url = '/admin/offers';
+    var type = 1;
+    var selection = [];
     
-    function retrieve(id) {
+    $(function() {
+        
+        $('#submit').attr('id', 'submit_').attr('name', 'submit_'); // Fix for a flask.wtf and/or jQuery bug: http://bugs.jquery.com/ticket/4652
+    
+	    $('#confirm').dialog({
+	        autoOpen: false,
+		    resizable: false,
+		    height: 170,
+		    modal: true,
+		    buttons: {
+			    Continuar: function() {
+				    $('#confirm').dialog('close');
+				    $('#user_choice').submit();
+			    },
+			    Cancelar: function() {
+				    $('#confirm').dialog('close');
+				    return false;
+			    }
+		    }
+	    });
+    
+        $(':radio').live('click', function() {
+            var id = $(this).val();
+            retrieveByID(id);
+        });
+    
+        $('#submit_').click(function() {
+            var id = $(':radio:checked').val();
+            if (id) {
+                if (selection.indexOf(id) == -1) {
+                    selection.push(id);
+                }   
+                type++;
+                retrieveByType(type);
+            } else {
+                alert('No se ha seleccionado ninguna opción');
+            }
+            return false; // Avoid submit
+        });
+        
+        retrieveByType(type); // Retrieve type 1
+        
+    });
+    
+    function retrieveByID(id) {
+        retrieve(id, false);
+    }
+    
+    function retrieveByType(type) {
+        retrieve(type, true);
+    }
+    
+    function retrieve(num, byType) {
         
         var url = base_url;
+        var id = String(num);
         
-        if (arguments.length > 0) // We need to ask for an specific ID
-        url += String(id);
-        else
-        url += 'type/'+String({{form.type.data}})
+        if (byType) {
+            url += '/type';
+        }
+        
+        url += '/' + id;
+        
+        $('label').removeClass('focused');
+        $('label[for="' + id + '"]').addClass('focused')
         
         $.getJSON(url, function(data) {
         
             if ($.isEmptyObject(data)) {
-                //$('form').submit();
-                $(':radio.clickable#'+String(id)).next().addClass('focused')
+            
+                if (byType) {
+                    $('#selection').empty();
+                    $('#type').empty();
+                    
+                    $.each(selection, function(key, val) {
+                        $('#selection').append(val + ', ');
+                        $('#type').append(val + ',');
+                    });
+                    
+                    $('#confirm').dialog('open');
+                }
+                
                 return;
             }
         
-        $('.input').empty().append('<div class="thumbnails"><ul></ul></div>');
+            $('.input').empty().append('<div class="thumbnails"><ul></ul></div>');
     
             var lst = $('.thumbnails ul');
             
@@ -57,17 +130,6 @@
         
     }
     
-    $(function() {
-    
-        $(':radio').live('click', function() {
-            var id = $(this).val();
-            retrieve(id);
-        });
-        
-        retrieve();
-        
-    });
-    
 </script>
 {% endblock %}
 
@@ -75,7 +137,8 @@
 
 
 <div class='span9'>
-    <form class='form-stacked' method="POST" action="{{ url_for('user.set_offer') }}">
+    <!--<form class='form-stacked' method="POST" action="{{ url_for('user.set_offer', type_id=form.type.data) }}">-->
+    <form id="user_choice" class='form-stacked' method="POST" action="{{ url_for('user.save_user_choice') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         
@@ -87,5 +150,13 @@
     </form>
 </div>
 
+<div id="confirm" title="Confirmar selección">
+	<p>
+	    <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	    Su selección es:
+	    <span id="selection"></span>
+	    ¿confirma que desea continuar?
+	</p>
+</div>
 
 {% endblock %}

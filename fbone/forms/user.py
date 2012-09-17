@@ -28,6 +28,7 @@ class EditDatosForm(Form):
     name = TextField(_('Nombre'), [required()])
     projects = FieldList(TextField(""))
     nextproject = SelectField("")
+    incorrect = BooleanField(u'Mi carrera/especialidad/grupo no sale en la lista')
 
     submit = SubmitField(_('Guardar'))
     

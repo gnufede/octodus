@@ -37,10 +37,51 @@ def index():
                            signup_form=signup_form, current_user=current_user)
 
 
+@frontend.route('/bodas')
+@cached_response
+def bodas():
+    login_form= LoginForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'))
+    return render_template('bodas.html', login_form=login_form,
+                           signup_form=form, current_user=current_user)
+
+
+@frontend.route('/fotoescuela')
+@cached_response
+def fotoescuela():
+    login_form= LoginForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'))
+    return render_template('fotoescuela.html', login_form=login_form,
+                           signup_form=form, current_user=current_user)
+
+@frontend.route('/nuestros_productos')
+@cached_response
+def productos():
+    login_form= LoginForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'))
+    return render_template('productos.html', login_form=login_form,
+                           signup_form=form, current_user=current_user)
+
 @frontend.route('/email')
 @cached_response
 def email():
-    return render_template('email.html')
+    login_form= LoginForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'))
+    return render_template('email.html', login_form=login_form,
+                           signup_form=form, current_user=current_user)
+
+@frontend.route('/proceso')
+@cached_response
+def proceso():
+    login_form = form = None
+    if not current_user.is_authenticated():
+        login_form= LoginForm(next=request.args.get('next'))
+        form = SignupForm(next=request.args.get('next'))
+    proceso = Proceso.query.first()
+    return render_template('proceso.html', proceso=proceso.content,
+                       login_form=login_form,
+                       form=form)
+
 
 
 @frontend.route('/search')
@@ -222,32 +263,6 @@ def reset_password():
             flash(_('Lo sentimos, no hay ningún usuario con esa dirección'), 'error') #Sorry, no user found for that email address
 
     return render_template('reset_password.html', form=form, value=value)
-
-@frontend.route('/bodas')
-@cached_response
-def bodas():
-    return render_template('bodas.html')
-
-
-@frontend.route('/fotoescuela')
-@cached_response
-def fotoescuela():
-    return render_template('fotoescuela.html')
-
-
-@frontend.route('/proceso')
-@cached_response
-def proceso():
-    login_form = form = None
-    if not current_user.is_authenticated():
-        login_form= LoginForm(next=request.args.get('next'))
-        form = SignupForm(next=request.args.get('next'))
-    proceso = Proceso.query.first()
-    return render_template('proceso.html', proceso=proceso.content,
-                       login_form=login_form,
-                           form=form)
-
-
 
 @frontend.route('/edit_session')
 def edit_session():

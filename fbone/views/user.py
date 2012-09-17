@@ -159,7 +159,7 @@ def new_appointment_post():
     
     # Count appointments in this slot
     count = Appointment.query.filter_by(session_id=session_id, project_id=project.id, date=appointment_date).count()
-    sess = Session.query.filter_by(session_id=session_id).first()
+    sess = Session.query.filter_by(id=session_id).first()
     if count >= sess.block_capacity:
         flash('La hora elegida ya está llena', 'error')
         return redirect(form.next.data or url_for('user.index'))

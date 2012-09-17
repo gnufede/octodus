@@ -73,9 +73,13 @@
 
      {% if sessions %}
         var sessions = {{sessions|safe}};
-        var dates = sessions.map(function(s) {
+        /*var dates = sessions.map(function(s) {
             return s[0];
-        });
+        });*/
+        var dates = [];
+        for ( var i = 0; i < sessions.length; i++){
+            dates.push(sessions[i][0]);
+        }
         $('#datepicker').datepicker(
         /*
         $.datepicker.regional['es']

@@ -66,6 +66,8 @@
         return year + '-' + month + '-' + day;
     }
     
+    $(function() {
+
 if (!Array.prototype.indexOf)
 {
   Array.prototype.indexOf = function(elt /*, from*/)
@@ -89,7 +91,6 @@ if (!Array.prototype.indexOf)
   };
 }
     
-    $(function() {
     $("label").css({ 'display': 'inline' });
     $('#select_date').addClass('active');
     $('.active a i').addClass('icon-white');

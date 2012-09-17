@@ -36,12 +36,12 @@
     padding: 20px;
 }
 
-.content .span4 {
+/*.content .span4 {
     border-left: 1px solid #EEE;
     margin-left: 0px;
     padding-left: 19px;
 }
-
-.content .span10, .content .span4 {
+*/
+.content .span10, {
     min-height: 500px;
 }

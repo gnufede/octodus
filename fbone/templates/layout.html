@@ -27,7 +27,7 @@
    	</div>
     <div class="navbar-wrapper" style="z-index: 5;">
 
-        <header class="navbar " data-dropdown="dropdown" role='banner' style="margin-bottom:0">
+        <div id="header" class="navbar " data-dropdown="dropdown" role='banner' style="margin-bottom:0">
             <div class="navbar-inner" style="min-width:940px;border-radius:0">
         <div class="container" style="max-width:980px;margin-left:auto;margin-right:auto;">
                 	{% if current_user.is_authenticated() %}
@@ -92,7 +92,7 @@
                     {% endif %}
                 </div>
             </div><!-- /topbar-inner -->
-        </header><!-- /topbar -->
+        </div><!-- /header -->
     </div>
 
     <div class="container">
@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <footer style="text-align: right; margin-top: 10px; margin-bottom: 15px;">
+        <div id="footer" style="text-align: right; margin-top: 10px; margin-bottom: 15px;">
             <p>
                 © 2012 E.F. Digital Orlas - Realizado por <a href="http://www.sigmaset.com">Sigmaset</a> -
                 <!--a href='{{ url_for('frontend.about') }}'>{{ _('About') }}</a> -
@@ -119,7 +119,7 @@
                 <a href='{{ url_for('frontend.help') }}'>{{ _('Help') }}</a> -
                 <a href='{{ url_for('frontend.terms') }}' title='{{ _('Terms of Service') }}'>{{ _('Terms') }}</a-->
             </p>
-        </footer>
+            </div> <!-- footer -->
     </div>
 
     {% block jquery %}

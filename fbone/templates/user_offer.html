@@ -24,13 +24,23 @@
         $(':radio').removeClass('focused').next().removeClass('focused');
         $(':radio:checked').addClass('focused').next().addClass('focused');
     }
+    
+    function findByField(a, field, value) {
+        for (var i = 0; i < a.length; i++) {
+            var obj = a[i];
+            if (obj[field] == value) return i;
+        }
+        return -1;
+    }
 
     $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
     
     var base_url = '/admin/offers';
     var type = 1;
+    var currentData;
     var selection = [];
+    var fullSelection = [];
     
     $(function() {
         
@@ -39,7 +49,7 @@
 	    $('#confirm').dialog({
 	        autoOpen: false,
 		    resizable: false,
-		    height: 170,
+		    height: 250,
 		    modal: true,
 		    buttons: {
 			    Continuar: function() {
@@ -61,8 +71,9 @@
         $('#submit_').click(function() {
             var id = $(':radio:checked').val();
             if (id) {
-                if (selection.indexOf(id) == -1) {
-                    selection.push(id);
+                var found = findByField(selection, 'id', id);
+                if (found == -1) {
+                    selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
                 }   
                 type++;
                 retrieveByType(type);
@@ -72,22 +83,23 @@
             return false; // Avoid submit
         });
         
-        retrieveByType(type); // Retrieve type 1
+        retrieveByType(type);
         
     });
     
     function retrieveByID(id) {
-        retrieve(id, false, false);
+        retrieve(id, false);
     }
     
     function retrieveByType(type) {
-        retrieve(type, true, true);
+        retrieve(type, true);
     }
     
-    function retrieve(num, byType, showPrice) {
+    function retrieve(num, byType) {
         
         var url = base_url;
         var id = String(num);
+        var showPrice = byType;
         
         if (byType) {
             url += '/type';
@@ -103,19 +115,29 @@
             if ($.isEmptyObject(data)) {
             
                 if (byType) {
-                    $('#selection').empty();
+                    $('#selection').empty().append('<br />');
                     $('#type').empty();
                     
+                    var total = 0.0;
+                    
                     $.each(selection, function(key, val) {
-                        $('#selection').append(val + ', ');
-                        $('#type').append(val + ',');
+                        $('#selection').append(val.name + ': ' + val.price + '€<br />');
+                        total += val.price;
+                        $('#type').append(val.id + ',');
                     });
+                    
+                    var totalF = parseFloat(total).toFixed(2);
+                    var totalIVA = parseFloat(total * 1.21).toFixed(2);
+                    
+                    $('#selection').append('TOTAL SIN IVA: ' + totalF + '€<br />TOTAL CON IVA: ' + totalIVA + '€<br />');
                     
                     $('#confirm').dialog('open');
                 }
                 
                 return;
             }
+            
+            currentData = data;
         
             $('.input').empty().append('<div class="thumbnails"><ul></ul></div>');
     

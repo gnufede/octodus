@@ -7,15 +7,16 @@
 {% if sessions %}
 
 {% block append_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.ie.css') }}">
 {% endblock %}
 
 {% block append_js %}
-<script src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/libs/jquery-ui-datepicker-es.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-datepicker-es.js') }}"></script>
 
 
-<script>
+<script type="text/javascript">
 
     /*
     $(function() {

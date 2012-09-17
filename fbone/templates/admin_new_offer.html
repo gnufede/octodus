@@ -2,8 +2,10 @@
 
 {% set page_title = 'Crea o edita ofertas' %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/jqtree.css') }}">
 {% extends 'user_index.html' %}
+{% block append_css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jqtree.css') }}">
+{% endblock %}
 
 {% block body %}
 <div class='span5 well' id="tree1"></div>

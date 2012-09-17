@@ -1,0 +1,31 @@
+<html>
+
+{% trans select_session_url=url_for('user.new_appointment_get', email=user.email, activation_key=user.activation_key, _external=True), user=user.name %}
+<p>
+Estimado/a {{user}}:
+</p>
+
+<p>
+Desde E.F. Digital Orlas queremos informarte que ya puedes seleccionar tu cita para hacerte la foto de la orla.
+</p>
+
+<p>
+Si lo deseas, puedes hacerlo ahora mismo, siguiendo el siguiente enlace: 
+</p>
+
+<p>
+<a href="{{ select_session_url }}">Seleccionar cita en E.F. Digital Orlas</a>
+</p>
+
+<p>
+Recuerda hacerlo cuanto antes, para poder elegir la hora que te venga mejor, las plazas no son ilimitadas!
+</p>
+
+<p>
+Afectuosamente,
+</p>
+<p>
+E.F. Digital Orlas.
+</p>
+{% endtrans %}
+</html>

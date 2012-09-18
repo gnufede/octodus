@@ -121,11 +121,13 @@
                     $('#type').empty();
                     
                     var total = 0.00;
+                    var values = "";
                     
                     $.each(selection, function(key, val) {
                         $('#selection').append(val.name + ': ' + val.price + '€<br />');
                         total += parseFloat(val.price);
-                        $('#type').append(val.id + ',');
+                        values.append(val.id + ',');
+                        $('#type').val(values);
                     });
                     
                     var totalF = parseFloat(total).toFixed(2);

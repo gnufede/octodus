@@ -107,9 +107,11 @@ Ofertas</li>
    <i class="icon-bell icon-white"></i> 
     </span>
     {% else %}
+    {% if current_user.offer_selection|length %}
     <span class="badge badge-success">
    <i class="icon-ok icon-white"></i> 
     </span>
+    {% endif %}
     {% endif %}
     </a> 
 	</li>

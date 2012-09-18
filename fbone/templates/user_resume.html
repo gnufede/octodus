@@ -6,15 +6,29 @@
 {% block body %}
 
 {% if not current_user.is_admin()%}
+<div class='span5'>
 {% if current_user.appointments|length and current_user.appointments[-1].date > today %}
 {% set date = current_user.appointments[-1].date %}
-<div class='span5'>
     <div class="well">
+        <h3>Tu cita:</h3><br/>
         <strong>Recuerda</strong>,  tu cita es el: <strong>{{ date.day }}-{{date.month}}-{{date.year}} a las {{date.hour}}:{{date.minute}}
             </strong>
     </div>
-</div>
 {% endif %}
+{% if current_user.offer_selection|length %}
+    <div class="well">
+        <h3>Tu pedido:</h3><br/>
+        <ul>
+        {% for item in current_user.offer_selection %}
+        <li><strong>{{ item.offer.name }} - {{ item.offer.price|round(2, 'common') }} € </strong></li>
+        {% endfor %}
+        </ul>
+        <hr/>
+        <strong>Total sin IVA: {{total_sin_iva|round(2, 'common')}}€ </strong><br/>
+        <strong>Total con IVA: {{(total_sin_iva * 1.21)|round(2, 'common')}}€ </strong>
+    </div>
+{% endif %}
+</div>
 {% endif %}
 
 

@@ -1,0 +1,23 @@
+<html>
+{% trans select_session_url=url_for('user.new_appointment_get',  _external=True), current_username=current_user.name  %}
+<p>
+Estimado/a {{current_username}}:
+</p>
+
+<p>
+Desde E.F. Digital Orlas te enviamos este email como recordatorio de la cita que tienes para hacerte la foto que aparecerá en tu orla:
+</p>
+<p><strong>{{ day }}-{{ month }}-{{ year }} a las {{ time }} </strong></p>
+
+<p>
+Recuerda que puedes <a href="{{ select_session_url }}">cambiar la cita en E.F. Digital Orlas</a> siempre que sea al menos con un día de antelación, y antes de faltar a tu cita.
+</p>
+
+<p>
+Afectuosamente,
+</p>
+<p>
+E.F. Digital Orlas.
+</p>
+{% endtrans %}
+</html>

@@ -5,10 +5,12 @@ import datetime
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash
 from flask.ext.login import login_required, current_user
 
+from flaskext.mail import Message
+
 from fbone.models import *
 from fbone.decorators import keep_login_url, admin_required
 from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm)
-from fbone.extensions import db
+from fbone.extensions import db, mail
 from sqlalchemy import Date, cast
 import datetime
 
@@ -183,6 +185,9 @@ def new_appointment_post():
     db.session.commit()
     time = appointment_date.split()[1]
     (year, month, day) = appointment_date.split()[0].split('-')
+    body = render_template('emails/remember_appointment.html', current_user=current_user, time=time, year=year, month=month, day=day)
+    message = Message(subject='Recordatorio de tu cita', html=body, recipients=[current_user.email])
+    mail.send(message)
     flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
     return redirect(form.next.data or url_for('user.index'))
 

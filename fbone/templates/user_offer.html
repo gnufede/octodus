@@ -71,10 +71,12 @@
         $('#submit_').click(function() {
             var id = $(':radio:checked').val();
             if (id || type==2) {
-                var found = findByField(selection, 'id', id);
-                if (found == -1) {
-                    selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
-                }   
+                if (id) {
+                    var found = findByField(selection, 'id', id);
+                    if (found == -1) {
+                        selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
+                    }
+                }
                 type++;
                 retrieveByType(type);
             } else {

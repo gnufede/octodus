@@ -1,17 +1,20 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
 {% set page_title = current_user.name +" "+ current_user.surname +" en E.F. Digital Orlas" %}
-{% set date = current_user.appointments[-1].date %}
 {% extends 'user_index.html' %}
 
 {% block body %}
+
+{% if not current_user.is_admin()%}
 {% if current_user.appointments|length and current_user.appointments[-1].date > today %}
+{% set date = current_user.appointments[-1].date %}
 <div class='span5'>
     <div class="well">
         <strong>Recuerda</strong>,  tu cita es el: <strong>{{ date.day }}-{{date.month}}-{{date.year}} a las {{date.hour}}:{{date.minute}}
             </strong>
     </div>
 </div>
+{% endif %}
 {% endif %}
 
 

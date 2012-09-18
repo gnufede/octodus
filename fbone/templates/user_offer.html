@@ -126,7 +126,7 @@
                     $.each(selection, function(key, val) {
                         $('#selection').append(val.name + ': ' + val.price + '€<br />');
                         total += parseFloat(val.price);
-                        values.append(val.id + ',');
+                        values += val.id + ',';
                         $('#type').val(values);
                     });
                     

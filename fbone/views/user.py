@@ -194,11 +194,6 @@ def set_offer(type_id=1):
     form.set_offer_type(type_id)
     project = current_user.projects[-1] #FIXME
     
-    if len(current_user.offer_selection):
-        for selection in current_user.offer_selection:
-            db.session.delete(selection)
-        db.session.commit()
-
     if request.method == 'POST':
         next_offer = Offer.query.filter_by(type=str(int(type_id)+1)).first()
         if form.options.data != u'None':
@@ -231,10 +226,11 @@ def save_user_choice():
         print 'saving offer id', oid
         offer_id = int(oid.strip())
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
-        prev_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
-        if prev_offer:
-            db.session.delete(prev_offer)
+        if len(current_user.offer_selection):
+            for selection in current_user.offer_selection:
+                db.session.delete(selection)
             db.session.commit()
+
         choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()

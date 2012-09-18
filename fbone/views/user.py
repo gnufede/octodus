@@ -21,7 +21,12 @@ user = Blueprint('user', __name__, url_prefix='/user')
 @user.route('/')
 @login_required
 def index():
-    return render_template('user_resume.html', current_user=current_user, today=datetime.datetime.now())
+    total_sin_iva = 0.00
+    if current_user.offer_selection:
+        for item in current_user.offer_selection:
+            total_sin_iva = total_sin_iva + float(item.offer.price)
+        
+    return render_template('user_resume.html', current_user=current_user, today=datetime.datetime.now(), total_sin_iva=total_sin_iva)
 
 @user.route('/ayuda')
 @login_required
@@ -227,15 +232,15 @@ def save_user_choice():
     #TODO: comprobar que el usuario no haya guardado ya
     form = UserOfferForm()
     project = current_user.projects[-1] #FIXME
+    if len(current_user.offer_selection):
+        for selection in current_user.offer_selection:
+            db.session.delete(selection)
+        db.session.commit()
+
     for oid in form.type.data[:-1].split(','): #:-1 para quitar la última coma
         print 'saving offer id', oid
         offer_id = int(oid.strip())
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
-        if len(current_user.offer_selection):
-            for selection in current_user.offer_selection:
-                db.session.delete(selection)
-            db.session.commit()
-
         choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()

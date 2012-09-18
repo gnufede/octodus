@@ -120,11 +120,11 @@
                     $('#selection').empty().append('<br />');
                     $('#type').empty();
                     
-                    var total = 0.0;
+                    var total = 0.00;
                     
                     $.each(selection, function(key, val) {
                         $('#selection').append(val.name + ': ' + val.price + '€<br />');
-                        total += val.price;
+                        total += parseFloat(val.price);
                         $('#type').append(val.id + ',');
                     });
                     

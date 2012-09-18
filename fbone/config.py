@@ -32,8 +32,8 @@ class DefaultConfig(BaseConfig):
     # $ sudo chown $USER /var/log/fbone
     DEBUG_LOG = '/tmp/fbone-debug.log'
 
-    ACCEPT_LANGUAGES = ['en']
-    BABEL_DEFAULT_LOCALE = 'es_ES'
+    ACCEPT_LANGUAGES = ['es','en']
+    BABEL_DEFAULT_LOCALE = 'es'
 
     CACHE_TYPE = 'simple'
     CACHE_DEFAULT_TIMEOUT = 60

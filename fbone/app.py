@@ -67,7 +67,8 @@ def configure_extensions(app):
     @babel.localeselector
     def get_locale():
         accept_languages = app.config.get('ACCEPT_LANGUAGES')
-        return request.accept_languages.best_match(accept_languages)
+        return request.accept_languages.best_match(['es', 'en'])
+    from flaskext.babel import refresh; refresh()
 
     # login.
     login_manager.login_view = 'frontend.login'

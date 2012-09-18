@@ -19,7 +19,7 @@ user = Blueprint('user', __name__, url_prefix='/user')
 @user.route('/')
 @login_required
 def index():
-    return render_template('user_index.html', current_user=current_user)
+    return render_template('user_resume.html', current_user=current_user, today=datetime.datetime.now())
 
 @user.route('/ayuda')
 @login_required

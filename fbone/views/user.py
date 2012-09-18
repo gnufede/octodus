@@ -227,7 +227,7 @@ def save_user_choice():
     #TODO: comprobar que el usuario no haya guardado ya
     form = UserOfferForm()
     project = current_user.projects[-1] #FIXME
-    for oid in form.type.data.split(','):
+    for oid in form.type.data[:-1].split(','): #:-1 para quitar la última coma
         print 'saving offer id', oid
         offer_id = int(oid.strip())
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario

@@ -154,15 +154,16 @@ def new_appointment_post():
     project =current_user.projects[-1] # FIXME
     if not session_id or not appointment_date:
         # TODO
-        flash('Datos actualizados incorrectamente', 'error')
+        flash(u'Datos actualizados incorrectamente', 'error')
         return redirect(url_for('user.new_appointment_get'))
     
     # Count appointments in this slot
     count = Appointment.query.filter_by(session_id=session_id, project_id=project.id, date=appointment_date).count()
     sess = Session.query.filter_by(id=session_id).first()
     if count >= sess.block_capacity:
-        flash('La hora elegida ya está llena', 'error')
-        return redirect(form.next.data or url_for('user.index'))
+        flash(u"La hora elegida ya se ha completado", 'error')
+        return redirect(url_for('user.new_appointment_get'))
+        #return redirect(form.next.data or url_for('user.index'))
     
     previous_appointment = Appointment.query.filter_by(user=current_user, project=project).first()
     if previous_appointment:

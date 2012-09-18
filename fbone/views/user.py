@@ -193,18 +193,18 @@ def set_offer(type_id=1):
     form = UserOfferForm()
     form.set_offer_type(type_id)
     project = current_user.projects[-1] #FIXME
+    
+    if len(current_user.offer_selection):
+        for selection in current_user.offer_selection:
+            db.session.delete(selection)
+        db.session.commit()
 
     if request.method == 'POST':
         next_offer = Offer.query.filter_by(type=str(int(type_id)+1)).first()
         if form.options.data != u'None':
             offer = Offer.query.get(int(form.options.data))
-            previous_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
-            if previous_offer:
-                offer_selection = previous_offer
-                offer_selection.offer_id = offer.id
-            else:
-                offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
-                db.session.add(offer_selection)
+            offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+            db.session.add(offer_selection)
             db.session.commit()
     
             if next_offer:

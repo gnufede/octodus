@@ -102,7 +102,7 @@ Ofertas</li>
     <li id="select_offer"><a href='{{ url_for('user.set_offer') }}'>
     <i class='icon-shopping-cart'></i>
     Seleccionar Oferta
-    {% if not current_user.offers|length %}
+    {% if not current_user.offer_selection|length %}
     <span class="badge badge-important">
    <i class="icon-bell icon-white"></i> 
     </span>

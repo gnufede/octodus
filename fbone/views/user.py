@@ -231,7 +231,7 @@ def save_user_choice():
         print 'saving offer id', oid
         offer_id = int(oid.strip())
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
-        prev_offer = OfferSelection.query.filter_by(project_id=project.id. user_id=current_user.id, offer_type=offer.type).first()
+        prev_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
         if prev_offer:
             choice = prev_offer
             choice.offer_id = offer_id

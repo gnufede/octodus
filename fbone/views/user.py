@@ -154,15 +154,16 @@ def new_appointment_post():
     project =current_user.projects[-1] # FIXME
     if not session_id or not appointment_date:
         # TODO
-        flash('Datos actualizados incorrectamente', 'error')
+        flash(u'Datos actualizados incorrectamente', 'error')
         return redirect(url_for('user.new_appointment_get'))
     
     # Count appointments in this slot
     count = Appointment.query.filter_by(session_id=session_id, project_id=project.id, date=appointment_date).count()
     sess = Session.query.filter_by(id=session_id).first()
     if count >= sess.block_capacity:
-        flash('La hora elegida ya está llena', 'error')
-        return redirect(form.next.data or url_for('user.index'))
+        flash(u"La hora elegida ya se ha completado", 'error')
+        return redirect(url_for('user.new_appointment_get'))
+        #return redirect(form.next.data or url_for('user.index'))
     
     previous_appointment = Appointment.query.filter_by(user=current_user, project=project).first()
     if previous_appointment:
@@ -226,10 +227,14 @@ def save_user_choice():
     #TODO: comprobar que el usuario no haya guardado ya
     form = UserOfferForm()
     project = current_user.projects[-1] #FIXME
-    for oid in form.type.data.split(','):
+    for oid in form.type.data[:-1].split(','): #:-1 para quitar la última coma
         print 'saving offer id', oid
         offer_id = int(oid.strip())
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
+        prev_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
+        if prev_offer:
+            db.session.delete(prev_offer)
+            db.session.commit()
         choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()

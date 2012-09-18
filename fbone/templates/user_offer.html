@@ -52,7 +52,7 @@
 		    height: 250,
 		    modal: true,
 		    buttons: {
-			    Continuar: function() {
+			    Confirmar: function() {
 				    $('#confirm').dialog('close');
 				    $('#user_choice').submit();
 			    },
@@ -70,11 +70,13 @@
     
         $('#submit_').click(function() {
             var id = $(':radio:checked').val();
-            if (id) {
-                var found = findByField(selection, 'id', id);
-                if (found == -1) {
-                    selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
-                }   
+            if (id || type==2) {
+                if (id) {
+                    var found = findByField(selection, 'id', id);
+                    if (found == -1) {
+                        selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
+                    }
+                }
                 type++;
                 retrieveByType(type);
             } else {
@@ -118,12 +120,14 @@
                     $('#selection').empty().append('<br />');
                     $('#type').empty();
                     
-                    var total = 0.0;
+                    var total = 0.00;
+                    var values = "";
                     
                     $.each(selection, function(key, val) {
                         $('#selection').append(val.name + ': ' + val.price + '€<br />');
-                        total += val.price;
-                        $('#type').append(val.id + ',');
+                        total += parseFloat(val.price);
+                        values += val.id + ',';
+                        $('#type').val(values);
                     });
                     
                     var totalF = parseFloat(total).toFixed(2);

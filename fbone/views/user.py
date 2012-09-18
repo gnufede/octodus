@@ -233,10 +233,9 @@ def save_user_choice():
         offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
         prev_offer = OfferSelection.query.filter_by(project_id=project.id, user_id=current_user.id, offer_type=offer.type).first()
         if prev_offer:
-            choice = prev_offer
-            choice.offer_id = offer_id
-        else:
-            choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+            db.session.delete(prev_offer)
+            db.session.commit()
+        choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()
     return redirect(form.next.data or url_for('user.index'))

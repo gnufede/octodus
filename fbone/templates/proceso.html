@@ -5,12 +5,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="span8">	
+<div class="span9">	
 {{ proceso|safe }}
 </div>	
 {% if form %}
 {% set page_title = 'Registrate para hacerte la orla' %}
-<div class='span4'>
+<div class='span3'>
     <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}

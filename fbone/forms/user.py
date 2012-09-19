@@ -44,11 +44,17 @@ class EditDatosForm(Form):
             self.projects.append_entry(TextField(val.type))
             self.projects[idx].label = Label('projects-'+str(idx),val.type)
             if val.children:
-                self.nextproject.label = Label('projects-'+str(idx+1),val.children[0].type)
                 children = []
+                types_list = []
                 for i in val.children:
-                    children.append((i.id, i.name))
+                    children.append((i.id, i.name + " ("+i.type+")"))
+                    types_list.append(i.type)
+                types_set = list(set(types_list))
+                types_label = str(types_set[0])
+                for i in types_set[1:]:
+                    types_label = types_label +'/'+ i
                 self.nextproject.choices = children
+                self.nextproject.label = Label('projects-'+str(idx+1),types_label)
             else:
                 del self.nextproject
      

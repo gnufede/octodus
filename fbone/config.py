@@ -21,7 +21,7 @@ class DefaultConfig(BaseConfig):
 
     if os.environ.get('SHARED_DATABASE_URL'):
         SQLALCHEMY_DATABASE_URI = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
-        DEBUG = False
+        DEBUG = True
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'

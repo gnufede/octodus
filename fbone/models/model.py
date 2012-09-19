@@ -154,7 +154,8 @@ class Project(db.Model):
         if self.children:
             for j in self.children:
                 j.remove_offer(offer)
-        self.offers.remove(offer)
+        if offer in self.offers:
+            self.offers.remove(offer)
 
     def set_session(self, session):
         if self.children:

@@ -68,9 +68,9 @@ def set_sessions(sessions, projects):
 def remove_offer(project_id, offer_id):
     project = Project.query.filter_by(id=project_id).first()
     offer = Offer.query.filter_by(id=offer_id).first()
-    project.offers.remove(offer)
+    project.remove_offer(offer)
     db.session.commit()
-    return redirect('/offers/'+project_id)
+    return redirect('/admin/offer/'+project_id)
 
 
 @admin.route('/offers/<id>', methods=['GET'])

@@ -147,9 +147,16 @@ class Project(db.Model):
         if self.children:
             for j in self.children:
                 j.set_offer(offer)
-        else:
+        if offer not in self.offers:
             self.offers.append(offer)
             db.session.commit()
+
+    def remove_offer(self, offer):
+        if self.children:
+            for j in self.children:
+                j.remove_offer(offer)
+        if offer in self.offers:
+            self.offers.remove(offer)
 
     def set_session(self, session):
         if self.children:

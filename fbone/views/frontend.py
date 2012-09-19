@@ -164,7 +164,7 @@ def signup():
     login_form= LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'), email=request.args.get('email'))
 
-    if form.validate_on_submit() or request.method == 'POST':
+    if form.validate_on_submit() or (request.method == 'POST' and form.nocode.data):
         if form.nocode.data:
             return redirect(url_for('frontend.email'))
         else:

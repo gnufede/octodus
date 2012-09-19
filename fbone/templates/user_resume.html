@@ -20,12 +20,13 @@
         <h3>Tu pedido:</h3><br/>
         <ul>
         {% for item in current_user.offer_selection %}
-        <li><strong>{{ item.offer.name }} - {{ item.offer.price|round(2, 'common') }} € </strong></li>
+        <li>{{ item.offer.name }} - {{ item.offer.price|round(2, 'common') }} € </li>
         {% endfor %}
         </ul>
         <hr/>
-        <strong>Total sin IVA: {{total_sin_iva|round(2, 'common')}}€ </strong><br/>
-        <strong>Total con IVA: {{(total_sin_iva * 1.21)|round(2, 'common')}}€ </strong>
+        Total: {{total_sin_iva |round(2, 'common')}} €<br/>
+        IVA (21%): {{total_sin_iva * 0.21|round(2, 'common')}} €<br/>
+        <strong>Total con IVA: {{(total_sin_iva * 1.21)|round(2, 'common')}} € </strong>
     </div>
 {% endif %}
 </div>

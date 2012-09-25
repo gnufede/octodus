@@ -141,7 +141,7 @@ def group_list():
 @admin_required
 def page_list():
     objects = db.session.query(Page).all()
-    return render_template('list.html', title="Páginas", objects=objects, active='page_list', actions=[['Editar', "edit", 'icon-pencil'],], current_user=current_user)
+    return render_template('list.html', title=u"Páginas", objects=objects, active='page_list', actions=[['Editar', "edit", 'icon-pencil'],], current_user=current_user)
 
 
 @admin.route('/project/del/<id>')

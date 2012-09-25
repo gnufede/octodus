@@ -12,7 +12,7 @@ from flask.ext.login import (login_required, login_user, current_user,
                             login_fresh)
 
 from fbone.decorators import cached_response
-from fbone.models import User, Proceso, Project
+from fbone.models import User, Page, Project
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
@@ -77,7 +77,7 @@ def proceso():
     if not current_user.is_authenticated():
         login_form= LoginForm(next=request.args.get('next'))
         form = SignupForm(next=request.args.get('next'))
-    proceso = Proceso.query.first()
+    proceso = Page.query.filter_by(name="Proceso").first()
     return render_template('proceso.html', proceso=proceso.content,
                        login_form=login_form,
                        form=form)

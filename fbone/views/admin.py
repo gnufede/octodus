@@ -254,7 +254,7 @@ def new_act():
         if file:
             filename = secure_filename(file.filename)
             dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password)
-            os.mkdir(dir_path)
+            #os.mkdir(dir_path)
             file_path = os.path.join(dir_path, filename) 
             file.save(file_path)
             zip_file = zipfile.ZipFile(file_path)

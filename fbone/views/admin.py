@@ -259,7 +259,11 @@ def new_act():
             file.save(file_path)
             zip_file = zipfile.ZipFile(file_path)
             zip_file.extractall(dir_path)
+            return redirect(form.next.data or url_for('admin.offer_list'))
             
+    return render_template("admin_new_act.html",
+                           form=form
+                           )
 
 
 

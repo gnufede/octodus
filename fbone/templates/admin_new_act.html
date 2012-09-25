@@ -1,0 +1,29 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = 'Crea actos de graduación' %}
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span5'>
+    <form class='form-stacked' enctype=multipart/form-data method="POST" action="{{ url_for('admin.new_act') }}">
+        {{ form.next }}
+        {{ form.password }}
+
+        <fieldset>
+             {{ render_input(form.password, 'xlarge', style="height:28px") }}
+             {{ render_input(form.zipfile, 'xlarge') }}
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+{% block append_js %}
+<script>
+    /*
+    $('#act_new').addClass('active'); 
+    */
+</script>
+{% endblock %}
+

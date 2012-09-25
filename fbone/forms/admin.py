@@ -38,7 +38,7 @@ class NewProjectForm(Form):
     term = TextField(u"Año/Periodo", [required()])
     submit = SubmitField(_('Guardar'))
 
-class EditProcesoForm(Form):
+class EditPageForm(Form):
     next = HiddenField()
     textarea = TextAreaField()
     submit = SubmitField(_('Guardar'))

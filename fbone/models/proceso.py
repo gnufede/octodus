@@ -6,11 +6,12 @@ from sqlalchemy import Table, Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 
 
-class Proceso(db.Model):
+class Page(db.Model):
 
-    __tablename__ = 'proceso'
+    __tablename__ = 'pages'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
     content = db.Column(db.UnicodeText(length=2000), nullable=False)
 
 

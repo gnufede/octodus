@@ -6,7 +6,7 @@ from flaskext.script import Manager, prompt, prompt_pass, prompt_bool
 
 from fbone import create_app
 from fbone.extensions import db
-from fbone.models import User, Group, Proceso
+from fbone.models import User, Group, Page
 from fbone.models.model import *
 
 
@@ -32,7 +32,8 @@ def reset():
     db.drop_all()
     db.create_all()
     user = User(name='Jose Manuel', surname='Lopez', email='efdigitalorlas.test@gmail.com', password='123456', type=1)
-    proceso = Proceso(content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
+    proceso = Page(name="Proceso", content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
+    horario = Page(name="Horario", content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
 
     group = Group(name='Universidad de Vicalvaro', activation_key = "VICALVARO",depth=0, type='Universidad')
 

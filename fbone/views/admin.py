@@ -5,7 +5,7 @@ from flask.ext.login import login_required, current_user
 from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Proceso, Project, Session, Offer
+from fbone.models import User, Group, Page, Project, Session, Offer
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename
@@ -432,19 +432,19 @@ def groups():
     return jsonify(tree)
     
 
-@admin.route('/edit_proceso', methods=['GET', 'POST'])
+@admin.route('/edit_page/<id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def edit_proceso():
-    form = EditProcesoForm(request.form)
+def edit_page(id):
+    form = EditPageForm(request.form)
     #if form.validate_on_submit():
     if request.method == 'POST':
-        proceso = Proceso.query.first()
-        proceso.content = form.textarea.data
+        page = Page.query.get(id)
+        page.content = form.textarea.data
         db.session.commit()
         return redirect(url_for('user.index'))
-    proceso = Proceso.query.first()
-    return render_template('edit_proceso.html', proceso=proceso.content, form=form)
+    page = Page.query.get(id)
+    return render_template('edit_proceso.html', page=page, form=form)
 
 
 @admin.route('/')

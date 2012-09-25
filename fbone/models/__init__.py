@@ -11,4 +11,4 @@ from fbone.models.model import User, Project, Session, Appointment, Offer, Offer
 from fbone.models.model import Node as Group
 
 
-from fbone.models.proceso import Proceso
+from fbone.models.proceso import Page

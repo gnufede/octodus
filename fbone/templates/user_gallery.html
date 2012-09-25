@@ -8,7 +8,7 @@
 <div class='span9'>
     <div id="galleria">
         {% for filename in images %}
-        <a href="{{filename}}"><img src="{{filename}}"></a>
+        <a href="{{url_for('static'), filename = 'acts/'+password+'/'+filename}}"><img src="{{filename}}"></a>
         {% endfor %}
     </div>
     <div id="download">

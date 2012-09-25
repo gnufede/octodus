@@ -34,7 +34,7 @@ def index():
     page = int(request.args.get('page', 1))
     horario = Page.query.filter_by(name="Horario").first()
     pagination = User.query.paginate(page=page, per_page=10)
-    return render_template('index.html', horario=horario, pagination=pagination, login_form=login_form,
+    return render_template('index.html', horario=horario.content, pagination=pagination, login_form=login_form,
                            signup_form=signup_form, current_user=current_user)
 
 

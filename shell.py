@@ -39,6 +39,7 @@ def reset():
 
 
     db.session.add(user)
+    db.session.add(horario)
     db.session.add(proceso)
     db.session.add(group)
     db.session.commit()

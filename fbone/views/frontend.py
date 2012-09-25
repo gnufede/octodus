@@ -16,7 +16,7 @@ from fbone.models import User, Page, Project
 from fbone.extensions import db, cache, mail, login_manager
 from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
-
+import os
 
 frontend = Blueprint('frontend', __name__)
 

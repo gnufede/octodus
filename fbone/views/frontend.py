@@ -294,6 +294,7 @@ def gallery():
             return render_template('user_gallery.html', form=None,password=filename, images=images, zipfile=zipfile)
         else: 
             flash(u'No existe el path '+dir_path, 'error')
+        return abort(403)
 
     return render_template('user_gallery.html', form=form)
 

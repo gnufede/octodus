@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditProcesoForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
+from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
 from fbone.extensions import db
 
 from fbone.models import User, Group, Page, Project, Session, Offer

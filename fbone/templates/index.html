@@ -26,19 +26,7 @@
 						<iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.es/maps?f=q&amp;source=embed&amp;hl=es&amp;geocode=&amp;q=Avenida+de+Roma,+7,+Coslada&amp;aq=0&amp;sll=40.434928,-3.56575&amp;sspn=0.357483,0.616608&amp;ie=UTF8&amp;hq=&amp;hnear=Av+de+Roma,+7,+28822+Coslada,+Madrid,+Comunidad+de+Madrid&amp;ll=40.422465,-3.540494&amp;spn=0.005668,0.00912&amp;z=16&amp;iwloc=A&amp;output=embed"></iframe><br /><small><a href="http://maps.google.es/maps?f=q&amp;source=embed&amp;hl=es&amp;geocode=&amp;q=Avenida+de+Roma,+7,+Coslada&amp;aq=0&amp;sll=40.434928,-3.56575&amp;sspn=0.357483,0.616608&amp;ie=UTF8&amp;hq=&amp;hnear=Av+de+Roma,+7,+28822+Coslada,+Madrid,+Comunidad+de+Madrid&amp;ll=40.422465,-3.540494&amp;spn=0.005668,0.00912&amp;z=16&amp;iwloc=A" style="color:#0000FF;text-align:center">Ver mapa más grande</a></small>
 						</p>
 						<p>&nbsp;</p>
-						<p> Avenida de Roma, nº 7, local<br />
-	28820 Coslada (Madrid) <br />
-	<strong>Tfno.: 912477428 </strong><br />
-	<strong>Email: <a href="mailto:efdigitalorlas@gmail.com" style="text-decoration:underline">efdigitalorlas@gmail.com </a>			
-				</strong><br />
-	METRO: LINEA 7 - PARADA LA RAMBLA (COSLADA) <br />
-	AUTOBUS: L. 286 (Ciudad Lineal-Coslada Ciudad 70) <br />
-	CERCANÍAS: C1, C2, C7 </p>
-						<p><strong>Horario de Atención al Público:<br/>
-						Lunes y miércoles de 16:30 a 19:30 horas.<br/>
-						Martes, jueves y viernes de 17:00 a 20:00 horas.</strong></p>
-						<p>Meses de julio y agosto llamar antes en horario de tarde.</p>
-	
+                        {{ horario|safe }}
 	
     <!--form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ signup_form.hidden_tag() }}

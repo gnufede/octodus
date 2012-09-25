@@ -37,7 +37,7 @@ def set_offers(offers, projects):
                 project.set_offer(offer)
                 
         db.session.commit()
-        return redirect(url_for('admin.project_list'))
+        return redirect(form.next.data or url_for('admin.project_list'))
     return render_template('admin_set_offer.html', form=form,
                            current_user=current_user)
 
@@ -59,7 +59,7 @@ def set_sessions(sessions, projects):
                 project.set_session(session)
                 
         db.session.commit()
-        return redirect(url_for('admin.project_list'))
+        return redirect(form.next.data or url_for('admin.project_list'))
     return render_template('admin_set_session.html', form=form,
                            current_user=current_user)
 
@@ -70,7 +70,7 @@ def remove_offer(project_id, offer_id):
     offer = Offer.query.filter_by(id=offer_id).first()
     project.remove_offer(offer)
     db.session.commit()
-    return redirect('/admin/offer/'+project_id)
+    return redirect(form.next.data or '/admin/offer/'+project_id)
 
 
 @admin.route('/offers/<id>', methods=['GET'])
@@ -151,7 +151,7 @@ def project_delete(id):
     project = Project.query.filter_by(id=id).first_or_404()
     db.session.delete(project)
     db.session.commit()
-    return redirect(url_for('admin.project_list'))
+    return redirect(form.next.data or url_for('admin.project_list'))
 
 @admin.route('/group/del/<id>')
 @login_required 
@@ -160,7 +160,7 @@ def group_delete(id):
     group = Group.query.filter_by(id=id).first_or_404()
     db.session.delete(group)
     db.session.commit()
-    return redirect(url_for('admin.group_list'))
+    return redirect(form.next.data or url_for('admin.group_list'))
 
 @admin.route('/offer/del/<id>')
 @login_required 
@@ -169,7 +169,7 @@ def offer_delete(id):
     offer = Offer.query.filter_by(id=id).first_or_404()
     db.session.delete(offer)
     db.session.commit()
-    return redirect(url_for('admin.offer_list'))
+    return redirect(form.next.data or url_for('admin.offer_list'))
 
 @admin.route('/offer/set/<id>', methods=['GET', 'POST'])
 @login_required 
@@ -286,17 +286,17 @@ def new_offer(id=None):
             if form.copy.data or form.id.data:
                 offer.picture = prev_offer.picture
             else:
-                return redirect(url_for('admin.offer_list'))
+                return redirect(form.next.data or url_for('admin.offer_list'))
         if not id: #FIXME cuando hay que hacer add?
             db.session.add(offer)
         db.session.commit()
-        return redirect(url_for('admin.offer_list'))
+        return redirect(form.next.data or url_for('admin.offer_list'))
     else:
         filename = None
         return render_template("admin_new_offer.html",
                            form=form,
                            filename=filename)
-    return redirect(url_for('admin.offer_list'))
+    return redirect(form.next.data or url_for('admin.offer_list'))
     
 @admin.route('/offer/view/<id>', methods=['GET', 'POST'])
 @login_required
@@ -449,7 +449,7 @@ def edit_page(id):
         page = Page.query.get(id)
         page.content = form.textarea.data
         db.session.commit()
-        return redirect(url_for('user.index'))
+        return redirect(form.next.data or url_for('admin.page_list'))
     page = Page.query.get(id)
     return render_template('edit_proceso.html', page=page, form=form)
 

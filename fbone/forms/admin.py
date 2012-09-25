@@ -36,6 +36,7 @@ class NewActForm(Form):
     password = TextField()
     zipfile = FileField("Zip con fotos",
                        validators=[file_required()])
+    submit = SubmitField(_('Guardar'))
 
 
 class NewProjectForm(Form):

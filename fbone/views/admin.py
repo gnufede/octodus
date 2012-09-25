@@ -443,7 +443,7 @@ def groups():
 @login_required
 @admin_required
 def edit_page(id):
-    form = EditPageForm(request.form)
+    form = EditPageForm(request.form, next=url_for('admin.page_list'))
     #if form.validate_on_submit():
     if request.method == 'POST':
         page = Page.query.get(id)

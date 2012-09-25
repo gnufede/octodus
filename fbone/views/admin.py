@@ -8,7 +8,7 @@ from fbone.extensions import db
 from fbone.models import User, Group, Page, Project, Session, Offer
 from fbone.decorators import keep_login_url, admin_required
 import datetime
-from werkzeug import secure_filename
+from werkzeug import secure_filename, generate_password_hash, check_password_hash
 import os, zipfile
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -250,16 +250,21 @@ def new_act():
     form = NewActForm(request.form)
     if request.method == 'POST':
         password = form.password.data
+        password_hash = generate_password_hash(password)
         file = request.files['zipfile']
         if file:
             filename = secure_filename(file.filename)
-            dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password)
-            os.mkdir(dir_path)
-            file_path = os.path.join(dir_path, filename) 
-            file.save(file_path)
-            zip_file = zipfile.ZipFile(file_path)
-            zip_file.extractall(dir_path)
-            return redirect(form.next.data or url_for('admin.offer_list'))
+            dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password_hash)
+            if not os.path.exists(dir_path):
+                os.mkdir(dir_path)
+                file_path = os.path.join(dir_path, filename) 
+                file.save(file_path)
+                zip_file = zipfile.ZipFile(file_path)
+                zip_file.extractall(dir_path)
+                flash(u'Acto creado exitosamente','success')
+                return redirect(form.next.data or url_for('admin.offer_list'))
+            else:
+                flash(u'Ya existe un acto con esa contraseña','error')
             
     return render_template("admin_new_act.html",
                            form=form

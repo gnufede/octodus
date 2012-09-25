@@ -24,3 +24,4 @@ venv/
 # Ignore OS X shit
 .DS_Store
 fbone/static/offers/*
+fbone/static/acts/*

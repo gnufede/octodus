@@ -54,3 +54,7 @@ class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_(u'Contraseña'), [required(), length(min=6, max=56)]) #Password
     submit = SubmitField(_(u'Reautenticarse')) #Reauthenticate
+
+class GalleryForm(Form):
+    password = PasswordField(u'Contraseña', validators=[required()] )
+    submit = SubmitField(_(u'Entrar')) #Save

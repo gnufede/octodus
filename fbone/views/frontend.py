@@ -14,9 +14,10 @@ from flask.ext.login import (login_required, login_user, current_user,
 from fbone.decorators import cached_response
 from fbone.models import User, Page, Project
 from fbone.extensions import db, cache, mail, login_manager
-from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
+from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm, GalleryForm,
                          ChangePasswordForm, ReauthForm)
 import os
+from werkzeug import (generate_password_hash, check_password_hash)
 
 frontend = Blueprint('frontend', __name__)
 
@@ -275,12 +276,26 @@ def edit_session():
     return render_template('edit_proceso.html', proceso=proceso.content)
 
 
-@frontend.route('/galeria/<password>')
-def gallery(password):
-    dir_path = os.path.join(os.path.join(frontend.root_path, '../static/acts/'),password)
-    images = [ file for file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
-    zipfile = [ file for file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
-    return render_template('user_gallery.html', images=images, zipfile=zipfile)
+@frontend.route('/galeria', methods=['GET', 'POST'])
+def gallery():
+    form = GalleryForm(request.form)
+    dir_path = None
+    if request.method == 'POST':
+        for filename in os.listdir(os.path.join(frontend.root_path, '../static/acts/')):
+            exist = check_password_hash(filename, form.password.data)
+            if (exist):
+        #        dir_path = filename
+
+        #password_hash = generate_password_hash(form.password.data)
+                dir_path = os.path.join(os.path.join(frontend.root_path, '../static/acts/'),filename)
+        if dir_path and os.path.exists(dir_path):
+            images = [ file for file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
+            zipfile = [ file for file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
+            return render_template('user_gallery.html', form=None,password=filename, images=images, zipfile=zipfile)
+        else: 
+            flash(u'No existe el path '+dir_path, 'error')
+
+    return render_template('user_gallery.html', form=form)
 
 
 

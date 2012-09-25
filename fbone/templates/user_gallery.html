@@ -1,0 +1,28 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = "Galería del Acto de Graduación" %}
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class='span9'>
+    <div id="galleria">
+        {% for filename in images %}
+        <a href="{{filename}}"><img src="{{filename}}"></a>
+        {% endfor %}
+    </div>
+    <div id="download">
+        <a class="btn btn-primary" href="{{zipfile}}">Descargar todas las fotos</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/galleria-1.2.8.min.js')}}"></script>
+<script>
+    Galleria.loadTheme("{{ url_for('static', filename='js/libs/themes/classic/galleria.classic.min.js')}}");
+    Galleria.run('#galleria');
+</script>
+{% endblock %}
+

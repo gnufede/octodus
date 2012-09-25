@@ -31,6 +31,13 @@ class NewOfferForm(Form):
                                    file_allowed(images, "Images only!")])
     submit = SubmitField(_('Guardar'))
 
+class NewActForm(Form):
+    next = HiddenField()
+    password = TextField()
+    zipfile = FileField("Zip con fotos",
+                       validators=[file_required()])
+
+
 class NewProjectForm(Form):
     next = HiddenField()
     project_id = HiddenField()

@@ -2,14 +2,14 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm
+from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm, NewActForm
 from fbone.extensions import db
 
 from fbone.models import User, Group, Page, Project, Session, Offer
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename
-import os
+import os, zipfile
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 UPLOAD_FOLDER = '/tmp/'
@@ -242,6 +242,26 @@ def copy_offer(id=None):
         return render_template("admin_new_offer.html",
                            form=form,
                            filename=offer.picture)
+
+@admin.route('/new_act/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_act():
+    form = NewActForm(request.form)
+    if request.method == 'POST':
+        password = form.password.data
+        file = request.files['zipfile']
+        if file:
+            filename = secure_filename(file.filename)
+            dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password)
+            os.mkdir(dir_path)
+            file_path = os.path.join(dir_path, filename) 
+            file.save(file_path)
+            zip_file = zipfile.ZipFile(file_path)
+            zip_file.extractall(dir_path)
+            
+
+
 
 @admin.route('/new_offer/', methods=['GET', 'POST'])
 @admin.route('/offer/edit/<id>', methods=['GET', 'POST'])

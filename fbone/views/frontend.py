@@ -275,6 +275,12 @@ def edit_session():
     return render_template('edit_proceso.html', proceso=proceso.content)
 
 
+@frontend.route('/galeria/<password>')
+def gallery(password):
+    dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password)
+    images = [ file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
+    zipfile = [ file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
+    return render_template('user_gallery.html', images=images, zipfile=zipfile)
 
 
 

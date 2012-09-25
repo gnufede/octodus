@@ -7,8 +7,6 @@
 {% block body %}
 <div class='span5'>
     <form class='form-stacked' enctype=multipart/form-data method="POST" action="{{ url_for('admin.new_act') }}">
-        {{ form.password }}
-
         <fieldset>
              {{ render_input(form.password, 'xlarge', style="height:28px") }}
              {{ render_input(form.zipfile, 'xlarge') }}

@@ -5,7 +5,7 @@
 
 {% block body %}
 
-<div class='row-fluid span12' >
+<div class='span12' >
     {% if form %}
     <form class='form-stacked' method="POST" action="{{ url_for('frontend.gallery') }}">
         {{ form.next }}
@@ -15,7 +15,7 @@
         </fieldset>
     </form>
     {% else %}
-    <ul id="galleria" class="span8">
+    <ul id="galleria" class="span12">
         {% for filename in images %}
         <li> 
         <!--a href="{{url_for('static', filename='acts/'+password+'/'+filename) }}"-->
@@ -40,7 +40,12 @@
 <!--script src="{{ url_for('static', filename='js/libs/galleria-1.2.8.min.js')}}"></script-->
 <script>
     $(function() {
-        $('#galleria').galleryView();
+        $('#galleria').galleryView({
+                 panel_animation: 'slide',
+     panel_scale: 'fit',
+    panel_height: 500,
+    panel_width: 840,
+});
         /*
         Galleria.loadTheme("{{ url_for('static', filename='js/libs/themes/classic/galleria.classic.min.js')}}");
         Galleria.run('#galleria');

@@ -21,7 +21,7 @@
 {% block body %}
 <div class="span8">	
 
-<form class='form-stacked' method="POST" action="{{ url_for('admin.edit_page',page.id) }}">
+<form class='form-stacked' method="POST" action="{{ url_for('admin.edit_page',id=page.id) }}">
           {{ render_input( form.textarea, nolabel=True, cls='textarea', value=page.content|safe, style="width:610px; height:200px", placeholder=page.content|safe) }}
           {{ render_action(form.submit) }}
 </form>

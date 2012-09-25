@@ -136,6 +136,13 @@ def project_list():
 def group_list():
     return render_template('list.html', title="Grupos", objects=Group.query.all(), active='group_list', actions=[['Editar', "edit", 'icon-pencil'], ['Borrar',"del",'icon-trash']], current_user=current_user)
 
+@admin.route('/page/list')
+@login_required
+@admin_required
+def page_list():
+    objects = db.session.query(Page).all()
+    return render_template('list.html', title="Páginas", objects=objects, active='page_list', actions=[['Editar', "edit", 'icon-pencil'],], current_user=current_user)
+
 
 @admin.route('/project/del/<id>')
 @login_required 
@@ -432,7 +439,7 @@ def groups():
     return jsonify(tree)
     
 
-@admin.route('/edit_page/<id>', methods=['GET', 'POST'])
+@admin.route('/page/edit/<id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def edit_page(id):

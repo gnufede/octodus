@@ -66,9 +66,9 @@ Ofertas</li>
     <li class='nav-header'>
     <i class='icon-asterisk'></i>
     Otros</li>
-    <li id='process_edit'><a href='{{ url_for('admin.edit_page',id=1) }}'>
-    <i class='icon-pencil'></i>
-        Editar página de proceso</a></li>
+    <li id='pages_list'><a href='{{ url_for('admin.pages_list') }}'>
+    <i class='icon-list'></i>
+        Lista de páginas</a></li>
 </ul>
 {% else %}
 <div class="well" style="padding: 8px 0;">

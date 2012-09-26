@@ -5,7 +5,7 @@ from flask.ext.login import login_required, current_user
 from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm, NewActForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Page, Project, Session, Offer
+from fbone.models import User, Group, Page, Project, Session, Offer, Act
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename, generate_password_hash, check_password_hash

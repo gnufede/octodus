@@ -284,15 +284,12 @@ def gallery():
         for filename in os.listdir(os.path.join(frontend.root_path, '../static/acts/')):
             exist = check_password_hash(filename, form.password.data)
             if (exist):
-        #        dir_path = filename
-
-        #password_hash = generate_password_hash(form.password.data)
                 dir_path = os.path.join(os.path.join(frontend.root_path, '../static/acts/'),filename)
-        if dir_path and os.path.exists(dir_path):
-            images = [ file for file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
-            zipfile = [ file for file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
-            actos = Page.query.filter_by(name="actos").first()
-            return render_template('user_gallery.html', form=None,password=filename, images=images, zipfile=zipfile, actos=actos)
+                if os.path.exists(dir_path):
+                    images = [ file for file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
+                    zipfile = [ file for file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
+                    actos = Page.query.filter_by(name="actos").first()
+                    return render_template('user_gallery.html', form=None,password=filename, images=images, zipfile=zipfile, actos=actos)
 
     return render_template('user_gallery.html', form=form)
 

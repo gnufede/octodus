@@ -39,6 +39,11 @@ projects_offers = db.Table("projects_offers", db.metadata,
     db.Column("offer_id", db.Integer, ForeignKey("offers.id")),
     db.Column("overriden_price", db.Float))
 
+class Act(db.Model):
+    __tablename__ = "acts"
+    password = db.Column(db.String(128))
+    password_hash = db.Column(db.Sring(256))
+
 class OfferSelection(db.Model):
     __tablename__ = "offers_users"
     project_id = db.Column(db.Integer, ForeignKey("projects.id"), primary_key=True)

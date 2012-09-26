@@ -143,6 +143,13 @@ def page_list():
     objects = db.session.query(Page).all()
     return render_template('list.html', title=u"Páginas", objects=objects, active='page_list', fields=['name'], actions=[['Editar', "edit", 'icon-pencil'],], current_user=current_user)
 
+@admin.route('/act/list')
+@login_required
+@admin_required
+def act_list():
+    objects = db.session.query(Act).all()
+    return render_template('list.html', title="Actos de Graduación", objects=objects, active='act_list', actions=[['Borrar',"del",'icon-trash']], fields="password", current_user=current_user)
+
 
 @admin.route('/project/del/<id>')
 @login_required 
@@ -243,6 +250,17 @@ def copy_offer(id=None):
                            form=form,
                            filename=offer.picture)
 
+@admin.route('/act/del/<id>')
+@login_required
+@admin_required
+def del_act():
+    act = Act.query.get(id)
+    dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),act.password_hash)
+    os.removedirs(dir_path)
+    db.session.delete(act)
+    db.session.commit()
+    return redirect(form.next.data or url_for('admin.act_list'))
+
 @admin.route('/new_act/', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -256,11 +274,15 @@ def new_act():
             filename = secure_filename(file.filename)
             dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),password_hash)
             if not os.path.exists(dir_path):
+                act = Act(password=password, password_hash=password_hash)
+                db.session.add(act)
+                db.session.commit()
                 os.mkdir(dir_path)
                 file_path = os.path.join(dir_path, filename) 
                 file.save(file_path)
                 zip_file = zipfile.ZipFile(file_path)
                 zip_file.extractall(dir_path)
+                
                 flash(u'Acto creado exitosamente','success')
                 return redirect(form.next.data or url_for('admin.offer_list'))
             else:

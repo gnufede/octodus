@@ -41,9 +41,9 @@ projects_offers = db.Table("projects_offers", db.metadata,
 
 class Act(db.Model):
     __tablename__ = "acts"
-    id = db.Column(db.Integer)
-    password = db.Column(db.String(128), primary_key=True)
-    password_hash = db.Column(db.String(256))
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(128), unique=True)
+    password_hash = db.Column(db.String(256), unique=True)
 
 class OfferSelection(db.Model):
     __tablename__ = "offers_users"

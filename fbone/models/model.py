@@ -42,7 +42,7 @@ projects_offers = db.Table("projects_offers", db.metadata,
 class Act(db.Model):
     __tablename__ = "acts"
     password = db.Column(db.String(128))
-    password_hash = db.Column(db.Sring(256))
+    password_hash = db.Column(db.String(256))
 
 class OfferSelection(db.Model):
     __tablename__ = "offers_users"

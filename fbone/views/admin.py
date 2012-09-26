@@ -256,7 +256,7 @@ def copy_offer(id=None):
 def del_act(id):
     act = Act.query.filter_by(id=id).first()
     dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),act.password_hash)
-    if not os.path.exists(dir_path):
+    if os.path.exists(dir_path):
         os.removedirs(dir_path)
     db.session.delete(act)
     db.session.commit()

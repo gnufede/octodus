@@ -9,7 +9,7 @@ from fbone.models import User, Group, Page, Project, Session, Offer, Act
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename, generate_password_hash, check_password_hash
-import os, zipfile
+import os, zipfile, shutil
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 UPLOAD_FOLDER = '/tmp/'
@@ -257,7 +257,7 @@ def del_act(id):
     act = Act.query.filter_by(id=id).first()
     dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),act.password_hash)
     if os.path.exists(dir_path):
-        os.removedirs(dir_path)
+        shutil.rmtree(dir_path)
     db.session.delete(act)
     db.session.commit()
     return redirect(url_for('admin.act_list'))

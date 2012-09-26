@@ -254,7 +254,7 @@ def copy_offer(id=None):
 @login_required
 @admin_required
 def del_act():
-    act = Act.query.get(id)
+    act = Act.query.filter_by(id=id).first()
     dir_path = os.path.join(os.path.join(admin.root_path, '../static/acts/'),act.password_hash)
     os.removedirs(dir_path)
     db.session.delete(act)

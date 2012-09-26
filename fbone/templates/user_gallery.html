@@ -24,7 +24,8 @@
         </li> 
         {% endfor %}
     </ul>
-    <div id="buy" class="span5">
+    <hr/>
+    <div id="buy" class="span12">
         <p>
         <strong>
             SI ESTÁS INTERESADO EN COMPRAR TUS FOTOS DE GRADUACIÓN, MÁNDANOS UN EMAIL CON LOS NOMBRES DE ARCHIVOS QUE TE INTERESAN A <a href='mailto:efdigitalorlas@gmail.com'>efdigitalorlas@gmail.com</a>
@@ -36,7 +37,7 @@
         </p>
     </div>
     <hr/>
-    <div id="download" class="span5">
+    <div id="download" class="span12">
         <a class="btn" href="{{url_for('static', filename='acts/'+password+'/'+zipfile)}}"><i class="icon-gift"></i> Descargar todas las fotos</a>
     </div>
     {% endif %}

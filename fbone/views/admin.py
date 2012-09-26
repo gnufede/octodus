@@ -148,7 +148,7 @@ def page_list():
 @admin_required
 def act_list():
     objects = db.session.query(Act).all()
-    return render_template('list.html', title=u"Actos de Graduación", objects=objects, active='act_list', actions=[['Borrar',"del",'icon-trash']], fields="password", current_user=current_user)
+    return render_template('list.html', title=u"Actos de Graduación", objects=objects, active='act_list', actions=[['Borrar',"del",'icon-trash']], fields=["password",], current_user=current_user)
 
 
 @admin.route('/project/del/<id>')

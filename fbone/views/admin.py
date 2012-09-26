@@ -260,7 +260,7 @@ def del_act(id):
         os.removedirs(dir_path)
     db.session.delete(act)
     db.session.commit()
-    return redirect(form.next.data or url_for('admin.act_list'))
+    return redirect(url_for('admin.act_list'))
 
 @admin.route('/new_act/', methods=['GET', 'POST'])
 @login_required
@@ -285,7 +285,7 @@ def new_act():
                 zip_file.extractall(dir_path)
                 
                 flash(u'Acto creado exitosamente','success')
-                return redirect(form.next.data or url_for('admin.offer_list'))
+                return redirect(form.next.data or url_for('admin.act_list'))
             else:
                 flash(u'Ya existe un acto con esa contraseña','error')
             

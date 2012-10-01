@@ -176,7 +176,7 @@ def offer_delete(id):
     offer = Offer.query.filter_by(id=id).first_or_404()
     db.session.delete(offer)
     db.session.commit()
-    return redirect(form.next.data or url_for('admin.offer_list'))
+    return redirect(url_for('admin.offer_list'))
 
 @admin.route('/offer/set/<id>', methods=['GET', 'POST'])
 @login_required 

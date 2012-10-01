@@ -132,9 +132,9 @@
                     
                     var totalF = parseFloat(total).toFixed(2);
                     var totalIVA = parseFloat(total * 1.21).toFixed(2);
-                    var totalIVAeur = Math.floor(totalIva)
+                    var totalIVAeur = Math.floor(totalIva);
                     
-                    $('#selection').append('TOTAL SIN IVA: ' + totalF + '€<br />TOTAL CON IVA: ' + totalIVA + '€<br />');
+                    $('#selection').append('TOTAL SIN IVA: ' + totalF + '€<br />TOTAL CON IVA: ' + totalIVAeur + '€<br />');
                     
                     $('#confirm').dialog('open');
                 }

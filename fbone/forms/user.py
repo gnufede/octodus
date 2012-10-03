@@ -47,7 +47,7 @@ class EditDatosForm(Form):
                 children = []
                 types_list = []
                 for i in val.children:
-                    children.append((i.id, i.name + " ("+i.type+")"))
+                    children.append((i.id, "("+i.type+") " + i.name))
                     types_list.append(i.type)
                 types_set = list(set(types_list))
                 types_label = str(types_set[0])

@@ -98,11 +98,17 @@ def list():
     users2 = User.query.all()
     users = users2[:]
     for user in users:
+        if user.projects and user.projects[-1]:
+            user.grupo = user.projects[-1].name
+            user.codigo = user.projects[-1].activation_key
+        else:
+            user.grupo = ''
+            user.codigo = ''
         if user.appointments:
             user.cita = user.appointments[0].date
         else:
             user.cita = ''
-    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email', 'cita'],no_set_delete=True,  active='user_list', actions=[['Borrar', 'del', 'icon-trash']], current_user=current_user)
+    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email', 'grupo', 'codigo', 'cita'],no_set_delete=True,  active='user_list', actions=[['Borrar', 'del', 'icon-trash']], current_user=current_user)
 
 @user.route('/<name>')
 def pub(name):
@@ -165,7 +171,7 @@ def new_appointment_post():
         return redirect(url_for('user.new_appointment_get'))
     
     # Count appointments in this slot
-    count = Appointment.query.filter_by(session_id=session_id, project_id=project.id, date=appointment_date).count()
+    count = Appointment.query.filter_by(session_id=session_id, date=appointment_date).count()
     sess = Session.query.filter_by(id=session_id).first()
     if count >= sess.block_capacity:
         flash(u"La hora elegida ya se ha completado", 'error')

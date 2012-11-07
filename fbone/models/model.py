@@ -49,12 +49,12 @@ class PollSelection(db.Model):
     __tablename__ = "polls_users"
     project_id = db.Column(db.Integer, ForeignKey("projects.id"), primary_key=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
-    poll_item_id = db.Column(db.Integer, ForeignKey("offers.id"), primary_key=True)
-    poll_type = db.Column(db.Integer, ForeignKey("offers.type"), primary_key=True)
+    poll_item_id = db.Column(db.Integer, ForeignKey("poll_items.id"), primary_key=True)
+    poll_type = db.Column(db.Integer, ForeignKey("poll_items.type"), primary_key=True)
     date = db.Column(db.DateTime, default=db.func.now())
     project = relationship("Project", backref=backref("poll_selection",cascade="all,delete,delete-orphan"))
     user = relationship("User", backref=backref("poll_selection",cascade="all,delete,delete-orphan"))
-    poll_item = relationship("PollItem", primaryjoin="PollItem.id==OfferSelection.poll_item_id", backref=backref('poll_selection', cascade='all,delete,delete-orphan'))
+    poll_item = relationship("PollItem", primaryjoin="PollItem.id==PollSelection.poll_item_id", backref=backref('poll_selection', cascade='all,delete,delete-orphan'))
 
 class PollItem(db.Model):
     __tablename__ = "poll_items"
@@ -68,7 +68,7 @@ class PollItem(db.Model):
         return {'id': self.id, 'name': self.name  }
 
     def jsonify_full(self):
-        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="offers/"+self.picture), 'description': self.description }
+        return {'id': self.id, 'name': self.name, 'img': url_for('static', filename="polls/"+self.picture), 'description': self.description }
 
 
 class OfferSelection(db.Model):

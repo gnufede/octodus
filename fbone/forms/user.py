@@ -92,3 +92,12 @@ class UserOfferForm(Form):
 
     def set_offer_type(self, type):
         self.type.data = type
+
+class UserPollForm(Form):
+    next = HiddenField()
+    options = RadioField(_(u'Elección'))
+    submit = SubmitField(_('Continuar'))
+    type = HiddenField()
+
+    def set_poll_type(self, type):
+        self.type.data = type

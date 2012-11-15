@@ -25,6 +25,14 @@ nodes_professors = db.Table("nodes_professors", db.metadata,
     db.Column("node_id", db.Integer, ForeignKey("nodes.id")),
     db.Column("professor_id", db.Integer, ForeignKey("professors.id")))
 
+nodes_poll_items = db.Table("nodes_poll_items", db.metadata,
+    db.Column("node_id", db.Integer, ForeignKey("nodes.id")),
+    db.Column("poll_item_id", db.Integer, ForeignKey("poll_items.id")))
+
+projects_poll_items = db.Table("projects_poll_items", db.metadata,
+    db.Column("project_id", db.Integer, ForeignKey("projects.id")),
+    db.Column("poll_item_id", db.Integer, ForeignKey("poll_items.id")))
+
 
 projects_users = db.Table("projects_users", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
@@ -136,6 +144,7 @@ class Project(db.Model):
     users = relationship("User", secondary=projects_users, backref="projects")
     sessions = relationship("Session", secondary=projects_sessions, backref="projects")
     offers = relationship("Offer", secondary=projects_offers, backref="projects")
+    poll_items = relationship("PollItem", secondary=projects_poll_items, backref="projects")
     #node_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #appointments = relationship("Appointment", backref="project")
     depth = db.Column(db.Integer)
@@ -162,6 +171,7 @@ class Project(db.Model):
             new_project.type = node.type
             new_project.activation_key = node.activation_key + self.term
             new_project.depth = node.depth
+            new_project.poll_items = node.items
         if node.parent:
             parent_activation_key = node.parent.activation_key + self.term
             parent_project = db.session.query(Project).filter(Project.activation_key==parent_activation_key).first()
@@ -174,6 +184,14 @@ class Project(db.Model):
         db.session.commit()
         for j in node.children:
             new_project.create(j)
+
+    def set_poll_item(self, poll_item):
+        if self.children:
+            for j in self.children:
+                j.set_poll_item(poll_item)
+        if poll_item not in self.poll_items:
+            self.poll_items.append(poll_item)
+            db.session.commit()
 
     def set_offer(self, offer):
         if self.children:
@@ -303,9 +321,18 @@ class Node(db.Model):
     activation_key = db.Column(db.String(128), nullable=False, unique=True)
     parent_id = db.Column(db.Integer, ForeignKey("nodes.id"))
     #projects = relationship("Project", backref="node")
+    poll_items = relationship("PollItem", secondary=nodes_poll_items, backref="nodes")
     children = relationship("Node",
                 backref=backref('parent', remote_side=[id])
                )
+
+    def set_poll_item(self, poll_item):
+        if self.children:
+            for j in self.children:
+                j.set_poll_item(poll_item)
+        if poll_item not in self.poll_items:
+            self.poll_items.append(poll_item)
+            db.session.commit()
 
     def jsonify_OLD(self):
         children = dict()

@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Escoge Oferta') %}
+{% set page_title = _('Vota en la encuesta') %}
 
 {% extends 'user_index.html' %}
 
@@ -36,7 +36,7 @@
     $("label").css({'display': 'inline'});
     $('#select_offer').addClass('active');
     
-    var base_url = '/admin/offers';
+    var base_url = '/admin/polls';
     var type = 1;
     var currentData;
     var selection = [];
@@ -101,7 +101,7 @@
         
         var url = base_url;
         var id = String(num);
-        var showPrice = byType;
+        var showPrice = false;
         
         if (byType) {
             url += '/type';
@@ -119,22 +119,6 @@
                 if (byType) {
                     $('#selection').empty().append('<br />');
                     $('#type').empty();
-                    
-                    var total = 0.00;
-                    var values = "";
-                    
-                    $.each(selection, function(key, val) {
-                        $('#selection').append(val.name + ': ' + val.price + '€<br />');
-                        total += parseFloat(val.price);
-                        values += val.id + ',';
-                        $('#type').val(values);
-                    });
-                    
-                    var totalF = parseFloat(total).toFixed(2);
-                    var totalIVA = parseFloat(total * 1.21).toFixed(2);
-                    var totalIVAeur = Math.floor(totalIVA);
-                    
-                    $('#selection').append('TOTAL SIN IVA: ' + totalF + '€<br />TOTAL CON IVA: ' + totalIVAeur + '€<br />');
                     
                     $('#confirm').dialog('open');
                 }
@@ -172,7 +156,7 @@
 
 <div class='span9'>
     <!--<form class='form-stacked' method="POST" action="{{ url_for('user.set_offer', type_id=form.type.data) }}">-->
-    <form id="user_choice" class='form-stacked' method="POST" action="{{ url_for('user.save_user_choice') }}">
+    <form id="user_choice" class='form-stacked' method="POST" action="{{ url_for('user.set_poll_option') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         

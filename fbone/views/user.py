@@ -253,5 +253,27 @@ def save_user_choice():
     return redirect(form.next.data or url_for('user.index'))
 
 
+@user.route('/set_poll_option/<type_id>', methods=['GET', 'POST'])
+@login_required
+def set_poll_option(type_id=1):
+    form = UserPollForm()
+    form.set_poll_type(type_id)
+    project = current_user.projects[-1] #FIXME
+    
+    if request.method == 'POST':
+        if form.options.data != u'None':
+            poll_option = Poll.query.get(int(form.options.data))
+            poll_selection = PollSelection(poll_option_id=poll_option.id, project_id=project.id, user_id=current_user.id, poll_option_type=poll_option.type)
+            db.session.add(poll_selection)
+            db.session.commit()
+    
+        else:
+            return redirect(url_for('user.set_offer', type_id=type_id))
+
+        flash('Voto emitido correctamente', 'success')
+        return redirect(form.next.data or url_for('user.index'))
+    return render_template('user_poll.html', form=form,
+                           current_user=current_user)
+
 
 

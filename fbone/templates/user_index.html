@@ -59,7 +59,20 @@ Ofertas</li>
     <li id='offer_list'><a href='{{ url_for('admin.offer_list') }}'>
     <i class='icon-list'></i>
     Lista de ofertas</a></li>
-<li id='offer_set'><a href='{{ url_for('admin.set_offer') }}'>
+    <li class="divider"></li>
+<li class='nav-header'>
+    <i class='icon-align-left'></i>
+Encuestas</li>
+    <li id='poll_item_new'><a href='{{ url_for('admin.new_poll_item') }}'>
+    <i class='icon-plus'></i>
+    Nuevo elemento de encuesta</a></li>
+    <li id='poll_list'><a href='{{ url_for('admin.poll_list') }}'>
+    <i class='icon-list'></i>
+    Lista de encuestas</a></li>
+<li id='poll_set_node'><a href='{{ url_for('admin.node_set_poll_item') }}'>
+    <i class='icon-random'></i>
+    Asignar a grupos</a></li>
+<li id='poll_set_project'><a href='{{ url_for('admin.project_set_poll_item') }}'>
     <i class='icon-random'></i>
     Asignar a proyectos</a></li>
     <li class="divider"></li>

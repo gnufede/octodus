@@ -2,10 +2,10 @@
 
 from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash, jsonify
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm, NewActForm
+from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, SetSessionForm, NewOfferForm, SetOfferForm, NewActForm, NewPollItemForm, SetPollNodeForm
 from fbone.extensions import db
 
-from fbone.models import User, Group, Page, Project, Session, Offer, Act
+from fbone.models import User, Group, Page, Project, Session, Offer, Act, PollItem
 from fbone.decorators import keep_login_url, admin_required
 import datetime
 from werkzeug import secure_filename, generate_password_hash, check_password_hash
@@ -22,6 +22,42 @@ def render_projects(objects):
         object.ofertas = len(object.offers)
         object.usuarios = len(object.users)
     return render_template('list.html', title="Proyectos", objects=objects, fields=["id","activation_key", "term","type", "name", "sesiones", "ofertas","usuarios"], actions=[['Ver Sesiones', "view_session", 'icon-camera'], ['Asignar Sesiones', "set_session", 'icon-hand-right'], ['Ver Ofertas', "view_offer", 'icon-shopping-cart'], ['Asignar Ofertas', "set_offer", 'icon-hand-right'], ['Borrar',"del",'icon-trash']], active='project_list', current_user=current_user)
+
+def set_polls_nodes(polls, nodes):
+    form = SetPollNodeForm(request.form)
+    polls_choices = [ (poll.id, poll.name) for poll in polls]
+    nodes_choices = [ (node.id, node.activation_key) for node in nodes]
+    form.polls_id.choices = polls_choices
+    form.nodes_id.choices = nodes_choices
+    if request.method == 'POST':
+        for poll_id in form.polls_id.data:
+            poll = Poll.query.filter_by(id=poll_id).first()
+            for node_id in form.nodes_id.data:
+                node = Group.query.filter_by(id=node_id).first()
+                node.set_poll_item(poll)
+                
+        db.session.commit()
+        return redirect(form.next.data or url_for('admin.project_list'))
+    return render_template('admin_set_poll.html', form=form,
+                           current_user=current_user)
+
+def set_polls_projects(polls, projects):
+    form = SetPollForm(request.form)
+    polls_choices = [ (poll.id, poll.name) for poll in polls]
+    projects_choices = [ (project.id, project.activation_key) for project in projects]
+    form.polls_id.choices = polls_choices
+    form.projects_id.choices = projects_choices
+    if request.method == 'POST':
+        for poll_id in form.polls_id.data:
+            poll = Poll.query.filter_by(id=poll_id).first()
+            for project_id in form.projects_id.data:
+                project = Project.query.filter_by(id=project_id).first()
+                project.set_poll_item(poll)
+                
+        db.session.commit()
+        return redirect(form.next.data or url_for('admin.project_list'))
+    return render_template('admin_set_poll.html', form=form,
+                           current_user=current_user)
 
 def set_offers(offers, projects):
     form = SetOfferForm(request.form)
@@ -40,6 +76,61 @@ def set_offers(offers, projects):
         return redirect(form.next.data or url_for('admin.project_list'))
     return render_template('admin_set_offer.html', form=form,
                            current_user=current_user)
+
+@admin.route('/polls/<id>', methods=['GET'])
+@admin.route('/polls/', methods=['GET'])
+@login_required
+def polls(id=None):
+    project = None
+    if len(current_user.projects):
+        project = current_user.projects[-1] #FIXME
+    if project:
+        polls = project.polls
+        poll_ids = [str(poll.id) for poll in polls]
+        if id: 
+            if(str(id) in poll_ids):
+                node = PollItem.query.filter_by(id=id).first()
+                tree = [(x.id, x.jsonify_full()) for x in node.children]
+            else:
+                tree = []
+        else:
+            polls = [poll for poll in polls]
+            tree = [(x.id, x.jsonify_full()) for x in polls]
+
+    else:
+        if id:
+            node = PollItem.query.filter_by(id=id).first()
+            tree = db.session.query(PollItem.id,PollItem.name).filter_by(parent=node).all()
+        else:
+            tree = [(x.id, x.jsonify_full()) for x in PollItem.query.all()]
+    return jsonify(tree)
+    
+@admin.route('/polls/type/<type>', methods=['GET'])
+@login_required
+def polls_types(type=1):
+    project = None
+    tree = []
+    if len(current_user.projects):
+        project = current_user.projects[-1] #FIXME
+    if project:
+        polls = project.polls
+        poll_types = [str(poll.type) for poll in polls]
+        if(str(type) in poll_types):
+            nodes = [poll for poll in polls if (poll.depth == 0 and str(poll.type)==str(type))]
+            tree = [(x.id, x.jsonify_full()) for x in nodes]
+    return jsonify(tree)
+    
+@admin.route('/poll/<project_id>/del/<poll_id>', methods=['GET'])
+@login_required
+@admin_required
+def remove_offer(project_id, poll_id):
+    project = Project.query.filter_by(id=project_id).first()
+    poll = PollItem.query.filter_by(id=poll_id).first()
+    project.remove_poll(poll)
+    db.session.commit()
+    return redirect(form.next.data or '/admin/poll/'+project_id)
+
+
 
 def set_sessions(sessions, projects):
     if len(sessions) > 1:
@@ -65,6 +156,7 @@ def set_sessions(sessions, projects):
 
 @admin.route('/offer/<project_id>/del/<offer_id>', methods=['GET'])
 @login_required
+@admin_required
 def remove_offer(project_id, offer_id):
     project = Project.query.filter_by(id=project_id).first()
     offer = Offer.query.filter_by(id=offer_id).first()
@@ -292,6 +384,92 @@ def new_act():
     return render_template("admin_new_act.html",
                            form=form
                            )
+
+@admin.route('/new_poll_item/', methods=['GET', 'POST'])
+@admin.route('/poll_item/edit/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_poll_item(id=None):
+    poll_item = None
+    if id:
+        poll_item = db.session.query(PollItem).get(id)
+        form = NewPollItemForm(request.form, obj=poll_item)
+    else:
+        form = NewPollItemForm(request.form)
+
+    if request.method == 'POST':
+        if form.id.data:
+            poll_item = db.session.query(PollItem).get(form.id.data)
+            prev_poll_item = poll_item
+        if not form.id.data or form.copy.data:
+            poll_item = PollItem(name=form.name.data, description=form.description.data,
+                     type=form.type.data)
+        else:
+            poll_item.name = form.name.data
+            poll_item.type = form.type.data
+            poll_item.description = form.description.data
+        file = request.files['picture']
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(os.path.join(admin.root_path, '../static/poll_items/'), filename))
+            poll_item.picture = filename
+        else:
+            if form.copy.data or form.id.data:
+                poll_item.picture = prev_poll_item.picture
+            else:
+                return redirect(form.next.data or url_for('admin.poll_item_list'))
+        if not id: #FIXME cuando hay que hacer add?
+            db.session.add(poll_item)
+        db.session.commit()
+        return redirect(form.next.data or url_for('admin.poll_item_list'))
+    else:
+        filename = None
+        return render_template("admin_new_poll_item.html",
+                           form=form,
+                           filename=filename)
+    return redirect(form.next.data or url_for('admin.poll_item_list'))
+
+
+@admin.route('/poll_admin/', methods=['GET', 'POST'])
+@admin.route('/poll/<id>/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def poll_list(id=None):
+    return redirect(url_for('admin.poll_item_list'))
+
+
+
+@admin.route('/poll_items/', methods=['GET', 'POST'])
+@admin.route('/poll_item/<id>/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def poll_item_list(id=None):
+    polls = None
+    actions = None
+    if id:
+        actions=[['Quitar del Proyecto',"del",'icon-trash']]
+        project = Project.query.filter_by(id=id).first()
+        objects = project.poll_items
+    else:
+        actions=[['Asignar Proyectos', "set", 'icon-hand-right'], ['Ver', "view", 'icon-eye-open'], ['Editar', "edit", 'icon-pencil'], ['Clonar', "copy", 'icon-share-alt'], ['Borrar',"del",'icon-trash']]
+        objects = db.session.query(Offer).all()
+    return render_template('list.html', title="Ofertas", objects=objects, fields=['name', 'description', 'default', 'price', 'parent_id', 'type'], actions=actions , active='offer_list', current_user=current_user)
+
+@admin.route('/project_set_poll_item/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def project_set_poll_item():
+    poll_items = PollItem.query.all()
+    projects = db.session.query(Project).filter(Project.name!='0').all()
+    return set_polls_projects(poll_items, projects)
+
+@admin.route('/node_set_poll_item/', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def node_set_poll_item():
+    poll_items = PollItem.query.all()
+    nodes = db.session.query(Group).filter(Group.name!='0').all()
+    return set_polls_nodes(poll_items, nodes)
 
 
 

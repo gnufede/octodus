@@ -25,3 +25,4 @@ venv/
 .DS_Store
 fbone/static/offers/*
 fbone/static/acts/*
+fbone/static/poll_items/*

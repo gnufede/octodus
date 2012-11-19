@@ -1,0 +1,31 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Asignar Opciones de encuesta') %}
+
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span8'>
+    <form class='form-stacked' method="POST" action="{{ url_for('admin.node_set_poll_item') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        <fieldset>
+            <div class='span3'>
+             {{ render_input(form.offers_id, 'xlarge' ) }}
+           </div>
+            <div class='span3'>
+             {{ render_input(form.nodes_id, 'xlarge' ) }}
+           </div>
+             
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+{% block append_js %}
+<script>
+$('#poll_set_node').addClass('active');
+$("li>label").css({ 'display': 'inline' });
+</script>
+{% endblock %}

@@ -3,6 +3,7 @@ import os
 
 APP_NAME = 'fbone'
 
+
 class BaseConfig(object):
 
     DEBUG = False
@@ -32,7 +33,7 @@ class DefaultConfig(BaseConfig):
     # $ sudo chown $USER /var/log/fbone
     DEBUG_LOG = '/tmp/fbone-debug.log'
 
-    ACCEPT_LANGUAGES = ['es','en']
+    ACCEPT_LANGUAGES = ['es', 'en']
     BABEL_DEFAULT_LOCALE = 'es'
 
     CACHE_TYPE = 'simple'
@@ -52,7 +53,7 @@ class DefaultConfig(BaseConfig):
 
     TESTING = False
     #TESTING = True
-    
+
 
 class TestConfig(BaseConfig):
     TESTING = True

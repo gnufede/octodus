@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from uuid import uuid4
-from datetime import datetime
+#from datetime import datetime
 
 from flask import (Blueprint, render_template, current_app, request,
-                   flash, url_for, redirect, session, g, abort, Markup)
+                   flash, url_for, redirect, session, abort)
+                   #Markup, g
 from flaskext.mail import Message
 from flaskext.babel import gettext as _
 from flask.ext.login import (login_required, login_user, current_user,
-                            logout_user, confirm_login, fresh_login_required,
+                            logout_user, confirm_login,
                             login_fresh)
+                            #fresh_login_required
 
 from fbone.decorators import cached_response
 from fbone.models import User, Page, Project
-from fbone.extensions import db, cache, mail, login_manager
-from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm, GalleryForm,
+from fbone.extensions import db, mail, login_manager  # cache
+from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
+                         GalleryForm,
                          ChangePasswordForm, ReauthForm)
 import os
-from werkzeug import (generate_password_hash, check_password_hash)
+from werkzeug import check_password_hash  # generate_password_hash
 
 frontend = Blueprint('frontend', __name__)
 
@@ -30,19 +33,20 @@ def index():
 
     login_form = signup_form = None
     if not current_user.is_authenticated():
-        login_form= LoginForm(next=request.args.get('next'))
+        login_form = LoginForm(next=request.args.get('next'))
         signup_form = SignupForm(next=request.args.get('next'))
     page = int(request.args.get('page', 1))
     horario = Page.query.filter_by(name="Horario").first()
     pagination = User.query.paginate(page=page, per_page=10)
-    return render_template('index.html', horario=horario.content, pagination=pagination, login_form=login_form,
+    return render_template('index.html', horario=horario.content,
+                            pagination=pagination, login_form=login_form,
                            signup_form=signup_form, current_user=current_user)
 
 
 @frontend.route('/bodas')
 @cached_response
 def bodas():
-    login_form= LoginForm(next=request.args.get('next'))
+    login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'))
     return render_template('bodas.html', login_form=login_form,
                            signup_form=form, current_user=current_user)
@@ -51,33 +55,36 @@ def bodas():
 @frontend.route('/fotoescuela')
 @cached_response
 def fotoescuela():
-    login_form= LoginForm(next=request.args.get('next'))
+    login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'))
     return render_template('fotoescuela.html', login_form=login_form,
                            signup_form=form, current_user=current_user)
 
+
 @frontend.route('/nuestros_productos')
 @cached_response
 def productos():
-    login_form= LoginForm(next=request.args.get('next'))
+    login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'))
     return render_template('productos.html', login_form=login_form,
                            signup_form=form, current_user=current_user)
 
+
 @frontend.route('/email')
 @cached_response
 def email():
-    login_form= LoginForm(next=request.args.get('next'))
+    login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'))
     return render_template('email.html', login_form=login_form,
                            signup_form=form, current_user=current_user)
+
 
 @frontend.route('/proceso')
 @cached_response
 def proceso():
     login_form = form = None
     if not current_user.is_authenticated():
-        login_form= LoginForm(next=request.args.get('next'))
+        login_form = LoginForm(next=request.args.get('next'))
         form = SignupForm(next=request.args.get('next'))
     proceso = Page.query.filter_by(name="Proceso").first()
     return render_template('proceso.html', proceso=proceso.content,
@@ -85,12 +92,11 @@ def proceso():
                        form=form)
 
 
-
 @frontend.route('/search')
 def search():
     login_form = None
     if not current_user.is_authenticated():
-        login_form= LoginForm(next=request.args.get('next'))
+        login_form = LoginForm(next=request.args.get('next'))
     keywords = request.args.get('keywords', '').strip()
     pagination = None
     if keywords:
@@ -108,28 +114,30 @@ def login():
    # email=request.args.get('email', 'tu_email@email.com')
     form = LoginForm(email=request.args.get('email', None),
                      next=request.args.get('next', None))
-    
-    
     tries = request.args.get('tries', 0)
     if form.validate_on_submit():
         user, authenticated = User.authenticate(form.email.data,
                                     form.password.data)
 
-        if user: 
+        if user:
             if authenticated:
                 remember = request.form.get('remember') == 'y'
                 if login_user(user, remember=remember):
-                    flash("Bienvenido, "+user.name+'!', 'success') # Logged in!
+                    flash("Bienvenido, " + user.name + '!', 'success')
+                         # Logged in!
                 return redirect(form.next.data or url_for('user.index'))
             else:
-                flash(_('Vaya, no es correcto'), 'error') # Sorry, invalid login
+                flash(_('Vaya, no es correcto'), 'error')
+                    # Sorry, invalid login
                 tries = tries + 1
 
         else:
-            flash(_('Lo sentimos, esa cuenta no existe'), 'error') #Sorry, there is no such account
-            return redirect(url_for('frontend.signup',email=form.email.data))
+            flash(_('Lo sentimos, esa cuenta no existe'), 'error')
+                    #Sorry, there is no such account
+            return redirect(url_for('frontend.signup', email=form.email.data))
     if form.email.data:
-        return render_template('login.html', form=form, tries=tries, email=form.email.data)
+        return render_template('login.html', form=form, tries=tries,
+                                email=form.email.data)
     return render_template('login.html', form=form, tries=tries)
     #return redirect(url_for('frontend.login',email=email))
 
@@ -145,7 +153,7 @@ def reauth():
         if user and authenticated:
             confirm_login()
             current_app.logger.debug('reauth: %s' % session['_fresh'])
-            flash(_('Reautenticado.'), 'success') #Reauthenticate
+            flash(_('Reautenticado.'), 'success')  # Reauthenticate
             return redirect('/change_password')
 
         flash(_(u'La contraseña no es correcta.'), 'error') #Password is wrong.
@@ -157,34 +165,39 @@ def reauth():
 def logout():
     if current_user:
         logout_user()
-        flash(_('Has salido correctamente'), 'success') #You are now logged out
+        flash(_('Has salido correctamente'), 'success')
+                  # You are now logged out
     return redirect(url_for('frontend.index'))
 
 
 @frontend.route('/signup', methods=['GET', 'POST'])
 def signup():
-    login_form= LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'), email=request.args.get('email'))
+    login_form = LoginForm(next=request.args.get('next'))
+    form = SignupForm(next=request.args.get('next'),
+                        email=request.args.get('email'))
 
-    if form.validate_on_submit() or (request.method == 'POST' and form.nocode.data):
+    if form.validate_on_submit() or \
+        (request.method == 'POST' and form.nocode.data):
         if form.nocode.data:
             return redirect(url_for('frontend.email'))
         else:
             activation_key = form.code.data
-            group = Project.query.filter_by(activation_key=activation_key).first()
+            group = Project.query.\
+                    filter_by(activation_key=activation_key).first()
             if group:
                 user = User()
-                form.populate_obj(user)            
+                form.populate_obj(user)
                 group.users.append(user)
-     
+
                 db.session.add(user)
-                
+
                 db.session.commit()
-     
+
                 if login_user(user):
                     return redirect(form.next.data or url_for('user.index'))
             else:
-                flash(_("Codigo no valido"), #Invalid code
+                flash(_("Codigo no valido"),
+                         #Invalid code
                   "error")
 
     return render_template('signup.html', form=form, login_form=login_form)
@@ -211,7 +224,7 @@ def change_password():
             activation_key = session['activation_key']
             user = User.query.filter_by(activation_key=activation_key) \
                          .filter_by(email=email).first()
-       
+
     if not user:
         abort(403)
 
@@ -225,16 +238,17 @@ def change_password():
         session.pop('email', None)
         session.pop('activation_code', None)
         if current_user.is_authenticated():
-            flash(_(u"Se ha cambiado tu contraseña correctamente"), #Your password has been changed, please log in again
+            flash(_(u"Se ha cambiado tu contraseña correctamente"),
+                    #Your password has been changed, please log in again
               "success")
-            return redirect(url_for("user.index",email=email))
+            return redirect(url_for("user.index", email=email))
         else:
-            flash(_(u"Se ha cambiado tu contraseña, por favor, entra otra vez"), #Your password has been changed, please log in again
+            flash(_(u"Se ha cambiado tu contraseña, por favor, entra otra vez"),
+                 #Your password has been changed, please log in again
               "success")
-            return redirect(url_for("frontend.login",email=email))
-  
-    return render_template("change_password.html", form=form)
+            return redirect(url_for("frontend.login", email=email))
 
+    return render_template("change_password.html", form=form)
 
 
 @frontend.route('/reset_password', methods=['GET', 'POST'])
@@ -243,15 +257,17 @@ def reset_password():
 
     if 'value' in request.values:
         value = request.values['value']
-    else: value = ''
+    else:
+        value = ''
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
         if user:
             flash(_('Sigue las indicaciones que hemos enviado a tu correo '
-                  'para acceder a tu cuenta'), 'success') #Please see your email for instructions on
-                                                            #how to access your account
+                  'para acceder a tu cuenta'), 'success')
+                  #Please see your email for instructions on
+                  #how to access your account
             user.activation_key = str(uuid4())
             db.session.add(user)
             db.session.commit()
@@ -262,17 +278,19 @@ def reset_password():
 
             return redirect(url_for('frontend.index'))
         else:
-            flash(_('Lo sentimos, no hay ningún usuario con esa dirección'), 'error') #Sorry, no user found for that email address
+            flash(_('Lo sentimos, no hay ningún usuario con esa dirección'),
+                    'error')  # Sorry, no user found for that email address
 
     return render_template('reset_password.html', form=form, value=value)
+
 
 @frontend.route('/edit_session')
 def edit_session():
     user = current_user
     if not user or not user.is_admin() or not user.is_coordinator():
         abort(403)
-    
-    proceso = Proceso.query.first()
+
+    proceso = Page.query.filter_by(name="Proceso").first()
     return render_template('edit_proceso.html', proceso=proceso.content)
 
 
@@ -281,18 +299,27 @@ def gallery():
     form = GalleryForm(request.form)
     dir_path = None
     if request.method == 'POST':
-        for filename in os.listdir(os.path.join(frontend.root_path, '../static/acts/')):
+        for filename in os.listdir(os.path.join(frontend.root_path,
+                    '../static/acts/')):
             exist = check_password_hash(filename, form.password.data)
             if (exist):
-                dir_path = os.path.join(os.path.join(frontend.root_path, '../static/acts/'),filename)
+                dir_path = os.path.join(os.path.join(frontend.root_path,
+                            '../static/acts/'), filename)
                 if os.path.exists(dir_path):
-                    images = [ unicode(file, errors='replace') for file in os.listdir(dir_path) if (file.endswith(".jpg") or file.endswith(".JPG")) ]
-                    zipfile = [ file for file in os.listdir(dir_path) if (file.endswith(".zip") or file.endswith(".ZIP")) ][0]
+                    images = [unicode(file, errors='replace')
+                                for file in os.listdir(dir_path)
+                                    if (file.endswith(".jpg")
+                                        or file.endswith(".JPG"))]
+                    zipfile = [file for file in os.listdir(dir_path)
+                                        if (file.endswith(".zip")
+                                            or file.endswith(".ZIP"))][0]
                     actos = Page.query.filter_by(name="actos").first()
-                    return render_template('user_gallery.html', form=None,password=filename, images=images, zipfile=zipfile, actos=actos)
+                    return render_template('user_gallery.html',
+                                            form=None, password=filename,
+                                            images=images, zipfile=zipfile,
+                                            actos=actos)
 
     return render_template('user_gallery.html', form=form)
-
 
 
 @frontend.route('/about')

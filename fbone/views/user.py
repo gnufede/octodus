@@ -2,17 +2,19 @@
 
 import datetime
 
-from flask import Blueprint, render_template, current_app, g, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash
+                    #current_app, g
 from flask.ext.login import login_required, current_user
 
 from flaskext.mail import Message
 
 from fbone.models import *
-from fbone.decorators import keep_login_url, admin_required
+from fbone.decorators import admin_required
+                            #keep_login_url
 from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm)
 from fbone.extensions import db, mail
 from sqlalchemy import Date, cast
-import datetime
+#import datetime
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
@@ -25,36 +27,44 @@ def index():
     if current_user.offer_selection:
         for item in current_user.offer_selection:
             total_sin_iva = total_sin_iva + float(item.offer.price)
-        
-    return render_template('user_resume.html', current_user=current_user, today=datetime.datetime.now(), total_sin_iva=total_sin_iva)
+
+    return render_template('user_resume.html', current_user=current_user,
+                            today=datetime.datetime.now(),
+                            total_sin_iva=total_sin_iva)
+
 
 @user.route('/ayuda')
 @login_required
 def ayuda():
     return render_template('user_email.html', current_user=current_user)
 
-@user.route('/edit_date', methods=['POST','GET'])
+
+@user.route('/edit_date', methods=['POST', 'GET'])
 @login_required
-def edit_date(): 
+def edit_date():
     project = current_user.projects[-1]
     form = EditDateForm(next=request.args.get('next'))
     if request.method == 'post':
         date = Session.query.filter_by(id=form.date.data).first()
-        appointment = Appointment(project=project,user=current_user,session=date,date=date.begin)
+        appointment = Appointment(project=project, user=current_user,
+                                    session=date, date=date.begin)
         db.session.add(appointment)
         db.session.commit()
         return redirect(form.next.data or url_for('user.index'))
 
-    dates = Session.query.filter( cast(Session.begin,Date) > datetime.date.today()).all()
+    dates = Session.query.\
+                filter(cast(Session.begin, Date) > datetime.date.today()).all()
     form.generate_dates(dates)
-    return render_template('user_edit_date.html', form=form, current_user=current_user)
+    return render_template('user_edit_date.html', form=form,
+                            current_user=current_user)
 
-@user.route('/edit_datos', methods=['POST','GET'])
+
+@user.route('/edit_datos', methods=['POST', 'GET'])
 @login_required
-def edit_datos(): 
+def edit_datos():
     commit = False
     project = current_user.projects[-1]
-    groups = [project,]
+    groups = [project, ]
     while project.depth > 0:
         project = project.parent
         groups.append(project)
@@ -76,7 +86,7 @@ def edit_datos():
             current_user.projects = []
         #group.users.append(current_user)
             current_user.projects.append(group)
-            groups = [group,]
+            groups = [group, ]
             db.session.commit()
             if group.children:
                 return redirect(url_for('user.edit_datos'))
@@ -108,7 +118,14 @@ def list():
             user.cita = user.appointments[0].date
         else:
             user.cita = ''
-    return render_template('list.html', title="Usuarios", objects=users, fields=['name', 'surname', 'email', 'grupo', 'codigo', 'cita'],no_set_delete=True,  active='user_list', actions=[['Borrar', 'del', 'icon-trash']], current_user=current_user)
+    return render_template('list.html', title="Usuarios", objects=users,
+                            fields=['name', 'surname', 'email',
+                                    'grupo', 'codigo', 'cita'],
+                            no_set_delete=True,
+                            active='user_list',
+                            actions=[['Borrar', 'del', 'icon-trash']],
+                            current_user=current_user)
+
 
 @user.route('/<name>')
 def pub(name):
@@ -118,8 +135,9 @@ def pub(name):
     user = User.query.filter_by(name=name).first_or_404()
     return render_template('user_pub.html', user=user)
 
+
 @user.route('/del/<id>')
-@login_required 
+@login_required
 @admin_required
 def delete(id):
     user = User.query.filter_by(id=id).first_or_404()
@@ -131,31 +149,42 @@ def delete(id):
 @user.route('/new_appointment', methods=['GET'])
 @login_required
 def new_appointment_get():
-    project = current_user.projects[-1] # FIXME
+    project = current_user.projects[-1]  # FIXME
     session_id = request.args.get('session_id', None)
     form = UserAppointmentForm()
     if not session_id:
         # get all sessions for this project
-        sessions = [ [s.begin.date().isoformat(), int(s.id)] for s in project.sessions if s.begin > datetime.datetime.now() ]
-        sessions=sorted(sessions)
-        return render_template('user_appointment.html', form=form, sessions=sessions)
+        sessions = [[s.begin.date().isoformat(), int(s.id)]
+                        for s in project.sessions
+                            if s.begin > datetime.datetime.now()]
+        sessions = sorted(sessions)
+        return render_template('user_appointment.html', form=form,
+                                sessions=sessions)
     else:
         # get all hours for this session
         sess = Session.query.filter_by(id=session_id).first()
         interval_timedelta = sess.end - sess.begin
         #hack so it works in python2.6
         td = interval_timedelta
-        total_seconds = (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
-        interval_mins = int(total_seconds / 60) 
+        total_seconds = (td.microseconds +
+                         (td.seconds + td.days * 24 * 3600)
+                          * 10 ** 6) / 10 ** 6
+        interval_mins = int(total_seconds / 60)
                         #int(interval_timedelta.total_seconds() / 60)
-        all_hours = [ sess.begin + datetime.timedelta(minutes=x) for x in range(0, interval_mins, sess.block_duration) ]
-        all_hours_occupation = [ (h, len([ apn for apn in sess.appointments if apn.date == h ])) for h in all_hours ]
-        #hours = [ (h, n) for (h, n) in all_hours_occupation if n < sess.block_capacity ]
-        hours = [ (h, str(h).split()[1])  for (h, n) in all_hours_occupation if n < sess.block_capacity ]
+        all_hours = [sess.begin + datetime.timedelta(minutes=x)
+                        for x in range(0, interval_mins, sess.block_duration)]
+        all_hours_occupation = [(h, len([apn for apn in sess.appointments
+                                    if apn.date == h])) for h in all_hours]
+        #hours = [ (h, n) for (h, n) in all_hours_occupation
+        #if n < sess.block_capacity ]
+        hours = [(h, str(h).split()[1])
+                    for (h, n) in all_hours_occupation
+                        if n < sess.block_capacity]
         form.set_hours(hours)
         form.session.data = session_id
-        return render_template('user_appointment.html', form=form, hours=hours, session=sess)
-        
+        return render_template('user_appointment.html',
+                                form=form, hours=hours, session=sess)
+
 
 @user.route('/new_appointment', methods=['POST'])
 @login_required
@@ -164,43 +193,51 @@ def new_appointment_post():
     form = UserAppointmentForm()
     session_id = form.session.data
     appointment_date = form.hour.data
-    project =current_user.projects[-1] # FIXME
+    project = current_user.projects[-1]  # FIXME
     if not session_id or not appointment_date:
         # TODO
         flash(u'Datos actualizados incorrectamente', 'error')
         return redirect(url_for('user.new_appointment_get'))
-    
+
     # Count appointments in this slot
-    count = Appointment.query.filter_by(session_id=session_id, date=appointment_date).count()
+    count = Appointment.query.\
+                filter_by(session_id=session_id, date=appointment_date).count()
     sess = Session.query.filter_by(id=session_id).first()
     if count >= sess.block_capacity:
         flash(u"La hora elegida ya se ha completado", 'error')
         return redirect(url_for('user.new_appointment_get'))
         #return redirect(form.next.data or url_for('user.index'))
-    
-    previous_appointment = Appointment.query.filter_by(user=current_user, project=project).first()
+
+    previous_appointment = Appointment.query.\
+                        filter_by(user=current_user, project=project).first()
     if previous_appointment:
         if previous_appointment.date < datetime.datetime.now():
             flash('Lo sentimos, su cita ya ha tenido lugar', 'error')
-            #TODO #ERROR, permitimos cambiar fecha de appointment si ya ha ocurrido?
+    #TODO #ERROR, permitimos cambiar fecha de appointment si ya ha ocurrido?
             return redirect(form.next.data or url_for('user.index'))
-        #TODO elif si la fecha de modificación de appointments ya ha ocurrido, no dejamos cambiar el appointment
+    #TODO elif si la fecha de modificación de appointments ya ha ocurrido,
+    #no dejamos cambiar el appointment
         else:
             appointment = previous_appointment
     else:
         appointment = Appointment()
     appointment.date = appointment_date
-    appointment.project = current_user.projects[-1] # FIXME
+    appointment.project = current_user.projects[-1]  # FIXME
     appointment.user = current_user
     appointment.session = Session.query.filter_by(id=session_id).first()
     db.session.commit()
     time = appointment_date.split()[1]
     (year, month, day) = appointment_date.split()[0].split('-')
-    body = render_template('emails/remember_appointment.html', current_user=current_user, time=time, year=year, month=month, day=day)
-    message = Message(subject='Recordatorio de tu cita', html=body, recipients=[current_user.email])
+    body = render_template('emails/remember_appointment.html',
+                            current_user=current_user, time=time, year=year,
+                            month=month, day=day)
+    message = Message(subject='Recordatorio de tu cita', html=body,
+                        recipients=[current_user.email])
     mail.send(message)
-    flash('Cita confirmada correctamente para el '+day+'-'+month+'-'+year+' a las '+time+')', 'success')
+    flash('Cita confirmada correctamente para el ' + day + '-' + month + '-'
+            + year + ' a las ' + time + ')', 'success')
     return redirect(form.next.data or url_for('user.index'))
+
 
 @user.route('/set_offer/<type_id>', methods=['GET', 'POST'])
 @user.route('/set_offer/', methods=['GET', 'POST'])
@@ -208,22 +245,26 @@ def new_appointment_post():
 def set_offer(type_id=1):
     form = UserOfferForm()
     form.set_offer_type(type_id)
-    project = current_user.projects[-1] #FIXME
-    
+    project = current_user.projects[-1]  # FIXME
+
     if request.method == 'POST':
-        next_offer = Offer.query.filter_by(type=str(int(type_id)+1)).first()
+        next_offer = Offer.query.filter_by(type=str(int(type_id) + 1)).first()
         if form.options.data != u'None':
             offer = Offer.query.get(int(form.options.data))
-            offer_selection = OfferSelection(offer_id=offer.id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+            offer_selection = OfferSelection(offer_id=offer.id,
+                                project_id=project.id, user_id=current_user.id,
+                                offer_type=offer.type)
             db.session.add(offer_selection)
             db.session.commit()
-    
+
             if next_offer:
-                return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
+                return redirect(url_for('user.set_offer',
+                                    type_id=int(type_id) + 1))
         else:
             if (type_id == '2'):
                 if next_offer:
-                    return redirect(url_for('user.set_offer', type_id=int(type_id)+1))
+                    return redirect(url_for('user.set_offer',
+                                    type_id=int(type_id) + 1))
             else:
                 return redirect(url_for('user.set_offer', type_id=type_id))
 
@@ -232,12 +273,13 @@ def set_offer(type_id=1):
     return render_template('user_offer.html', form=form,
                            current_user=current_user)
 
+
 @user.route('/save_user_choice', methods=['POST'])
 @login_required
 def save_user_choice():
     #TODO: comprobar que el usuario no haya guardado ya
     form = UserOfferForm()
-    project = current_user.projects[-1] #FIXME
+    project = current_user.projects[-1]  # FIXME
     if len(current_user.offer_selection):
         for selection in current_user.offer_selection:
             db.session.delete(selection)
@@ -246,8 +288,11 @@ def save_user_choice():
     for oid in form.type.data[:-1].split(','): #:-1 para quitar la última coma
         print 'saving offer id', oid
         offer_id = int(oid.strip())
-        offer = Offer.query.get_or_404(offer_id) # No sería necesario si OfferSelection no guardara offer_type, que también es innecesario
-        choice = OfferSelection(offer_id=offer_id, project_id=project.id, user_id=current_user.id, offer_type=offer.type)
+        offer = Offer.query.get_or_404(offer_id)
+        # No sería necesario si OfferSelection no guardara offer_type,
+        # que también es innecesario
+        choice = OfferSelection(offer_id=offer_id, project_id=project.id,
+                                user_id=current_user.id, offer_type=offer.type)
         db.session.add(choice)
         db.session.commit()
     return redirect(form.next.data or url_for('user.index'))
@@ -258,15 +303,18 @@ def save_user_choice():
 def set_poll_option(type_id=1):
     form = UserPollForm()
     form.set_poll_type(type_id)
-    project = current_user.projects[-1] #FIXME
-    
+    project = current_user.projects[-1]  # FIXME
+
     if request.method == 'POST':
         if form.options.data != u'None':
             poll_option = Poll.query.get(int(form.options.data))
-            poll_selection = PollSelection(poll_option_id=poll_option.id, project_id=project.id, user_id=current_user.id, poll_option_type=poll_option.type)
+            poll_selection = PollSelection(poll_option_id=poll_option.id,
+                                            project_id=project.id,
+                                            user_id=current_user.id,
+                                            poll_option_type=poll_option.type)
             db.session.add(poll_selection)
             db.session.commit()
-    
+
         else:
             return redirect(url_for('user.set_offer', type_id=type_id))
 
@@ -274,6 +322,3 @@ def set_poll_option(type_id=1):
         return redirect(form.next.data or url_for('user.index'))
     return render_template('user_poll.html', form=form,
                            current_user=current_user)
-
-
-

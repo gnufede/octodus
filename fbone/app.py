@@ -64,19 +64,21 @@ def configure_extensions(app):
 
     # babel
     babel = Babel(app)
+
     @babel.localeselector
     def get_locale():
-        accept_languages = app.config.get('ACCEPT_LANGUAGES')
+        #accept_languages = app.config.get('ACCEPT_LANGUAGES')
         return request.accept_languages.best_match(['es', 'en'])
     from flaskext.babel import refresh; refresh()
 
     # login.
     login_manager.login_view = 'frontend.login'
     login_manager.refresh_view = 'frontend.reauth'
+
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
-    login_manager.setup_app(app)
+    login_manager.init_app(app)
 
 
 def configure_blueprints(app, blueprints):
@@ -100,13 +102,14 @@ def configure_logging(app):
   #      return
 
     import logging
-    from logging.handlers import RotatingFileHandler, SMTPHandler
+    from logging.handlers import SMTPHandler  # , RotatingFileHandler
 
     # Set info level on logger, which might be overwritten by handers.
     app.logger.setLevel(logging.INFO)
 
     debug_log = os.path.join(app.root_path, app.config['DEBUG_LOG'])
-    file_handler = logging.handlers.RotatingFileHandler(debug_log, maxBytes=100000, backupCount=10)
+    file_handler = logging.handlers.RotatingFileHandler(debug_log,
+                        maxBytes=100000, backupCount=10)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '

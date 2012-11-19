@@ -2,10 +2,12 @@
 
 from functools import wraps
 
-from flask import g, url_for, flash, redirect, Markup, request, make_response, abort
-from flask.ext.login import login_required, current_user
-from fbone.models import User
-from flaskext.babel import gettext as _
+from flask import g, make_response, abort
+                    #redirect, url_for, flash, Markup, request,
+from flask.ext.login import current_user
+                    #login_required
+#from fbone.models import User
+#from flaskext.babel import gettext as _
 
 
 def admin_required(func):

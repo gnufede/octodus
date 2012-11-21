@@ -41,6 +41,50 @@ def render_projects(objects):
          ['Borrar', "del", 'icon-trash']], active='project_list',
          current_user=current_user)
 
+@admin.route('/project/<project_id>/polls', methods=['GET'])
+@admin.route('/project/<project_id>/polls/<poll_type_param>', methods=['GET'])
+def render_poll_results(project_id, poll_type_param=None):
+    project = Project.query.filter_by(id=project_id).first()
+
+    if poll_type_param:
+        poll_types = [int(poll_type_param), ]
+    else:
+        poll_types = set([vote.poll_type for vote in project.poll_selection])
+
+    results = dict()
+    for poll_type in poll_types:
+        votes = [vote.poll_item_id for vote in project.poll_selection if
+                vote.poll_type == poll_type] 
+
+        candidates = set(votes)
+        aggregated = dict()  # aggregated proffesor votes
+        for candidate in candidates:
+            name = PollItem.query.filter_by(id=candidate).first().name
+            aggregated[name] = votes.count(candidate)
+        results[poll_type] = aggregated
+
+    return jsonify(results)
+"""
+    proffesor_votes = [vote.poll_item_id for vote in project.poll_selection if
+                vote.poll_type == 1] 
+
+    style_votes = [vote.poll_item_id for vote in project.poll_selection if
+                vote.poll_type == 2]
+    proffesor_candidates = set(proffesor_votes)
+    style_candidates = set(style_votes)
+
+    aggregated_proffesor = dict()  # aggregated proffesor votes
+    for candidate in proffesor_candidates:
+        name = PollItem.query.filter_by(id=candidate).first().name
+        aggregated_proffesor[name] = proffesor_votes.count(candidate)
+
+
+    aggregated_style = dict()  # aggregated proffesor votes
+    for candidate in style_candidates:
+        aggregated_style[candidate] = style_votes.count(candidate)
+
+    return jsonify(results=[aggregated_proffesor, aggregated_style])
+  """  
 
 def set_polls_nodes(polls, nodes):
     form = SetPollNodeForm(request.form)
@@ -500,13 +544,6 @@ def new_poll_item(id=None):
     return redirect(form.next.data or url_for('admin.poll_item_list'))
 
 
-@admin.route('/poll_admin/', methods=['GET', 'POST'])
-@admin.route('/poll/<id>/', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def poll_list(id=None):
-    return redirect(url_for('admin.poll_item_list'))
-
 
 @admin.route('/poll_items/', methods=['GET', 'POST'])
 @admin.route('/poll_item/<id>/', methods=['GET', 'POST'])
@@ -525,11 +562,10 @@ def poll_item_list(id=None):
                     ['Editar', "edit", 'icon-pencil'],
                     ['Clonar', "copy", 'icon-share-alt'],
                     ['Borrar', "del", 'icon-trash']]
-        objects = db.session.query(Offer).all()
-    return render_template('list.html', title="Ofertas", objects=objects,
-            fields=['name', 'description', 'default', 'price',
-                      'parent_id', 'type'],
-            actions=actions, active='offer_list',
+        objects = db.session.query(PollItem).all()
+    return render_template('list.html', title="Opciones de encuesta", objects=objects,
+            fields=['name', 'description', 'type'],
+            actions=actions, active='poll_list',
             current_user=current_user)
 
 

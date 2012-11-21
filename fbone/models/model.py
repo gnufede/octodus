@@ -31,8 +31,8 @@ nodes_poll_items = db.Table("nodes_poll_items", db.metadata,
 
 projects_poll_items = db.Table("projects_poll_items", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),
-    db.Column("poll_item_id", db.Integer, ForeignKey("poll_items.id")))
-
+    db.Column("poll_item_id", db.Integer, ForeignKey("poll_items.id")),
+    )
 
 projects_users = db.Table("projects_users", db.metadata,
     db.Column("project_id", db.Integer, ForeignKey("projects.id")),

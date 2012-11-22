@@ -118,22 +118,40 @@ Encuestas</li>
 	</li>
     {% endif %}
     {% if current_user.projects[-1].offers|length %}
-    <li id="select_offer"><a href='{{ url_for('user.set_offer') }}'>
-    <i class='icon-shopping-cart'></i>
-    Seleccionar Oferta
-    {% if not current_user.offer_selection|length %}
-    <span class="badge badge-important">
-   <i class="icon-bell icon-white"></i> 
-    </span>
-    {% else %}
-    {% if current_user.offer_selection|length %}
-    <span class="badge badge-success">
-   <i class="icon-ok icon-white"></i> 
-    </span>
+        <li id="select_offer"><a href='{{ url_for('user.set_offer') }}'>
+        <i class='icon-shopping-cart'></i>
+        Seleccionar Oferta
+         {% if not current_user.offer_selection|length %}
+            <span class="badge badge-important">
+            <i class="icon-bell icon-white"></i> 
+            </span>
+        {% else %}
+            {% if current_user.offer_selection|length %}
+                <span class="badge badge-success">
+                <i class="icon-ok icon-white"></i> 
+                </span>
+            {% endif %}
+        {% endif %}
+        </a> 
+	    </li>
     {% endif %}
-    {% endif %}
-    </a> 
-	</li>
+    {% if current_user.projects[-1].poll_items|length %}
+        <li id="select_poll_option"><a href='{{ url_for('user.set_poll_option') }}'>
+        <i class='icon-check'></i>
+        Votar en encuestas
+         {% if not current_user.poll_selection|length %}
+            <span class="badge badge-important">
+            <i class="icon-bell icon-white"></i> 
+            </span>
+        {% else %}
+            {% if current_user.poll_selection|length %}
+                <span class="badge badge-success">
+                <i class="icon-ok icon-white"></i> 
+                </span>
+            {% endif %}
+        {% endif %}
+        </a> 
+	    </li>
     {% endif %}
     {% else %}
     </a> 

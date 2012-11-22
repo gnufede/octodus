@@ -59,32 +59,11 @@ def render_poll_results(project_id, poll_type_param=None):
         candidates = set(votes)
         aggregated = dict()  # aggregated proffesor votes
         for candidate in candidates:
-            name = PollItem.query.filter_by(id=candidate).first().name
+            name = PollItem.query.get(candidate).name
             aggregated[name] = votes.count(candidate)
         results[poll_type] = aggregated
 
     return jsonify(results)
-"""
-    proffesor_votes = [vote.poll_item_id for vote in project.poll_selection if
-                vote.poll_type == 1] 
-
-    style_votes = [vote.poll_item_id for vote in project.poll_selection if
-                vote.poll_type == 2]
-    proffesor_candidates = set(proffesor_votes)
-    style_candidates = set(style_votes)
-
-    aggregated_proffesor = dict()  # aggregated proffesor votes
-    for candidate in proffesor_candidates:
-        name = PollItem.query.filter_by(id=candidate).first().name
-        aggregated_proffesor[name] = proffesor_votes.count(candidate)
-
-
-    aggregated_style = dict()  # aggregated proffesor votes
-    for candidate in style_candidates:
-        aggregated_style[candidate] = style_votes.count(candidate)
-
-    return jsonify(results=[aggregated_proffesor, aggregated_style])
-  """  
 
 def set_polls_nodes(polls, nodes):
     form = SetPollNodeForm(request.form)
@@ -94,9 +73,9 @@ def set_polls_nodes(polls, nodes):
     form.nodes_id.choices = nodes_choices
     if request.method == 'POST':
         for poll_id in form.polls_id.data:
-            poll = PollItem.query.filter_by(id=poll_id).first()
+            poll = PollItem.query.get(poll_id)
             for node_id in form.nodes_id.data:
-                node = Group.query.filter_by(id=node_id).first()
+                node = Group.query.get(node_id)
                 node.set_poll_item(poll)
 
         db.session.commit()
@@ -183,11 +162,11 @@ def polls_types(type=1):
     if len(current_user.projects):
         project = current_user.projects[-1]  # FIXME
     if project:
-        polls = project.polls
+        polls = project.poll_items
         poll_types = [str(poll.type) for poll in polls]
         if(str(type) in poll_types):
             nodes = [poll for poll in polls if
-                (poll.depth == 0 and str(poll.type) == str(type))]
+                str(poll.type) == str(type)]
             tree = [(x.id, x.jsonify_full()) for x in nodes]
     return jsonify(tree)
 

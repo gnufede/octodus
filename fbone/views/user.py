@@ -11,7 +11,8 @@ from flaskext.mail import Message
 from fbone.models import *
 from fbone.decorators import admin_required
                             #keep_login_url
-from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm)
+from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm, 
+                         UserPollForm)
 from fbone.extensions import db, mail
 from sqlalchemy import Date, cast
 #import datetime
@@ -298,6 +299,7 @@ def save_user_choice():
     return redirect(form.next.data or url_for('user.index'))
 
 
+@user.route('/set_poll_option/', methods=['GET', 'POST'])
 @user.route('/set_poll_option/<type_id>', methods=['GET', 'POST'])
 @login_required
 def set_poll_option(type_id=1):
@@ -307,16 +309,16 @@ def set_poll_option(type_id=1):
 
     if request.method == 'POST':
         if form.options.data != u'None':
-            poll_option = Poll.query.get(int(form.options.data))
-            poll_selection = PollSelection(poll_option_id=poll_option.id,
+            poll_item = PollItem.query.get(int(form.options.data))
+            poll_selection = PollSelection(poll_item_id=poll_item.id,
                                             project_id=project.id,
                                             user_id=current_user.id,
-                                            poll_option_type=poll_option.type)
+                                            poll_type=poll_item.type)
             db.session.add(poll_selection)
             db.session.commit()
 
         else:
-            return redirect(url_for('user.set_offer', type_id=type_id))
+            return redirect(url_for('user.set_poll_option', type_id=type_id))
 
         flash('Voto emitido correctamente', 'success')
         return redirect(form.next.data or url_for('user.index'))

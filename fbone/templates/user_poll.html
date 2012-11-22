@@ -34,7 +34,7 @@
     }
 
     $("label").css({'display': 'inline'});
-    $('#select_offer').addClass('active');
+    $('#select_poll_option').addClass('active');
     
     var base_url = '/admin/polls';
     var type = 1;
@@ -70,7 +70,7 @@
     
         $('#submit_').click(function() {
             var id = $(':radio:checked').val();
-            if (id || type==2) {
+            if (id) {
                 if (id) {
                     var found = findByField(selection, 'id', id);
                     if (found == -1) {
@@ -80,7 +80,7 @@
                 type++;
                 retrieveByType(type);
             } else {
-                alert('No se ha seleccionado ninguna opción');
+                alert('No se ha votado ninguna opción');
             }
             return false; // Avoid submit
         });
@@ -155,7 +155,7 @@
 
 
 <div class='span9'>
-    <!--<form class='form-stacked' method="POST" action="{{ url_for('user.set_offer', type_id=form.type.data) }}">-->
+    <!--<form class='form-stacked' method="POST" action="{{ url_for('user.set_poll_option', type_id=form.type.data) }}">-->
     <form id="user_choice" class='form-stacked' method="POST" action="{{ url_for('user.set_poll_option') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}

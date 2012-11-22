@@ -41,11 +41,7 @@ def render_projects(objects):
          ['Borrar', "del", 'icon-trash']], active='project_list',
          current_user=current_user)
 
-@admin.route('/project/<project_id>/polls', methods=['GET'])
-@admin.route('/project/<project_id>/polls/<poll_type_param>', methods=['GET'])
-def render_poll_results(project_id, poll_type_param=None):
-    project = Project.query.filter_by(id=project_id).first()
-
+"""
     if poll_type_param:
         poll_types = [int(poll_type_param), ]
     else:
@@ -62,8 +58,43 @@ def render_poll_results(project_id, poll_type_param=None):
             name = PollItem.query.get(candidate).name
             aggregated[name] = votes.count(candidate)
         results[poll_type] = aggregated
+"""
+@admin.route('/project/<project_id>/polls', methods=['GET'])
+@admin.route('/project/<project_id>/polls/<poll_type_param>', methods=['GET'])
+def render_poll_results(project_id, poll_type_param=None):
+    project = Project.query.filter_by(id=project_id).first()
 
-    return jsonify(results)
+    if poll_type_param:
+        poll_types = [int(poll_type_param), ]
+    else:
+        poll_types = set([vote.poll_type for vote in project.poll_selection])
+
+    total = dict()
+    results = [] 
+    for poll_type in poll_types:
+        votes = [vote.poll_item_id for vote in project.poll_selection if
+                vote.poll_type == poll_type] 
+
+        candidates = set(votes)
+        aggregated = dict()  # aggregated proffesor votes
+        for candidate in candidates:
+            name = PollItem.query.get(candidate).name
+            count = votes.count(candidate)
+            aggregated_name = dict()
+            aggregated_name['f'] = "null"
+            aggregated_name['v'] = name
+            aggregated_count = dict()
+            aggregated_count['f'] = "null"
+            aggregated_count['v'] = count
+            value = dict()
+            value["c"] = [aggregated_name, aggregated_count]
+            results.append(value)
+    total['rows'] = results
+    total['cols'] = [{'id':'','label':'Opciones','pattern':'', 
+                      'type':'string'},
+                     {'id':'', 'label':'Votos', 'pattern':'', 
+                      'type':'number'}]
+    return jsonify(total)
 
 def set_polls_nodes(polls, nodes):
     form = SetPollNodeForm(request.form)

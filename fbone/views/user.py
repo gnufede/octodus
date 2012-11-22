@@ -2,7 +2,8 @@
 
 import datetime
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, \
+                flash, jsonify
                     #current_app, g
 from flask.ext.login import login_required, current_user
 
@@ -298,6 +299,50 @@ def save_user_choice():
         db.session.commit()
     return redirect(form.next.data or url_for('user.index'))
 
+
+@user.route('/see_poll_json', methods=['GET'])
+@user.route('/see_poll_json/<poll_type_param>', methods=['GET'])
+@login_required
+def see_poll_json(poll_type_param=None):
+    project = current_user.projects[-1] 
+
+    if poll_type_param:
+        poll_types = [int(poll_type_param), ]
+    else:
+        poll_types = set([vote.poll_type for vote in project.poll_selection])
+
+    total = dict()
+    results = [] 
+    for poll_type in poll_types:
+        votes = [vote.poll_item_id for vote in project.poll_selection if
+                vote.poll_type == poll_type] 
+
+        candidates = set(votes)
+        aggregated = dict()  # aggregated proffesor votes
+        for candidate in candidates:
+            name = PollItem.query.get(candidate).name
+            count = votes.count(candidate)
+            aggregated_name = dict()
+           # aggregated_name['f'] = "null"
+            aggregated_name['v'] = name
+            aggregated_count = dict()
+           # aggregated_count['f'] = "null"
+            aggregated_count['v'] = count
+            value = dict()
+            value["c"] = [aggregated_name, aggregated_count]
+            results.append(value)
+    total['rows'] = results
+    total['cols'] = [{'id':'','label':'Opciones','pattern':'', 
+                      'type':'string'},
+                     {'id':'', 'label':'Votos', 'pattern':'', 
+                      'type':'number'}]
+    return jsonify(total)
+
+@user.route('/see_polls/', methods=['GET'])
+@login_required
+def see_polls():
+    return render_template('user_see_polls.html', 
+                           current_user=current_user)
 
 @user.route('/set_poll_option/', methods=['GET', 'POST'])
 @user.route('/set_poll_option/<type_id>', methods=['GET', 'POST'])

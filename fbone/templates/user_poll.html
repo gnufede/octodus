@@ -74,7 +74,7 @@
                 if (id) {
                     var found = findByField(selection, 'id', id);
                     if (found == -1) {
-                        selection.push({id: id, price: currentData[id].price, name: currentData[id].name});
+                        selection.push({id: id, name: currentData[id].name});
                     }
                 }
                 type++;
@@ -120,6 +120,15 @@
                     $('#selection').empty().append('<br />');
                     $('#type').empty();
                     
+                    var values = "";
+                    
+                    $.each(selection, function(key, val) {
+                        $('#selection').append(val.name + '<br />');
+                        values += val.id + ',';
+                        $('#type').val(values);
+                    });
+                    
+                    
                     $('#confirm').dialog('open');
                 }
                 
@@ -135,10 +144,6 @@
             $.each(data, function(key, val) {
                     html = '<li class="input" style="display:inline-block; padding-right:20px; padding-bottom:20px;"><input class="clickable" type="radio" name="options" style="display:none" id="' + key + '" value=' + key + '>' +
                     '<label class="labeled" for="' + key + '" style="display:inline-block; max-width:190px"><div class="thumbnail"><img style="width:190px" src=' + val.img + '> <div class="name"><h3>' + val.name + '</h3> </div>' 
-                    if (showPrice) {
-                        html = html + 
-                        '<div class="price"><b>' + val.price + ' € (IVA no incluido)</b></div>'
-                    }
                    html = html + 
                    '<hr style="margin:10px 0;"/><div class="description" style="margin-bottom:10px;"> ' + val.description + '</div></div></label></li>'
                     lst.append(html);

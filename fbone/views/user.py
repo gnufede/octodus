@@ -341,31 +341,51 @@ def see_poll_json(poll_type_param=None):
 @user.route('/see_polls/', methods=['GET'])
 @login_required
 def see_polls():
+    project = current_user.projects[-1]
+    polls = set([vote.poll_type for vote in project.poll_selection])
     return render_template('user_see_polls.html', 
-                           current_user=current_user)
+                           current_user=current_user, polls=polls)
 
 @user.route('/set_poll_option/', methods=['GET', 'POST'])
 @user.route('/set_poll_option/<type_id>', methods=['GET', 'POST'])
 @login_required
 def set_poll_option(type_id=1):
     form = UserPollForm()
-    form.set_poll_type(type_id)
     project = current_user.projects[-1]  # FIXME
 
+   #     if form.options.data != u'None':
+   #         poll_item = PollItem.query.get(int(form.options.data))
+   #         poll_selection = PollSelection(poll_item_id=poll_item.id,
+   #                                         project_id=project.id,
+   #                                         user_id=current_user.id,
+   #                                         poll_type=poll_item.type)
+   #         db.session.add(poll_selection)
+   #         db.session.commit()
+
     if request.method == 'POST':
-        if form.options.data != u'None':
-            poll_item = PollItem.query.get(int(form.options.data))
-            poll_selection = PollSelection(poll_item_id=poll_item.id,
-                                            project_id=project.id,
-                                            user_id=current_user.id,
-                                            poll_type=poll_item.type)
-            db.session.add(poll_selection)
+        if len(current_user.poll_selection):
+            for selection in current_user.poll_selection:
+                db.session.delete(selection)
             db.session.commit()
 
-        else:
-            return redirect(url_for('user.set_poll_option', type_id=type_id))
-
-        flash('Voto emitido correctamente', 'success')
+        list = form.type.data[:-1].split(',') 
+        for oid in list: #:-1 para quitar la última coma
+            print 'saving poll item id', oid
+            poll_item_id = int(oid.strip())
+            poll_item = PollItem.query.get_or_404(poll_item_id)
+            # No sería necesario si OfferSelection no guardara offer_type,
+            # que también es innecesario
+            choice = PollSelection(poll_item_id=poll_item_id, 
+                                   project_id=project.id,
+                                   user_id=current_user.id,
+                                   poll_type=poll_item.type)
+            db.session.add(choice)
+            db.session.commit()
+        flash('Votos emitidos correctamente', 'success')
         return redirect(form.next.data or url_for('user.index'))
+   # else:
+   #     return redirect(url_for('user.set_poll_option', type_id=type_id))
+
+    form.set_poll_type(type_id)
     return render_template('user_poll.html', form=form,
                            current_user=current_user)

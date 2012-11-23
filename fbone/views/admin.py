@@ -163,13 +163,13 @@ def polls(id=None):
     if len(current_user.projects):
         project = current_user.projects[-1]  # FIXME
     if project:
-        polls = project.polls
+        polls = project.poll_items
         poll_ids = [str(poll.id) for poll in polls]
         if id:
-            if(str(id) in poll_ids):
-                node = PollItem.query.filter_by(id=id).first()
-                tree = [(x.id, x.jsonify_full()) for x in node.children]
-            else:
+          #  if(str(id) in poll_ids):
+          #      node = PollItem.query.filter_by(id=id).first()
+          #      tree = [(x.id, x.jsonify_full()) for x in node.children]
+          #  else:
                 tree = []
         else:
             polls = [poll for poll in polls]

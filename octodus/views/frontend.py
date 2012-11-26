@@ -13,10 +13,10 @@ from flask.ext.login import (login_required, login_user, current_user,
                             login_fresh)
                             #fresh_login_required
 
-from fbone.decorators import cached_response
-from fbone.models import User, Page, Project
-from fbone.extensions import db, mail, login_manager  # cache
-from fbone.forms import (SignupForm, LoginForm, RecoverPasswordForm,
+from octodus.decorators import cached_response
+from octodus.models import User, Page, Project
+from octodus.extensions import db, mail, login_manager  # cache
+from octodus.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          GalleryForm,
                          ChangePasswordForm, ReauthForm)
 import os

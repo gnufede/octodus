@@ -20,42 +20,6 @@ from fbone.extensions import db
 images = UploadSet("images", IMAGES)
 
 
-class NewOfferForm(Form):
-    next = HiddenField()
-    id = HiddenField()
-    copy = HiddenField()
-    default = HiddenField()
-    parent = HiddenField()
-    name = TextField(u'Nombre', [required()])
-    description = TextAreaField(u'Descripción', [required()])
-    price = FloatField(u'Precio')
-    type = IntegerField(u'Tipo')
-    picture = FileField("Foto",
-                       validators=[file_required(),
-                                   file_allowed(images, "Images only!")])
-    submit = SubmitField(_('Guardar'))
-
-
-class NewPollItemForm(Form):
-    next = HiddenField()
-    id = HiddenField()
-    copy = HiddenField()
-    name = TextField(u'Nombre', [required()])
-    description = TextAreaField(u'Descripción', [required()])
-    type = IntegerField(u'Tipo')
-    picture = FileField("Foto",
-                       validators=[file_required(),
-                                   file_allowed(images, "Images only!")])
-    submit = SubmitField(_('Guardar'))
-
-
-class NewActForm(Form):
-    next = HiddenField()
-    password = TextField()
-    zipfile = FileField("Zip con fotos",
-                       validators=[file_required()])
-    submit = SubmitField(_('Guardar'))
-
 
 class NewProjectForm(Form):
     next = HiddenField()
@@ -120,23 +84,3 @@ class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
-
-class SetOfferForm(Form):
-    next = HiddenField()
-    offers_id = MultiCheckboxField()
-    projects_id = MultiCheckboxField()
-    submit = SubmitField(_('Guardar'))
-
-
-class SetPollForm(Form):
-    next = HiddenField()
-    polls_id = MultiCheckboxField()
-    projects_id = MultiCheckboxField()
-    submit = SubmitField(_('Guardar'))
-
-
-class SetPollNodeForm(Form):
-    next = HiddenField()
-    polls_id = MultiCheckboxField()
-    nodes_id = MultiCheckboxField()
-    submit = SubmitField(_('Guardar'))

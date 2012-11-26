@@ -4,15 +4,15 @@ import os
 
 from flaskext.script import Manager  # , prompt, prompt_pass, prompt_bool
 
-from fbone import create_app
-from fbone.extensions import db
-from fbone.models import User, Group, Page
-from fbone.models.model import *
+from octodus import create_app
+from octodus.extensions import db
+from octodus.models import User, Group, Page
+from octodus.models.model import *
 
 
 manager = Manager(create_app())
 
-from fbone import create_app
+from octodus import create_app
 app = create_app()
 project_root_path = os.path.join(os.path.dirname(app.root_path))
 
@@ -31,24 +31,12 @@ def reset():
 
     db.drop_all()
     db.create_all()
-    user = User(name='Jose Manuel', surname='Lopez',
-                email='efdigitalorlas.test@gmail.com',
+    user = User(name='Fede', surname='Mon',
+                email='gnufede@gmail.com',
                 password='123456', type=1)
-    proceso = Page(name="Proceso", content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
-    horario = Page(name="Horario", content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
-
-    actos = Page(name="actos", content="<div> <p> Aqui se describe el <b>proceso</b> para hacerse la orla: </p> <ol> <li> Darse de alta.</li> <li> Completar datos personales.</li> <li> Elegir fecha para te hagamos la foto</li> <li> Elegir lote de fotos</li> <li> Votar los profesores que quieres que aparezcan</li> </ol> </div>")
-
-    group = Group(name='Universidad de Vicalvaro', activation_key = "VICALVARO",depth=0, type='Universidad')
 
     db.session.add(user)
-    db.session.add(horario)
-    db.session.add(proceso)
-    db.session.add(group)
     db.session.commit()
-    #while node.parent:
-    #   print node.parent
-    #   node = node.parent
 
 manager.add_option('-c', '--config',
                    dest="config",

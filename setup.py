@@ -5,12 +5,12 @@ from setuptools import setup
 
 
 setup(
-    name='fbone',
+    name='octodus',
     version='0.1',
     description='Flask Skeleton Project',
-    author='Wilson Xu',
-    author_email='imwilsonxu@gmail.com',
-    packages=['fbone'],
+    author='Fede Mon',
+    author_email='gnufede@gmail.com',
+    packages=['octodus'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

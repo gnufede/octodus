@@ -4,15 +4,15 @@ from flask import Blueprint, render_template, redirect, \
                     url_for, request, flash, jsonify
                     #g, current_app
 from flask.ext.login import login_required, current_user
-from fbone.forms import NewGroupForm, EditPageForm, NewProjectForm, \
+from octodus.forms import NewGroupForm, EditPageForm, NewProjectForm, \
                         SetSessionForm, NewOfferForm, SetOfferForm, \
                         NewActForm, NewPollItemForm, SetPollNodeForm, \
                         SetPollForm
-from fbone.extensions import db
+from octodus.extensions import db
 
-from fbone.models import User, Group, Page, Project, Session, Offer, Act, \
+from octodus.models import User, Group, Page, Project, Session, Offer, Act, \
                             PollItem
-from fbone.decorators import admin_required
+from octodus.decorators import admin_required
                             #, keep_login_url
 import datetime
 from werkzeug import secure_filename, generate_password_hash

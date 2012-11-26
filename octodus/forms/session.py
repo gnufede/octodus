@@ -10,7 +10,7 @@ from flask.ext.wtf import (Form, HiddenField, TextField,
                           # PasswordField,length
 from flaskext.babel import gettext, lazy_gettext as _
 
-#from fbone.models import Session
+#from octodus.models import Session
 import dateutil.parser
 
 

@@ -16,18 +16,18 @@ def deploy():
     # figure out the release name and version
     dist = local('python setup.py --fullname', capture=True).strip()
     # upload the source tarball to the temporary folder on the server
-    put('dist/%s.tar.gz' % dist, '/tmp/fbone.tar.gz')
+    put('dist/%s.tar.gz' % dist, '/tmp/octodus.tar.gz')
     # create a place where we can unzip the tarball, then enter
     # that directory and unzip it
-    run('mkdir /tmp/fbone')
-    with cd('/tmp/fbone'):
-        run('tar xzf /tmp/fbone.tar.gz')
-    with cd('/tmp/fbone/%s' % dist):
+    run('mkdir /tmp/octodus')
+    with cd('/tmp/octodus'):
+        run('tar xzf /tmp/octodus.tar.gz')
+    with cd('/tmp/octodus/%s' % dist):
         # now setup the package with our virtual environment's
         # python interpreter
-        run('/var/www/fbone/env/bin/python setup.py install')
+        run('/var/www/octodus/env/bin/python setup.py install')
     # now that all is set up, delete the folder again
-    run('rm -rf /tmp/fbone /tmp/fbone.tar.gz')
+    run('rm -rf /tmp/octodus /tmp/octodus.tar.gz')
     # and finally touch the .wsgi file so that mod_wsgi triggers
     # a reload of the application
-    run('touch /var/www/fbone.wsgi')
+    run('touch /var/www/octodus.wsgi')

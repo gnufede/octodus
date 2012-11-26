@@ -9,12 +9,12 @@ from flask.ext.login import login_required, current_user
 
 from flaskext.mail import Message
 
-from fbone.models import *
-from fbone.decorators import admin_required
+from octodus.models import *
+from octodus.decorators import admin_required
                             #keep_login_url
-from fbone.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm, 
+from octodus.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm, 
                          UserPollForm)
-from fbone.extensions import db, mail
+from octodus.extensions import db, mail
 from sqlalchemy import Date, cast
 #import datetime
 

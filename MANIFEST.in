@@ -2,13 +2,13 @@
 # http://docs.python.org/distutils/sourcedist.html#specifying-the-files-to-distribute
 
 # Including
-recursive-include fbone/templates *
-recursive-include fbone/static *
-recursive-include fbone/views *
-recursive-include fbone/forms *
-recursive-include fbone/models *
-recursive-include fbone/translations *
+recursive-include octodus/templates *
+recursive-include octodus/static *
+recursive-include octodus/views *
+recursive-include octodus/forms *
+recursive-include octodus/models *
+recursive-include octodus/translations *
 
 # Excluding
-recursive-exclude fbone *.pyc
+recursive-exclude octodus *.pyc
 recursive-exclude tests *.pyc

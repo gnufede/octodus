@@ -8,19 +8,6 @@ from flaskext.babel import gettext, lazy_gettext as _
 
 from fbone.models import User, Project
 
-class EditDateForm(Form):
-    next = HiddenField()
-#    date = DateTimeField()
-    date = SelectField("Fecha de la cita")
-
-    submit = SubmitField(_('Save'))
-
-    def generate_dates (self, dates):
-        form_dates = []
-        for i in dates:
-            form_dates.append((i.id, i.begin))
-        self.date.choices = form_dates
-     
 
 class EditDatosForm(Form):
     next = HiddenField()
@@ -73,31 +60,3 @@ class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_('Password'), [required(), length(min=6, max=16)])
     submit = SubmitField(_('Reauthenticate'))
-
-
-class UserAppointmentForm(Form):
-    next = HiddenField()
-    session = HiddenField()
-    hour = RadioField(_('Hora'))
-    submit = SubmitField(_('Confirmar'))
-
-    def set_hours(self, hours):
-        self.hour.choices = hours
-
-class UserOfferForm(Form):
-    next = HiddenField()
-    options = RadioField(_('Oferta'))
-    submit = SubmitField(_('Continuar'))
-    type = HiddenField()
-
-    def set_offer_type(self, type):
-        self.type.data = type
-
-class UserPollForm(Form):
-    next = HiddenField()
-    options = RadioField(_(u'Elección'))
-    submit = SubmitField(_('Continuar'))
-    type = HiddenField()
-
-    def set_poll_type(self, type):
-        self.type.data = type

@@ -4,11 +4,11 @@ from flask import Blueprint, render_template, redirect, url_for, request
                     # current_app, g,
 from flask.ext.login import login_required, current_user
 
-from fbone.models import *
-from fbone.decorators import admin_required
+from octodus.models import *
+from octodus.decorators import admin_required
                         #keep_login_url
-from fbone.forms import (EditSessionForm)
-from fbone.extensions import db
+from octodus.forms import (EditSessionForm)
+from octodus.extensions import db
 
 import datetime
 import calendar

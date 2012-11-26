@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-APP_NAME = 'fbone'
+APP_NAME = 'octodus'
 
 
 class BaseConfig(object):
@@ -25,13 +25,13 @@ class DefaultConfig(BaseConfig):
         DEBUG = True
 
     # Sqlite
-#    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/fbone.db'
+#    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/octodus.db'
     # Mysql: 'mysql://dbusername:dbpassword@dbhost/dbname'
 
     # To create log folder.
-    # $ sudo mkdir -p /var/log/fbone
-    # $ sudo chown $USER /var/log/fbone
-    DEBUG_LOG = '/tmp/fbone-debug.log'
+    # $ sudo mkdir -p /var/log/octodus
+    # $ sudo chown $USER /var/log/octodus
+    DEBUG_LOG = '/tmp/octodus-debug.log'
 
     ACCEPT_LANGUAGES = ['es', 'en']
     BABEL_DEFAULT_LOCALE = 'es'

@@ -1,7 +1,7 @@
-Fbone: A Flask skeleton
+Octodus: A Flask skeleton
 =======================
 
-Fbone is `Flask <http://flask.pocoo.org>`_ skeleton, which records how I learn and use Flask.
+Octodus is `Flask <http://flask.pocoo.org>`_ skeleton, which records how I learn and use Flask.
 
 
 Features

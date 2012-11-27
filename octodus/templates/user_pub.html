@@ -1,6 +1,17 @@
-{% set page_title = user.name %}
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = user.username %}
 
 {% extends "layout.html" %}
 
 {% block body %}
+<div class='span10'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.pub', name=user.username) }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+        {{ form.follow }}
+        {{ render_action(form.submit) }}
+     </form>
+     </div>
+
 {% endblock %}

@@ -1,0 +1,33 @@
+{% from "macros/_misc.html" import render_input, render_action %}
+
+{% set page_title = _('Nueva Tarea') %}
+
+
+{% extends 'user_index.html' %}
+
+{% block body %}
+<div class='span3'>
+    <form class='form-stacked' method="POST" action="{{ url_for('user.new_task') }}">
+        {{ form.hidden_tag() }}
+        {{ form.next }}
+       
+
+        <fieldset>
+             {{ render_input(form.name, 'xlarge') }}
+             
+             {{ render_action(form.submit) }}
+        </fieldset>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block append_js %}
+<script src="{{ url_for('static', filename='js/libs/jquery.url.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-typeahead.js') }}"></script>
+
+<script type="text/javascript">
+$('#task_new').addClass('active');
+</script>
+{% endblock %}
+

@@ -12,8 +12,7 @@ from flaskext.mail import Message
 from octodus.models import *
 from octodus.decorators import admin_required
                             #keep_login_url
-from octodus.forms import (EditDatosForm, UserAppointmentForm, UserOfferForm, 
-                         UserPollForm)
+from octodus.forms import EditDatosForm, FollowForm, TaskForm, ProjectForm
 from octodus.extensions import db, mail
 from sqlalchemy import Date, cast
 #import datetime
@@ -25,20 +24,15 @@ user = Blueprint('user', __name__, url_prefix='/user')
 @user.route('/')
 @login_required
 def index():
-    total_sin_iva = 0.00
-    if current_user.offer_selection:
-        for item in current_user.offer_selection:
-            total_sin_iva = total_sin_iva + float(item.offer.price)
-
-    return render_template('user_resume.html', current_user=current_user,
-                            today=datetime.datetime.now(),
-                            total_sin_iva=total_sin_iva)
+    return render_template('user_index.html', current_user=current_user,
+                            today=datetime.datetime.now())
 
 
 @user.route('/ayuda')
 @login_required
 def ayuda():
     return render_template('user_email.html', current_user=current_user)
+
 
 
 @user.route('/edit_date', methods=['POST', 'GET'])
@@ -103,39 +97,154 @@ def edit_datos():
                            current_user=current_user, groups=groups)
 
 
+@user.route('/projects/new', methods=['POST', 'GET'])
+@user.route('/newproject', methods=['POST', 'GET'])
+@login_required
+def new_project():
+    form = ProjectForm()
+    if request.method == 'POST':
+        newproject = Project(name=form.name.data, owner=current_user)
+        db.session.add(newproject)
+        db.session.commit()
+        return redirect(url_for('user.projects'))
+    return render_template('user_newproject.html', form=form,
+                            current_user=current_user)
+
+
+@user.route('/tasks/new', methods=['POST', 'GET'])
+@user.route('/newtask', methods=['POST', 'GET'])
+@login_required
+def new_task():
+    form = TaskForm()
+    if request.method == 'POST':
+        newtask = Task(name=form.name.data, owner=current_user)
+        db.session.add(newtask)
+        db.session.commit()
+        return redirect(url_for('user.tasks'))
+    return render_template('user_newtask.html', form=form,
+                            current_user=current_user)
+
+
+@user.route('/projects/')
+@login_required
+def projects(name=None):
+    user = current_user
+    return render_template('list.html', title="Proyectos", headers=False, 
+                           objects=user.projects, fields=['name',], 
+                            actions=[['Borrar', 'del', 'icon-trash']],
+                            current_user=current_user)
+
+@user.route('/projects/<name>/tasks/')
+@login_required
+def project_tasks(name):
+    project = None
+    if name:
+        for each_project in current_user.projects:
+            if each_project.name == name:
+                project = each_project
+                break
+    if project:
+        return render_template('list.html', title=name+"'s Tasks",
+                            headers=False, 
+                            objects=project.tasks, fields=['name',], 
+                            actions=[['Borrar', 'del', 'icon-trash']],
+                            current_user=current_user)
+
+
+
+@user.route('/tasks')
+@user.route('/<name>/tasks')
+@login_required
+def tasks(name=None, done=None):
+    if name:
+        user = User.query.filter_by(username=name).first()
+    else:
+        user = current_user
+    tasks = user.tasks
+    if done:
+        done_tasks = []
+        for task in tasks:
+            if task.done:
+                done_tasks.append(task)
+        tasks = done_tasks
+    return render_template('list.html', title="Tareas", headers=False, 
+                           objects=tasks, fields=['name',], 
+                            actions=[['Borrar', 'del', 'icon-trash']],
+                            current_user=current_user)
+@user.route('/done')
+def done():
+        return tasks(name=None, done=True)
+
+@user.route('/private')
+def private():
+        return redirect('user/project/private/tasks')
+
+
+@user.route('/public')
+def public():
+        return redirect('user/project/public/tasks')
+
+
+
+
+@user.route('/inbox')
+def inbox():
+        return redirect('user/project/inbox/tasks')
+
+@user.route('/timeline')
+@user.route('/<project_name>/timeline')
+@login_required
+def timeline(project_name=None):
+    if project_name:
+        for each_project in current_user.projects:
+            if each_project.name == project_name:
+                project = each_project
+                break
+        users = project.users_in
+    else:
+        users = current_user.following
+    all_tasks = []
+    for followee in users:
+        if followee != current_user:
+            all_tasks = all_tasks + followee.tasks
+
+    return render_template('list.html', title="Timeline", headers=False, 
+                           objects=all_tasks, fields=['name',], 
+                            actions=[['Borrar', 'del', 'icon-trash']],
+                            current_user=current_user)
+
+
+
 @user.route('/list')
 @login_required
 @admin_required
 def list():
     users2 = User.query.all()
     users = users2[:]
-    for user in users:
-        if user.projects and user.projects[-1]:
-            user.grupo = user.projects[-1].name
-            user.codigo = user.projects[-1].activation_key
-        else:
-            user.grupo = ''
-            user.codigo = ''
-        if user.appointments:
-            user.cita = user.appointments[0].date
-        else:
-            user.cita = ''
     return render_template('list.html', title="Usuarios", objects=users,
-                            fields=['name', 'surname', 'email',
-                                    'grupo', 'codigo', 'cita'],
+                            fields=['name', 'surname', 'email'],
                             no_set_delete=True,
                             active='user_list',
                             actions=[['Borrar', 'del', 'icon-trash']],
                             current_user=current_user)
 
 
-@user.route('/<name>')
-def pub(name):
-    if current_user.is_authenticated() and current_user.name == name:
-        return redirect(url_for('user.index'))
+@user.route('/profile', methods=['GET'])
+@user.route('/<name>', methods=['POST', 'GET'])
+def pub(name=None):
+    form = FollowForm()
+    if request.method == 'POST':
+        followed = User.query.filter_by(username=name).first()
+        current_user.following.append(followed)
+        db.session.commit()
+    if current_user.is_authenticated() and \
+       (current_user.username == name or name==None):
+        return render_template('user_pub.html', user=current_user, form=form)
+       # return redirect(url_for('user.index'))
 
-    user = User.query.filter_by(name=name).first_or_404()
-    return render_template('user_pub.html', user=user)
+    user = User.query.filter_by(username=name).first_or_404()
+    form.follow = name
+    return render_template('user_pub.html', user=user, form=form)
 
 
 @user.route('/del/<id>')

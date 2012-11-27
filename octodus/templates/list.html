@@ -5,15 +5,18 @@
 {% extends "user_index.html" %}
 
 {% block body %}
-<div class="span9">
+<div class="span6">
     {% if not fields %}
     {% set fields = ''%}
     {% endif %}
     {% if not delete %}
     {% set delete = ''%}
     {% endif %}
+    {% if not headers %}
+    {% set headers = ''%}
+    {% endif %}
     
-    {{ render_table(objects,'table-bordered table-striped', fields, delete, no_set_delete, actions) }}
+    {{ render_table(objects,'table-bordered table-striped', headers, fields, delete, no_set_delete, actions) }}
 </div>
 {% endblock %}
 

@@ -14,8 +14,8 @@ from flaskext.babel import lazy_gettext as _  # gettext,
 
 from flask.ext.uploads import UploadSet, IMAGES
 
-from fbone.extensions import db
-#from fbone.models import User, Project, Group
+from octodus.extensions import db
+#from octodus.models import User, Project, Group
 
 images = UploadSet("images", IMAGES)
 

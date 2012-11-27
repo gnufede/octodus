@@ -4,9 +4,9 @@
 
 {% block menu %}
 <div class="span3">	
-{% if current_user.is_admin() %}
 <div class="well" style="padding: 8px 0;">
 <ul class="nav nav-list">
+{% if current_user.is_admin() %}
     <li class='nav-header'>
     <i class='icon-user'></i>
     Usuarios
@@ -17,158 +17,49 @@
     </a>
     </li>
     <li class="divider"></li>
-    <li class='nav-header'>
-    <i class='icon-th'></i>
-    Grupos</li>
-	<li id='group_new'><a href='{{ url_for('admin.new_group') }}'>
-    <i class='icon-plus'></i>
-    Nuevo grupo</a></li>
-<li id='group_list'><a href='{{ url_for('admin.group_list') }}'>
-    <i class='icon-list'></i>
-    Lista de grupos</a></li>
-    <li class="divider"></li>
-    <li class='nav-header'>
-    <i class='icon-briefcase'></i>
-    Proyectos</li>
-    <li id='project_new'><a href='{{ url_for('admin.new_project') }}'>
-    <i class='icon-plus'></i>
-    Nuevo proyecto</a></li>
-<li id='project_list'><a href='{{ url_for('admin.project_list') }}'>
-    <i class='icon-list'></i>
-    Lista de proyectos</a></li>
-    <li class="divider"></li>
-<li class='nav-header'>
-    <i class='icon-camera'></i>
-Sesiones Fotográficas</li>
-    <li id='session_new'><a href='{{ url_for('session.new_session') }}'>
-    <i class='icon-plus'></i>
-    Nueva sesión fotográfica</a></li>
-<li id='session_list'><a href='{{ url_for('session.index') }}'>
-    <i class='icon-list'></i>
-    Lista de sesiones</a></li>
-<li id='session_set'><a href='{{ url_for('admin.set_session') }}'>
-    <i class='icon-random'></i>
-    Asignar a proyectos</a></li>
-    <li class="divider"></li>
-<li class='nav-header'>
-    <i class='icon-shopping-cart'></i>
-Ofertas</li>
-    <li id='offer_new'><a href='{{ url_for('admin.new_offer') }}'>
-    <i class='icon-plus'></i>
-    Nueva oferta</a></li>
-    <li id='offer_list'><a href='{{ url_for('admin.offer_list') }}'>
-    <i class='icon-list'></i>
-    Lista de ofertas</a></li>
-    <li class="divider"></li>
-<li class='nav-header'>
-    <i class='icon-align-left'></i>
-Encuestas</li>
-    <li id='poll_item_new'><a href='{{ url_for('admin.new_poll_item') }}'>
-    <i class='icon-plus'></i>
-    Nuevo elemento de encuesta</a></li>
-	<li id='poll_item_list'><a href='{{ url_for('admin.poll_item_list') }}'>
-    <i class='icon-list'></i>
-    Lista de opciones</a></li>
-<li id='poll_set_node'><a href='{{ url_for('admin.node_set_poll_item') }}'>
-    <i class='icon-random'></i>
-    Asignar a grupos</a></li>
-<li id='poll_set_project'><a href='{{ url_for('admin.project_set_poll_item') }}'>
-    <i class='icon-random'></i>
-    Asignar a proyectos</a></li>
-    <li class="divider"></li>
-    <li class='nav-header'>
-    <i class='icon-asterisk'></i>
-    Otros</li>
-    <li id='page_list'><a href='{{ url_for('admin.page_list') }}'>
-    <i class='icon-list'></i>
-        Lista de páginas</a></li>
-    <li id='new_act'><a href='{{ url_for('admin.new_act') }}'>
-    <i class='icon-hdd'></i>
-        Nuevo acto de graduación</a></li>
-    <li id='act_list'><a href='{{ url_for('admin.act_list') }}'>
-    <i class='icon-list'></i>
-        Lista de actos</a></li>
-</ul>
-{% else %}
-<div class="well" style="padding: 8px 0;">
-<ul class="nav nav-list">
-    <li id="edit_data"><a href='{{ url_for('user.edit_datos') }}'>
-    <i class='icon-user'></i>
-    Datos Personales
-    {% if not current_user.projects[-1].children|length %}
-    <span class="badge badge-success">
-   <i class="icon-ok icon-white"></i> 
-    </span>
-    </a> 
-	</li>
-    {% if current_user.projects[-1].sessions|length %}
-    <li id="select_date"><a href='{{ url_for('user.new_appointment_get') }}'>
-    <i class='icon-calendar'></i>
-    Elige Cita Fotográfica
-    {% if not current_user.appointments|length %}
-    <span class="badge badge-important">
-   <i class="icon-bell icon-white"></i> 
-    </span>
-    {% else %}
-    <span class="badge badge-success">
-   <i class="icon-ok icon-white"></i> 
-    </span>
-    {% endif %}
-    </a> 
-	</li>
-    {% endif %}
-    {% if current_user.projects[-1].offers|length %}
-        <li id="select_offer"><a href='{{ url_for('user.set_offer') }}'>
-        <i class='icon-shopping-cart'></i>
-        Seleccionar Oferta
-         {% if not current_user.offer_selection|length %}
-            <span class="badge badge-important">
-            <i class="icon-bell icon-white"></i> 
-            </span>
-        {% else %}
-            {% if current_user.offer_selection|length %}
-                <span class="badge badge-success">
-                <i class="icon-ok icon-white"></i> 
-                </span>
-            {% endif %}
-        {% endif %}
+{% endif %}
+        <li id="inbox"><a href='/user/inbox'>
+        <i class='icon-inbox'></i>
+        Inbox
         </a> 
-	    </li>
-    {% endif %}
-    {% if current_user.projects[-1].poll_items|length %}
-        <li id="select_poll_option"><a href='{{ url_for('user.set_poll_option') }}'>
+        </li>
+        <li id="private"><a href='/user/private'>
+        <i class='icon-user'></i>
+        Private
+        </a> 
+        </li>
+        <li id="public"><a href='/user/public'>
+        <i class='icon-bullhorn'></i>
+        Public
+        </a> 
+        </li>
+        <li id="done"><a href='/user/done'>
         <i class='icon-check'></i>
-        Votar en encuestas
-         {% if not current_user.poll_selection|length %}
-            <span class="badge badge-important">
-            <i class="icon-bell icon-white"></i> 
-            </span>
-        {% else %}
-            {% if current_user.poll_selection|length %}
-                <span class="badge badge-success">
-                <i class="icon-ok icon-white"></i> 
-                </span>
-            {% endif %}
-        {% endif %}
+        Done
         </a> 
-	    </li>
-    <li id="see_polls"><a href='{{ url_for('user.see_polls') }}'>
-        <i class='icon-eye-open'></i>
-        Resultados encuestas
+        </li>
+        <li id="new_project"><a href='{{ url_for('user.new_project') }}'>
+        <i class='icon-plus'></i>
+        Nuevo Proyecto
+        </a> 
+        </li>
+    {% if current_user.projects|length %}
+        {% for project in current_user.projects: %}
+        <li id="{{project.name}}"><a href='/user/projects/{{project.name}}'>
+            <i class='icon-tag'></i>
+            {{project.name}}
+            </a> 
+            </li>
+        {% endfor %}
+    {% endif %}
     </a> 
 	</li>
-    {% endif %}
-    {% else %}
-    </a> 
-	</li>
-    {% endif %}
 </ul>
 {% if current_user.is_coordinator() %}
 <ul class="nav nav-list">
 	<li><a href='{{ url_for('frontend.edit_proceso') }}'>Editar Proceso</a> 
 	</li>
 </ul>
-{% endif %}	
 {% endif %}	
 </div>
 </div>

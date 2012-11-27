@@ -52,7 +52,7 @@
     </div>
 {% endmacro %}
 
-{% macro render_table(objects, class='', fields='', delete='', no_set_delete=False, actions='') %}
+{% macro render_table(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='') %}
 
 {% if objects|length >0 %}
 <table class='table {{ class }}'>
@@ -66,7 +66,9 @@
 
             {% for i in f %}
             {% if i != "_sa_instance_state" and i != "_labels" %}
+    {% if headers != '' %}
             <th>{{ i }}</th>
+    {% endif %}
             {% endif %}
             {% endfor %}
         </tr>

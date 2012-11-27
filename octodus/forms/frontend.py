@@ -6,7 +6,7 @@ from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField,
                           length)
 from flaskext.babel import gettext, lazy_gettext as _
 
-from fbone.models import User
+from octodus.models import User
 
 
 class LoginForm(Form):
@@ -22,11 +22,9 @@ class LoginForm(Form):
 class SignupForm(Form):
     next = HiddenField()
     code = TextField(_(u'Código'), [required()]) # Code
-    name = TextField(_(u'Nombre'), [required()])  # Username
-    surname = TextField(_(u'Apellidos'),  # Surname
-        [required(message='Quieres que tus apellidos aparezcan en la orla')])
+    username = TextField(_(u'Nombre'), [required()])  # Username
     password = PasswordField(u'Contraseña',  # Password
-        [required(), length(min=6, max=56)])
+        [required(), length(min=8, max=56)])
     password_again = PasswordField(_(u'Contraseña otra vez'),  # Password again
         [required(), equal_to('password')])
     email = TextField(_(u'Dirección de email'), [required(), email(
@@ -53,18 +51,18 @@ class ChangePasswordForm(Form):
     password = PasswordField(u'Contraseña', validators=[required(message=_(
         u'Se requiere una contraseña de al menos 6 caracteres')),
         #Password is required
-        length(min=6, max=56)])
+        length(min=8, max=56)])
     password_again = PasswordField(_(u'Contraseña otra vez'), validators=[
         #Password again
         equal_to('password', message=
-        _(u'Las contraseñas deben ser la misma'))])  # Passwords don't match
+        _(u'Las contraseñas deben ser la misma')), required()])  # Passwords don't match
     submit = SubmitField(_(u'Guardar'))  # Save
 
 
 class ReauthForm(Form):
     next = HiddenField()
     password = PasswordField(_(u'Contraseña'), [required(),
-        length(min=6, max=56)])  # Password
+        length(min=8, max=56)])  # Password
     submit = SubmitField(_(u'Reautenticarse'))  # Reauthenticate
 
 

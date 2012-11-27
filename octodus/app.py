@@ -8,7 +8,7 @@ from flaskext.babel import Babel
 from octodus import utils
 from octodus.models import User
 from octodus.config import DefaultConfig, APP_NAME
-from octodus.views import frontend, user, api, admin, session
+from octodus.views import frontend, user, api, admin
 from octodus.extensions import db, mail, cache, login_manager
 
 

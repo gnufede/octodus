@@ -14,10 +14,9 @@ from flask.ext.login import (login_required, login_user, current_user,
                             #fresh_login_required
 
 from octodus.decorators import cached_response
-from octodus.models import User, Page, Project
+from octodus.models import User, Project
 from octodus.extensions import db, mail, login_manager  # cache
 from octodus.forms import (SignupForm, LoginForm, RecoverPasswordForm,
-                         GalleryForm,
                          ChangePasswordForm, ReauthForm)
 import os
 from werkzeug import check_password_hash  # generate_password_hash
@@ -36,38 +35,11 @@ def index():
         login_form = LoginForm(next=request.args.get('next'))
         signup_form = SignupForm(next=request.args.get('next'))
     page = int(request.args.get('page', 1))
-    horario = Page.query.filter_by(name="Horario").first()
+    horario = "bla "
     pagination = User.query.paginate(page=page, per_page=10)
-    return render_template('index.html', horario=horario.content,
+    return render_template('index.html', horario=horario,
                             pagination=pagination, login_form=login_form,
                            signup_form=signup_form, current_user=current_user)
-
-
-@frontend.route('/bodas')
-@cached_response
-def bodas():
-    login_form = LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'))
-    return render_template('bodas.html', login_form=login_form,
-                           signup_form=form, current_user=current_user)
-
-
-@frontend.route('/fotoescuela')
-@cached_response
-def fotoescuela():
-    login_form = LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'))
-    return render_template('fotoescuela.html', login_form=login_form,
-                           signup_form=form, current_user=current_user)
-
-
-@frontend.route('/nuestros_productos')
-@cached_response
-def productos():
-    login_form = LoginForm(next=request.args.get('next'))
-    form = SignupForm(next=request.args.get('next'))
-    return render_template('productos.html', login_form=login_form,
-                           signup_form=form, current_user=current_user)
 
 
 @frontend.route('/email')
@@ -79,17 +51,6 @@ def email():
                            signup_form=form, current_user=current_user)
 
 
-@frontend.route('/proceso')
-@cached_response
-def proceso():
-    login_form = form = None
-    if not current_user.is_authenticated():
-        login_form = LoginForm(next=request.args.get('next'))
-        form = SignupForm(next=request.args.get('next'))
-    proceso = Page.query.filter_by(name="Proceso").first()
-    return render_template('proceso.html', proceso=proceso.content,
-                       login_form=login_form,
-                       form=form)
 
 
 @frontend.route('/search')
@@ -181,13 +142,13 @@ def signup():
         if form.nocode.data:
             return redirect(url_for('frontend.email'))
         else:
-            activation_key = form.code.data
-            group = Project.query.\
-                    filter_by(activation_key=activation_key).first()
-            if group:
+           # activation_key = form.code.data
+           # group = Project.query.\
+           #         filter_by(activation_key=activation_key).first()
+           # if group:
                 user = User()
                 form.populate_obj(user)
-                group.users.append(user)
+           #     group.users.append(user)
 
                 db.session.add(user)
 
@@ -195,10 +156,10 @@ def signup():
 
                 if login_user(user):
                     return redirect(form.next.data or url_for('user.index'))
-            else:
-                flash(_("Codigo no valido"),
-                         #Invalid code
-                  "error")
+           # else:
+           #     flash(_("Codigo no valido"),
+           #              #Invalid code
+           #       "error")
 
     return render_template('signup.html', form=form, login_form=login_form)
 
@@ -284,42 +245,6 @@ def reset_password():
     return render_template('reset_password.html', form=form, value=value)
 
 
-@frontend.route('/edit_session')
-def edit_session():
-    user = current_user
-    if not user or not user.is_admin() or not user.is_coordinator():
-        abort(403)
-
-    proceso = Page.query.filter_by(name="Proceso").first()
-    return render_template('edit_proceso.html', proceso=proceso.content)
-
-
-@frontend.route('/galeria', methods=['GET', 'POST'])
-def gallery():
-    form = GalleryForm(request.form)
-    dir_path = None
-    if request.method == 'POST':
-        for filename in os.listdir(os.path.join(frontend.root_path,
-                    '../static/acts/')):
-            exist = check_password_hash(filename, form.password.data)
-            if (exist):
-                dir_path = os.path.join(os.path.join(frontend.root_path,
-                            '../static/acts/'), filename)
-                if os.path.exists(dir_path):
-                    images = [unicode(file, errors='replace')
-                                for file in os.listdir(dir_path)
-                                    if (file.endswith(".jpg")
-                                        or file.endswith(".JPG"))]
-                    zipfile = [file for file in os.listdir(dir_path)
-                                        if (file.endswith(".zip")
-                                            or file.endswith(".ZIP"))][0]
-                    actos = Page.query.filter_by(name="actos").first()
-                    return render_template('user_gallery.html',
-                                            form=None, password=filename,
-                                            images=images, zipfile=zipfile,
-                                            actos=actos)
-
-    return render_template('user_gallery.html', form=form)
 
 
 @frontend.route('/about')

@@ -6,7 +6,7 @@ from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList
                           RadioField, SelectMultipleField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
-from fbone.models import User, Project
+from octodus.models import User, Project
 
 
 class EditDatosForm(Form):
@@ -54,6 +54,22 @@ class EditDatosForm(Form):
  #           raise ValidationError, gettext('This email is taken')
 
 
+class TaskForm(Form):
+    next = HiddenField()
+    name = TextField()
+    submit = SubmitField(_('Hecho'))
+
+
+class ProjectForm(Form):
+    next = HiddenField()
+    name = TextField()
+    submit = SubmitField(_('Hecho'))
+
+
+class FollowForm(Form):
+    next = HiddenField()
+    follow = HiddenField()
+    submit = SubmitField(_('Follow'))
 
 
 class ReauthForm(Form):

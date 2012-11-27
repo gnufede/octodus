@@ -6,7 +6,7 @@ from flaskext.script import Manager  # , prompt, prompt_pass, prompt_bool
 
 from octodus import create_app
 from octodus.extensions import db
-from octodus.models import User, Group, Page
+from octodus.models import User
 from octodus.models.model import *
 
 
@@ -33,7 +33,7 @@ def reset():
     db.create_all()
     user = User(name='Fede', surname='Mon',
                 email='gnufede@gmail.com',
-                password='123456', type=1)
+                password='123456', user_type=1)
 
     db.session.add(user)
     db.session.commit()

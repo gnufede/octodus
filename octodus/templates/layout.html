@@ -6,17 +6,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-   	<meta name="keywords" content="Orlas, orlas universitarias, foto, actos académicos, reportaje fotográfico">
-	<meta name="description" content="Somos una empresa formada por un grupo de profesionales con larga experiencia con el objetivo primordial de ofrecerles un servicio cimentado en la garantía de calidad, que conseguimos gracias a nuestros equipos fotográficos de alta definición">
-	<title>E.F. Digital Orlas - {% block title %}{{ page_title }}{% endblock %} - Orlas universitarias</title> 
+   	<meta name="keywords" content="Productivity, game, todo, todo-list, motivation, social">
+    <meta name="description" content="Reclaim your life">
+	<title>Octodus - {% block title %}{{ page_title }}{% endblock %} - Todo-list game</title> 
     <meta name="author" content="Sigmaset">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="google-site-verification" content="asq1uut_opYDClWqAd7BTD7vv3553vGy_ySkgP4nqKg" />
+    <meta name="google-site-verification" content="" />
     <link rel="Shortcut Icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
     {% block css %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styleorlas.css') }}">
+    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styleorlas.css') }}"-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}">
     {% endblock %}
     {% block append_css %}
@@ -33,12 +33,14 @@
             <div class="navbar-inner" style="min-width:940px;border-radius:0">
         <div class="container" style="max-width:980px;margin-left:auto;margin-right:auto;">
                 	{% if current_user.is_authenticated() %}
-                	  <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.name }}</a></h3>
+                	  <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>{{ current_user.username }}</a></h3>
                 	   <ul class="nav secondary-nav">
-                	   <li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-                	  <!--li id='actos' ><a href="../static/login.html">Actos de graduación</a></li-->
+                	  <li id='tasks' ><a href="/user/tasks">Tasks</a></li>
+                	  <li id='projects' ><a href="/user/projects">Projects</a></li>
+                	  <li id='profile' ><a href="/user/profile">Profile</a></li>
+                	  <li id='timeline' ><a href="/user/timeline">Timeline</a></li>
                 	{% else %}
-                      <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>E.F. Digital Orlas</a></h3>
+                      <h3><a id='index' class='brand' href='{{ url_for('frontend.index') }}'>Octodus</a></h3>
                     
                     <!--form class="pull-left" action="{{ url_for('frontend.search') }}">
                         <input type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
@@ -46,11 +48,7 @@
                     <!--div class="nav-collapse"-->
                  	  <ul class="nav secondary-nav">
                 
-						<li id='orlas'><a href='{{ url_for('frontend.proceso') }}'>Orlas universitarias</a></li>
-						<li id='productos'><a href="{{ url_for('frontend.productos') }}">Nuestros Productos</a></li>
-						<li id='fotoescuela'><a href="{{ url_for('frontend.fotoescuela') }}">Fotoescuela</a></li>
-						<li id='bodas'><a href="{{ url_for('frontend.bodas') }}">Eventos</a></li>
-						<li id='galeria'><a href="{{ url_for('frontend.gallery') }}">Actos de graduación</a></li>
+						<li id='galeria'><a href="{{ url_for('frontend.index') }}">Actos de graduación</a></li>
 				    {% endif %}
                     </ul>
 
@@ -62,6 +60,7 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('user.edit_datos') }}">Preferencias</a></li>
                             <li><a href="{{ url_for('frontend.change_password') }}">Cambiar contraseña</a></li>
                             <li class="divider"></li>
                             <li><a href="{{ url_for('frontend.logout') }}">Salir</a></li>
@@ -117,7 +116,7 @@
 
         <div id="footer" style="text-align: right; margin-top: 10px; margin-bottom: 15px;">
             <p>
-                © 2012 E.F. Digital Orlas - Realizado por <a href="http://www.sigmaset.com">Sigmaset</a> -
+                © 2012 Octodus - Done by <a href="http://www.sigmaset.com">Sigmaset</a> -
                 <!--a href='{{ url_for('frontend.about') }}'>{{ _('About') }}</a> -
                 <a href='{{ url_for('frontend.blog') }}'>{{ _('Blog') }}</a> -
                 <a href='{{ url_for('frontend.help') }}'>{{ _('Help') }}</a> -
@@ -150,7 +149,7 @@
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-21285120-1']);
+  _gaq.push(['_setAccount', '']);
   _gaq.push(['_trackPageview']);
 
   (function() {

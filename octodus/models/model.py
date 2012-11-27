@@ -44,6 +44,7 @@ projects_tasks = db.Table("projects_tasks", db.metadata,
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
     name = db.Column(db.String(64))
     surname = db.Column(db.String(128))
     email = db.Column(db.String(128))
@@ -51,6 +52,12 @@ class User(db.Model, UserMixin):
     activation_key = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
     points = db.Column(db.Integer)
+    tasks = relationship("Task", backref="owner")
+    projects = relationship("Project", backref="owner")
+    following = relationship("User", secondary=users_followers, 
+                             primaryjoin=users_followers.c.user_id==id,
+                    secondaryjoin=users_followers.c.follower_id==id,
+                             backref="followers")
 #projects = relationship("Project", secondary=projects_users, backref="users")
 #nodes = relationship("Node", secondary=nodes_users, backref="users")
 
@@ -75,10 +82,10 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def is_admin(self):
-        return self.type == Definitions.USER_TYPE_ADMIN
+        return self.user_type == Definitions.USER_TYPE_ADMIN
 
     def is_coordinator(self):
-        return self.type == Definitions.USER_TYPE_COORDINATOR
+        return self.user_type == Definitions.USER_TYPE_COORDINATOR
 
     @classmethod
     def authenticate(cls, email, password):
@@ -105,17 +112,23 @@ class Task(db.Model):
     name = db.Column(db.String(256))
     description = db.Column(db.String(256))
     duration = db.Column(db.Integer)
+    done = db.Column(db.Boolean)
+    added = db.Column(db.DateTime)
+    modified = db.Column(db.DateTime)
+    finished = db.Column(db.DateTime)
     begin = db.Column(db.DateTime)
     deadline = db.Column(db.DateTime)
-    owner = db.Column(db.Integer, nullable=False, ForeignKey("users.id"))
+    owner_id = db.Column(db.Integer, ForeignKey("users.id"))
 
 
 
-class Project(db.Model)
+class Project(db.Model):
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
     description = db.Column(db.String(256))
     deadline = db.Column(db.DateTime)
-    owner = db.Column(db.Integer, nullable=False, ForeignKey("users.id"))
+    owner_id = db.Column(db.Integer, ForeignKey("users.id"))
+    tasks = relationship("Task", secondary=projects_tasks, backref="projects")
+    users = relationship("User", secondary=users_projects, backref="projects_in")
 

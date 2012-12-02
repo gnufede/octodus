@@ -1,3 +1,4 @@
+from type import *
 {% macro render_errors(field) %}
     {% if field.errors %}
         {% for error in field.errors %}
@@ -46,10 +47,68 @@
 </div>
 {% endmacro %}
 
+
 {% macro render_action(field) %}
     <div class='actions'>
         {{ field(class_='btn btn-primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancelar') }}</a>
     </div>
+{% endmacro %}
+
+{% macro render_tasklist(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='') %}
+
+{% if objects|length >0 %}
+            {% if fields == '' %}
+            {% set f = objects[0].__dict__ %}
+            {% else %}
+            {% set f = fields %}
+            {% endif %}
+<table class='table {{ class }}'>
+    <tbody>
+        {% for object in objects %}
+        <tr>
+            {% for j in f %}
+            {% if j != "_sa_instance_state" and j != "_labels" %}
+            {% if delete == '' %}
+                {% if j == 'email' %}
+                <td><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></td>
+                 {% else %}
+                {% if object.done == True %}
+                 <td style="text-decoration:line-through">{{ object[j] }}</td>
+                 {% else %}
+                {% if object[j] is not is_list %}
+                 <td>{{ object[j] }}</td>
+                 {% else %}
+                 {% if j == 'projects'%}
+                 <td>
+                    {% for proj in object[j] %}
+                    <span class="label label-info">{{ proj.name }}</span>
+                    {% endfor %}
+                </td>
+                {% else %}
+                 <td>{{ object[j]|length }}</td>
+                {% endif %}
+                {% endif %}
+                {% endif %}
+                {% endif %}
+                 {% else %}
+                 <td><a href="#">{{ object[j] }}</a></td>
+                 {% endif %}
+            {% endif %}
+            {% endfor %}
+                {% if delete != '' %}
+                 <td><a href="del/{% for j in delete %}{% if loop.index0 == 0 %}{{object[j[1]]}}?{% else %}{{j[0]}}={{object[j[1]]}}&{%endif%}{% endfor %}">
+                <i class="icon-remove"></i></a></td>
+                 {% else %}
+            {% for action in actions %}
+            <td style='width:18px;'><a href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}}"></i></a></td>
+            {% endfor %}
+                 {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 {% endmacro %}
 
 {% macro render_table(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='') %}
@@ -82,7 +141,11 @@
                 {% if j == 'email' %}
                 <td><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></td>
                  {% else %}
+                {% if object[j] is not is_list %}
                  <td>{{ object[j] }}</td>
+                 {% else %}
+                 <td>{{ object[j]|length }}</td>
+                {% endif %}
                 {% endif %}
                  {% else %}
                  <td><a href="#">{{ object[j] }}</a></td>

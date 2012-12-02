@@ -84,7 +84,8 @@ def login():
             if authenticated:
                 remember = request.form.get('remember') == 'y'
                 if login_user(user, remember=remember):
-                    flash("Bienvenido, " + user.name + '!', 'success')
+                    name = [user.username,user.name][bool(user.name)]
+                    flash("Bienvenido, " + name + '!', 'success')
                          # Logged in!
                 return redirect(form.next.data or url_for('user.index'))
             else:
@@ -109,7 +110,7 @@ def reauth():
     form = ReauthForm(next=request.args.get('next'))
 
     if request.method == 'POST':
-        user, authenticated = User.authenticate(current_user.name,
+        user, authenticated = User.authenticate(current_user.username,
                                     form.password.data)
         if user and authenticated:
             confirm_login()
@@ -149,8 +150,15 @@ def signup():
                 user = User()
                 form.populate_obj(user)
            #     group.users.append(user)
+                user.points = 10
+                inbox = Project(name='inbox', owner=user)
+                private = Project(name='private', owner=user)
+                public = Project(name='public', owner=user)
 
                 db.session.add(user)
+                db.session.add(inbox)
+                db.session.add(private)
+                db.session.add(public)
 
                 db.session.commit()
 

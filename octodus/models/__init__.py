@@ -3,4 +3,4 @@
 
 from octodus.models.types import DenormalizedText
 
-from octodus.models.model import User, Project, Task 
+from octodus.models.model import User, Project, Task, Prop 

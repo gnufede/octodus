@@ -18,17 +18,18 @@
     </li>
     <li class="divider"></li>
 {% endif %}
-        <li id="inbox"><a href='/user/inbox'>
+<li id="inbox"> <div class="draggable ui-widget-content"><a href='inbox'>
         <i class='icon-inbox'></i>
         Inbox
         </a> 
+        </div>
         </li>
-        <li id="private"><a href='/user/private'>
+        <li id="private" class="draggable"><a href='private'>
         <i class='icon-user'></i>
         Private
         </a> 
         </li>
-        <li id="public"><a href='/user/public'>
+        <li id="public" class="draggable"><a href='public'>
         <i class='icon-bullhorn'></i>
         Public
         </a> 
@@ -44,12 +45,14 @@
         </a> 
         </li>
     {% if current_user.projects|length %}
-        {% for project in current_user.projects: %}
-        <li id="{{project.name}}"><a href='/user/projects/{{project.name}}'>
-            <i class='icon-tag'></i>
+    {% for project in current_user.projects: %}
+    {% if project.name not in ['inbox','private','public'] %}
+        <li id="{{project.name}}"><a href='{{project.name}}'>
+            <i class='icon-tag draggable ui-widget-content'></i>
             {{project.name}}
             </a> 
             </li>
+    {% endif %}
         {% endfor %}
     {% endif %}
     </a> 

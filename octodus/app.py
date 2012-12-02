@@ -22,6 +22,11 @@ DEFAULT_BLUEPRINTS = (
     admin,
 )
 
+import types
+def is_list(obj):
+    return isinstance(obj, types.ListType)
+
+
 
 def create_app(config=None, app_name=None, blueprints=None):
     """Create a Flask app."""
@@ -39,6 +44,8 @@ def create_app(config=None, app_name=None, blueprints=None):
     #configure_logging(app)
     configure_template_filters(app)
     configure_error_handlers(app)
+    app.jinja_env.tests['is_list'] = is_list
+    app.jinja_env.filters['type'] = type
 
     return app
 

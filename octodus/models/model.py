@@ -22,10 +22,10 @@ class Definitions(object):
     USER_TYPE_COORDINATOR = 2
 
 
-users_props = db.Table("users_props", db.metadata,
-    db.Column("user_id", db.Integer, ForeignKey("users.id")),
-    db.Column("points", db.Integer),
-    db.Column("task_id", db.Integer, ForeignKey("tasks.id")))
+#users_props = db.Table("users_props", db.metadata,
+#    db.Column("user_id", db.Integer, ForeignKey("users.id")),
+#    db.Column("points", db.Integer),
+#    db.Column("task_id", db.Integer, ForeignKey("tasks.id")))
 
 users_followers = db.Table("users_followers", db.metadata,
     db.Column("user_id", db.Integer, ForeignKey("users.id")),
@@ -41,13 +41,20 @@ projects_tasks = db.Table("projects_tasks", db.metadata,
     db.Column("task_id", db.Integer, ForeignKey("tasks.id")))
 
 
+class Prop(db.Model):
+    __tablename__ = "users_props"
+    user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
+    task_id = db.Column(db.Integer, ForeignKey("tasks.id"), primary_key=True)
+    points = db.Column(db.Integer, default=1)
+
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64))
+    username = db.Column(db.String(64), unique=True)
     name = db.Column(db.String(64))
     surname = db.Column(db.String(128))
-    email = db.Column(db.String(128))
+    email = db.Column(db.String(128), unique=True)
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
@@ -58,6 +65,7 @@ class User(db.Model, UserMixin):
                              primaryjoin=users_followers.c.user_id==id,
                     secondaryjoin=users_followers.c.follower_id==id,
                              backref="followers")
+    props = relationship("Prop", backref="propped_users")
 #projects = relationship("Project", secondary=projects_users, backref="users")
 #nodes = relationship("Node", secondary=nodes_users, backref="users")
 
@@ -89,7 +97,7 @@ class User(db.Model, UserMixin):
 
     @classmethod
     def authenticate(cls, email, password):
-        user = cls.query.filter(User.email == email).first()
+        user = cls.query.filter(User.email == email or User.username == email).first()
         if user:
             authenticated = user.check_password(password)
         else:
@@ -111,14 +119,16 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
     description = db.Column(db.String(256))
-    duration = db.Column(db.Integer)
-    done = db.Column(db.Boolean)
-    added = db.Column(db.DateTime)
-    modified = db.Column(db.DateTime)
+    priority = db.Column(db.Integer, default=0)
+    duration_minutes = db.Column(db.Integer, default=30)
+    done = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    modified = db.Column(db.DateTime, default=db.func.now())
     finished = db.Column(db.DateTime)
     begin = db.Column(db.DateTime)
     deadline = db.Column(db.DateTime)
     owner_id = db.Column(db.Integer, ForeignKey("users.id"))
+    props = relationship("Prop", backref="propped_tasks")
 
 
 
@@ -131,4 +141,8 @@ class Project(db.Model):
     owner_id = db.Column(db.Integer, ForeignKey("users.id"))
     tasks = relationship("Task", secondary=projects_tasks, backref="projects")
     users = relationship("User", secondary=users_projects, backref="projects_in")
+
+    def addTask(self, task):
+        self.tasks.append(task)
+        db.session.commit()
 

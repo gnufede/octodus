@@ -65,28 +65,32 @@ from type import *
 <table class='table {{ class }}'>
     <tbody>
         {% for object in objects %}
-        <tr>
+        <tr class="task droppable" id="task_{{object.id}}">
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
             {% if delete == '' %}
+                {% if object[j] is not is_list %}
                 {% if j == 'email' %}
                 <td><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></td>
                  {% else %}
                 {% if object.done == True %}
                  <td style="text-decoration:line-through">{{ object[j] }}</td>
                  {% else %}
-                {% if object[j] is not is_list %}
                  <td>{{ object[j] }}</td>
+                {% endif %}
+                {% endif %}
                  {% else %}
                  {% if j == 'projects'%}
                  <td>
                     {% for proj in object[j] %}
-                    <span class="label label-info">{{ proj.name }}</span>
+                    <span class="proj_label label label-info draggable">{{ proj.name }}</span>
                     {% endfor %}
                 </td>
                 {% else %}
+                {% if j == 'props' %}
+                <td>{{ object.get_props() }}</td>
+                {% else %}
                  <td>{{ object[j]|length }}</td>
-                {% endif %}
                 {% endif %}
                 {% endif %}
                 {% endif %}

@@ -15,6 +15,9 @@ from octodus.decorators import admin_required
 from octodus.forms import EditDatosForm, FollowForm, TaskForm, ProjectForm
 from octodus.extensions import db, mail
 from sqlalchemy import Date, cast
+import re
+import math
+from random import randint
 #import datetime
 
 
@@ -130,12 +133,32 @@ def projects(name=None):
                             current_user=current_user)
 
 
+@user.route('/projects/del/<id>')
+@login_required
+def project_delete(id):
+    project = Project.query.get(id)
+    if project.owner == current_user and\
+       project.name not in ['Inbox', 'Private', 'Public']:
+        db.session.delete(project)
+        db.session.commit()
+    return redirect(url_for('user.projects'))
+
+
 @user.route('/project/<name>/set/<task_id>', methods=['POST', 'GET'])
 @login_required
 def set_project_tasks(name, task_id):
-    project = Project.query.filter_by(name=name, owner=current_user).first_or_404()
-    task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
-    project.addTask(task)
+    proj_name = re.compile('^'+name+'$', re.I)
+    for each_project in current_user.projects:
+        if proj_name.match(each_project.name):
+            project = each_project
+            task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
+            project.addTask(task)
+            if project.name != 'Inbox':
+                inbox = [proj for proj in current_user.projects 
+                         if proj.name == 'Inbox']
+                if task in inbox[0].tasks:
+                    inbox[0].tasks.remove(task)
+                    db.session.commit()
     #for project in current_user.projects:
     #    if project.name == name:
     #        for task in current_user.tasks:
@@ -145,21 +168,47 @@ def set_project_tasks(name, task_id):
     return redirect('user/tasks/'+name)
 
 
+@user.route('/project/<name>/unset/<task_id>', methods=['POST', 'GET'])
+@login_required
+def unset_project_tasks(name, task_id):
+    proj_name = re.compile('^'+name+'$', re.I)
+    for each_project in current_user.projects:
+        if proj_name.match(each_project.name):
+            project = each_project
+            task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
+            project.tasks.remove(task)
+            db.session.commit()
+            if len(task.projects) == 0: 
+                inbox = [proj for proj in current_user.projects 
+                         if proj.name == 'Inbox']
+                inbox[0].tasks.append(task)
+                db.session.commit()
+    #for project in current_user.projects:
+    #    if project.name == name:
+    #        for task in current_user.tasks:
+    #            if task.id == task_id:
+    #                project.addTasks(task)
+    #                db.session.commit()
+    return redirect('user/tasks/'+name)
 
+
+@user.route('/projects/<name>')
 @user.route('/tasks/<name>')
 @login_required
 def project_tasks(name):
     project = None
-    if name:
+    proj_name = re.compile('^'+name+'$', re.I)
+    if proj_name.match('done'):
+        return redirect(url_for('user.done'))
+    else:
         for each_project in current_user.projects:
-            if each_project.name == name:
+            if proj_name.match(each_project.name):
                 project = each_project
-                break
-    if project:
-        return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
+                return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            objects=project.tasks, fields=['id','name','projects','props'], 
                             actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
                             current_user=current_user)
+    return redirect(url_for('user.tasks'))
 
 
 @user.route('/tasks/')
@@ -181,7 +230,8 @@ def tasks(name=None, done=None):
                            objects=tasks, fields=['id','name','projects','props'], 
                             actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
                             current_user=current_user)
-@user.route('/done/')
+
+@user.route('/tasks/done')
 def done():
         return tasks(name=None, done=True)
 
@@ -207,6 +257,9 @@ def new_task():
     form = TaskForm()
     if request.method == 'POST':
         newtask = Task(name=form.name.data, owner=current_user)
+        inbox = [project for project in current_user.projects
+                 if project.name=='Inbox']
+        newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
         return redirect(url_for('user.tasks'))
@@ -219,6 +272,25 @@ def new_task():
 def task_do(id):
     task = Task.query.get(id)
     if task.owner == current_user:
+        if not task.done:
+            task.finished = datetime.datetime.now()
+            started = [task.created_at, task.begin][bool(task.begin)]
+            #TODO: Get the latest finished task time
+            difference = task.finished - started
+            my_difference = 90
+            if difference.days < 1 and difference.seconds < (60*90):
+                my_difference = difference.seconds/60
+            task.duration_minutes = my_difference
+            points = 0
+            if task.duration_minutes >= 32:
+                points = int(math.sin(task.duration_minutes/20.0)+1.001 * 5)
+            else:
+                points = int(math.sin(task.duration_minutes/20.0) * 10)
+
+            points = math.ceil((points + randint(0, 4)) * ((len(task.props)**1.2) * 2.5))
+            current_user.points = current_user.points + points
+        else:
+            task.finished = None 
         task.done = not task.done
         db.session.commit()
     return redirect(url_for('user.tasks'))
@@ -236,6 +308,8 @@ def task_delete(id):
 
 @user.route('/prop/<id>/')
 @user.route('/prop/<id>/<value>/')
+@user.route('/timeline/prop/<id>/')
+@user.route('/timeline/prop/<id>/<value>/')
 @user.route('/tasks/prop/<id>/')
 @user.route('/tasks/prop/<id>/<value>/')
 @login_required

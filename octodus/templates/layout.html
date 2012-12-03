@@ -16,8 +16,9 @@
     {% block css %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
     <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styleorlas.css') }}"-->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}">
+    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}"-->
     {% endblock %}
     {% block append_css %}
     {% endblock %}
@@ -140,14 +141,15 @@
 
     {% block js_script %}
     <!--script src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-alert.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-alerts.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-modal.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-transition.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-tooltip.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-dropdown.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script>
+<!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script-->
 
 <script type="text/javascript">
 

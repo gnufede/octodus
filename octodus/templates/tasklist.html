@@ -22,15 +22,49 @@
 
 {% block append_js %}
 <script>
+
+    $(".proj_label.label.label-info").hover(function() {
+        $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;">&times;</a>');
+        }, function() {
+            $(".close").remove();
+    });
+    $(".close").live("click", function() {
+        var proj_label = $(this).parent();
+        var proj_name = proj_label.text();
+        proj_name = proj_name.replace('×','')
+        var task = proj_label.parent().siblings().first();
+        $.ajax({
+            url:'/user/project/'+proj_name+'/unset/'+task.text(),
+            success:
+            function(data){
+                document.location.reload();
+               // alert($(this).text());
+                //$(this).parent().empty();
+             }
+            });
+        });
+    
+   // });
     $('#{{ active }}').addClass('active');
     $(function() {
-        $( ".draggable" ).draggable();
+        $( ".project" ).draggable({helper: 'clone'});
+        $( ".label" ).draggable();
         $( ".droppable" ).droppable({
             drop: function( event, ui ) {
-                $( this )
-                    .addClass( "success" );
-            }
-        });
+    var task_id =  $(this).attr('id');
+    var indexof_ = task_id.indexOf('_')+1;
+    var id = task_id.substr(indexof_, task_id.length);
+    var project_name = $(ui.draggable).text().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    //window.location.href = 
+    $.ajax({url:'/user/project/'+project_name+'/set/'+id,
+        success:
+        function(data) { 
+            document.location.reload();
+        }});
+}});
+
+             //   $( this )
+             //       .addClass( "success" );
     });
     </script>
 {% endblock %}

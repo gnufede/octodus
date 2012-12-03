@@ -76,6 +76,9 @@ class User(db.Model, UserMixin):
     #    self.password = password
     #    self.type = type
 
+    def get_undone_tasks(self):
+        return len([task for task in self.tasks if not task.done])
+
     def get_password(self):
         return ""
 
@@ -130,6 +133,11 @@ class Task(db.Model):
     owner_id = db.Column(db.Integer, ForeignKey("users.id"))
     props = relationship("Prop", backref="propped_tasks")
 
+    
+    def get_props(self):
+        return sum([prop.points for prop in self.props])
+
+
 
 
 class Project(db.Model):
@@ -141,6 +149,9 @@ class Project(db.Model):
     owner_id = db.Column(db.Integer, ForeignKey("users.id"))
     tasks = relationship("Task", secondary=projects_tasks, backref="projects")
     users = relationship("User", secondary=users_projects, backref="projects_in")
+
+    def get_undone_tasks(self):
+        return len([task for task in self.tasks if not task.done])
 
     def addTask(self, task):
         self.tasks.append(task)

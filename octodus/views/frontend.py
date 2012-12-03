@@ -151,9 +151,9 @@ def signup():
                 form.populate_obj(user)
            #     group.users.append(user)
                 user.points = 10
-                inbox = Project(name='inbox', owner=user)
-                private = Project(name='private', owner=user)
-                public = Project(name='public', owner=user)
+                inbox = Project(name='Inbox', owner=user)
+                private = Project(name='Private', owner=user)
+                public = Project(name='Public', owner=user)
 
                 db.session.add(user)
                 db.session.add(inbox)

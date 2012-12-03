@@ -18,38 +18,87 @@
     </li>
     <li class="divider"></li>
 {% endif %}
-<li id="inbox"> <div class="draggable ui-widget-content"><a href='inbox'>
-        <i class='icon-inbox'></i>
+<li id="inbox"> <a href='Inbox'>
+        <i class='icon-inbox' style="display:inline-block;"></i>
+        <div class='project draggable'  style="display:inline-block;">
         Inbox
-        </a> 
         </div>
+        {% for project in current_user.projects: %}
+        {% if project.name in ['Inbox'] %}
+            {% if project.get_undone_tasks() > 0 %}
+            <div class='project draggable badge' style="display:inline-block;">
+            {{project.get_undone_tasks()}}
+            </div>
+            {% endif%}
+        {% endif%}
+        {% endfor %}
+        </a> 
         </li>
-        <li id="private" class="draggable"><a href='private'>
-        <i class='icon-user'></i>
+        <li id="private"><a href='Private'>
+        <i class='icon-user' style="display:inline-block;"></i>
+        <div class='project draggable' style="display:inline-block;">
         Private
+        </div>
+        {% for project in current_user.projects: %}
+        {% if project.name in ['Private'] %}
+            {% if project.get_undone_tasks() > 0 %}
+            <div class='project draggable badge' style="display:inline-block;">
+            {{project.get_undone_tasks()}}
+            </div>
+            {% endif%}
+        {% endif%}
+        {% endfor %}
         </a> 
         </li>
-        <li id="public" class="draggable"><a href='public'>
-        <i class='icon-bullhorn'></i>
+        <li id="public"><a href='Public'>
+        <i class='icon-bullhorn' style="display:inline-block;"></i>
+        <div class='project draggable' style="display:inline-block;">
         Public
+        </div>
+        {% for project in current_user.projects: %}
+        {% if project.name in ['Public'] %}
+            {% if project.get_undone_tasks() > 0 %}
+            <div class='project draggable badge' style="display:inline-block;">
+            {{project.get_undone_tasks()}}
+            </div>
+            {% endif%}
+        {% endif%}
+        {% endfor %}
         </a> 
         </li>
-        <li id="done"><a href='/user/done'>
-        <i class='icon-check'></i>
+        <li id="done"><a href='Done'>
+        <i class='icon-check' style="display:inline-block;"></i>
+        <div class='project draggable' style="display:inline-block;">
         Done
+        </div>
         </a> 
         </li>
-        <li id="new_project"><a href='{{ url_for('user.new_project') }}'>
-        <i class='icon-plus'></i>
+        <li id="new_project" onClick="document.getElementById('newproject').focus();">
+        <a>
+        <i class='icon-plus' style="display:inline-block;"></i>
+        <div id='newproject' style="display:inline-block;" 
+            contenteditable onKeyPress="return _onKeyPress();" 
+            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+            '/user/project/');"
+            onFocus="$(this).text('');"
+            onBlur="return _onBlur($(this), 'Nuevo Projecto');">
         Nuevo Proyecto
-        </a> 
+        </div> 
+        </a>
         </li>
     {% if current_user.projects|length %}
     {% for project in current_user.projects: %}
-    {% if project.name not in ['inbox','private','public'] %}
+    {% if project.name not in ['Inbox','Private','Public'] %}
         <li id="{{project.name}}"><a href='{{project.name}}'>
-            <i class='icon-tag draggable ui-widget-content'></i>
+            <i class='icon-tag' style="display:inline-block;"></i>
+            <div class='project draggable' style="display:inline-block;">
             {{project.name}}
+            </div>
+            {% if project.get_undone_tasks() > 0 %}
+            <div class='project draggable badge' style="display:inline-block;">
+            {{project.get_undone_tasks()}}
+            </div>
+            {% endif%}
             </a> 
             </li>
     {% endif %}
@@ -73,5 +122,46 @@
 {% block append_js2 %}
 <script>
     $('.active a i').addClass('icon-white');
+    function show()
+    {
+    alert(editor.innerHTML);
+    }
+
+    function checkEnter() {
+        if (window.event.keyCode == 13) { 
+            window.event.cancelBubble = true;
+            return false;
+        }
+        else return true;
+        }
+
+    function _onBlur(node, defaultText)
+    {
+        node.text(defaultText);
+        return true;
+    }
+
+    function _onKeyDown()
+    {
+        return checkEnter();
+    }
+
+    function _onKeyUp(node, url)
+    {
+        if (window.event.keyCode == 13) { 
+            var sel = node.text();
+            sel = decodeURIComponent(sel);
+            sel=sel.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/ /g,"_");
+            window.location.href=url+sel
+            //sel.pasteHTML('<br>'); 
+            //sel.moveEnd();
+        }
+        return true;
+    }
+
+    function _onKeyPress()
+    { 
+        return checkEnter();
+    }
 </script>
 {% endblock %}

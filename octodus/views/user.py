@@ -287,7 +287,9 @@ def task_do(id):
             else:
                 points = int(math.sin(task.duration_minutes/20.0) * 10)
 
-            points = math.ceil((points + randint(0, 4)) * ((len(task.props)**1.2) * 2.5))
+            multip = [1,((len(task.props)**1.2) * 2.1)][bool(len(task.props))]
+            points = math.ceil((points + randint(0, 4)) * multip)
+            points = [1,points][bool(points)]
             current_user.points = current_user.points + points
         else:
             task.finished = None 

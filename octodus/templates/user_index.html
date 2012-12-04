@@ -124,7 +124,7 @@
     $('.active a i').addClass('icon-white');
     
     $(".more_projects").hover(function() {
-        $(this).append('<div class="close pull-right" style="float:right;display:inline-block;">&times;</div>');
+        $(this).append('<span class="close pull-right" style="float:right;display:inline-block;">&times;</span>');
         }, function() {
             $(".close").remove();
     });
@@ -133,12 +133,14 @@
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
         proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
-        url='/user/projects/del/'+proj_name
+        url='/user/projects/del/'+proj_name;
+        $(this).parent().remove();
         $.ajax({
             url:url,
             success:
             function(data){
-                document.location.reload();
+               return true; 
+                //document.location.reload();
                // alert($(this).text());
                 //$(this).parent().empty();
              }

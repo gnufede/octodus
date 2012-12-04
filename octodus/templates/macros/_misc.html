@@ -70,7 +70,9 @@ from type import *
             {% if j != "_sa_instance_state" and j != "_labels" %}
             {% if delete == '' %}
                 {% if object[j] is not is_list %}
-                {% if j == 'sender' %}
+                {% if j == 'id' %}
+                <td style="display:none">{{ object[j] }}</td>
+                {% elif j == 'sender' %}
                  <td>
                 {% if object.sender != current_user%}
                     <span class="proj_label label draggable">{{ object.sender.username }}</span>
@@ -81,6 +83,8 @@ from type import *
                  {% else %}
                 {% if object.done == True %}
                  <td style="text-decoration:line-through">{{ object[j] }}</td>
+                {% elif j == 'name' %}
+                 <td class="taskname" style='font-weight:bold;'>{{ object[j] }}</td>
                  {% else %}
                  <td>{{ object[j] }}</td>
                 {% endif %}
@@ -94,7 +98,7 @@ from type import *
                 </td>
                 {% else %}
                 {% if j == 'props' %}
-                <td>{{ object.get_props() }}</td>
+                <td><span class="badge badge-inverse">{{ object.get_props() }}</span></td>
                 {% else %}
                  <td>{{ object[j]|length }}</td>
                 {% endif %}

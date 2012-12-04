@@ -285,7 +285,7 @@ def new_task(name=None):
             newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
-        return jsonify(True)
+        return jsonify({'1':True})
     return render_template('user_newtask.html', form=form,
                             current_user=current_user)
 

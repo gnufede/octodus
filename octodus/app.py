@@ -38,7 +38,6 @@ def create_app(config=None, app_name=None, blueprints=None):
         blueprints = DEFAULT_BLUEPRINTS
 
     app = Flask(app_name)
-    app.gzip = Gzip(app)
     configure_app(app, config)
     configure_hook(app)
     configure_blueprints(app, blueprints)
@@ -48,6 +47,8 @@ def create_app(config=None, app_name=None, blueprints=None):
     configure_error_handlers(app)
     app.jinja_env.tests['is_list'] = is_list
     app.jinja_env.filters['type'] = type
+    gzipped = Gzip(app)
+    app = gzipped.app
 
     return app
 
@@ -144,9 +145,9 @@ def configure_hook(app):
     @app.before_request
     def before_request():
         pass
-    @app.after_request
-    def after_request(response):
-        return app.gzip.after_request(response)
+  #  @app.after_request
+  #  def after_request(response):
+  #      return app.gzip.after_request(response)
 
 
 def configure_error_handlers(app):

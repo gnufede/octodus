@@ -138,14 +138,14 @@ def projects(name=None):
 @user.route('/projects/del/<id>')
 @login_required
 def project_delete(id):
-    if type(id) == type(9):
-        project = Project.query.get(id)
-    else:
+    project = Project.query.get(id)
+    if not project:
         project = Project.query.filter_by(name=id, owner=current_user).first()
     if project.owner == current_user and\
        project.name not in ['Inbox', 'Private', 'Public']:
         db.session.delete(project)
         db.session.commit()
+        return jsonify({'1':True})
     return redirect(url_for('user.projects'))
 
 

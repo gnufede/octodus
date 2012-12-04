@@ -89,7 +89,7 @@
     {% if current_user.projects|length %}
     {% for project in current_user.projects: %}
     {% if project.name not in ['Inbox','Private','Public'] %}
-        <li id="{{project.name}}"><a class='more_projects' href='{{project.name}}'>
+    <li id="{{project.name}}"><a href='{{project.name}}'  class='more_projects'>
             <i class='icon-tag' style="display:inline-block;"></i>
             <div class='project proj_name draggable' style="display:inline-block;">
             {{project.name}}
@@ -124,12 +124,14 @@
     $('.active a i').addClass('icon-white');
     
     $(".more_projects").hover(function() {
-        $(this).append('<span class="close pull-right" style="float:right;display:inline-block;">&times;</span>');
+        $(this).append('<button class="close pull-right" style="float:right;display:inline-block;">&times;</button>');
         }, function() {
             $(".close").remove();
     });
 
-    $(".more_projects > .close").live("click", function() {
+        /*
+    $(".more_projects > .close").click( function(e) {
+        e.preventDefault();
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
         proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
@@ -143,6 +145,32 @@
 
         });
 
+        $(".more_projects > .close").hover(function() {
+        alert("heah");
+        var prev_href= $(this).parent().attr('href');
+        $(this).parent().attr('href', '#');
+        }, function(){
+        $(this).parent().attr('href', prev_href);
+    });
+*/
+
+    $(".more_projects > .close").live("click", function() {
+        /*
+        $(this).parent().click(function(e) {
+            e.preventDefault();
+        });
+        */
+        var proj_label = $(this).siblings('.project');
+        var proj_name = proj_label.text();
+        proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
+        url='/user/projects/del/'+proj_name;
+        $.ajax({
+            url:url
+             }).done(function() { 
+                 document.location.reload();
+        });
+        $(this).parent().remove();
+        });
     function show()
     {
     alert(editor.innerHTML);

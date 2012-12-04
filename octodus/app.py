@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from flask_gzip import Gzip
 
 from flask import Flask, request, render_template
 from flaskext.babel import Babel
@@ -37,6 +38,7 @@ def create_app(config=None, app_name=None, blueprints=None):
         blueprints = DEFAULT_BLUEPRINTS
 
     app = Flask(app_name)
+    app.gzip = Gzip(app)
     configure_app(app, config)
     configure_hook(app)
     configure_blueprints(app, blueprints)
@@ -142,6 +144,9 @@ def configure_hook(app):
     @app.before_request
     def before_request():
         pass
+    @app.after_request
+    def after_request(response):
+        return app.gzip.after_request(response)
 
 
 def configure_error_handlers(app):

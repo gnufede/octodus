@@ -116,7 +116,7 @@ def new_project(name=None):
         form.name.data = name
     if request.method == 'POST' or name:
         name = form.name.data
-        if name not in [project.name for project in current_user.projects]):
+        if name not in [project.name for project in current_user.projects]:
         newproject = Project(name=name, owner=current_user)
         db.session.add(newproject)
         db.session.commit()

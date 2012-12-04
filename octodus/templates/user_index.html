@@ -76,7 +76,7 @@
         <li id="new_project" onClick="document.getElementById('newproject').focus();">
         <a>
         <i class='icon-plus' style="display:inline-block;" ></i>
-        <div id='newproject' style="display:inline-block;" 
+        <div id='newproject' style="display:inline-block; cursor:text; padding:2px 2px 0 0;" 
             contenteditable onKeyPress="return _onKeyPress();" 
             onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
             '/user/project/', true);"
@@ -160,6 +160,22 @@
         }
         else return true;
         }
+
+    function _action(node)
+    {
+        url = node.attr('href');
+        $.ajax({
+            url:url
+            }).done(function() { 
+            if (node.attr('title') == "Borrar"){
+                node.parent().parent().remove();
+            }
+            if (node.attr('title') == "Marcar terminada"){
+                 document.location.reload();
+            }
+        });
+        return true;
+    }
 
     function _onBlur(node, defaultText, isProject)
     {

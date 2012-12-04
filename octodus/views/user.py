@@ -162,6 +162,7 @@ def set_project_tasks(name, task_id):
                 if task in inbox[0].tasks:
                     inbox[0].tasks.remove(task)
                     db.session.commit()
+            return jsonify(true)
     #for project in current_user.projects:
     #    if project.name == name:
     #        for task in current_user.tasks:
@@ -186,6 +187,7 @@ def unset_project_tasks(name, task_id):
                          if proj.name == 'Inbox']
                 inbox[0].tasks.append(task)
                 db.session.commit()
+            return jsonify(true)
     #for project in current_user.projects:
     #    if project.name == name:
     #        for task in current_user.tasks:
@@ -283,7 +285,7 @@ def new_task(name=None):
             newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
-        return redirect(url_for('user.tasks'))
+        return jsonify(true)
     return render_template('user_newtask.html', form=form,
                             current_user=current_user)
 
@@ -322,6 +324,7 @@ def task_do(id):
             current_user.points = current_user.points-task.earned_points
         task.done = not task.done
         db.session.commit()
+        return jsonify(true)
     return redirect(url_for('user.tasks'))
 
 
@@ -333,6 +336,7 @@ def task_delete(id):
     if task.owner == current_user:
         db.session.delete(task)
         db.session.commit()
+        return jsonify(true)
     return redirect(url_for('user.tasks'))
 
 @user.route('/prop/<id>/')

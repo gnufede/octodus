@@ -110,8 +110,8 @@ from type import *
                 <i class="icon-remove"></i></a></td>
                  {% else %}
             {% for action in actions %}
-            <td style='width:18px;'><a href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i class="{{action[2]}}"></i></a></td>
+            <td style='width:18px;'><span onClick="return _action($(this));" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i onClick="return _action($(this).parent());" class="{{action[2]}}"></i></span></td>
             {% endfor %}
                  {% endif %}
         </tr>

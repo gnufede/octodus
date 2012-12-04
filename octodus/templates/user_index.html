@@ -136,15 +136,10 @@
         url='/user/projects/del/'+proj_name;
         $(this).parent().remove();
         $.ajax({
-            url:url,
-            success:
-            function(data){
-               return true; 
-                //document.location.reload();
-               // alert($(this).text());
-                //$(this).parent().empty();
-             }
-         });
+            url:url+sel
+             }).done(function() { 
+                 document.location.reload();
+        });
 
         });
 

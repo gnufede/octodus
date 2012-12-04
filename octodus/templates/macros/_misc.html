@@ -65,7 +65,7 @@ from type import *
 <table class='table {{ class }}'>
     <tbody>
         {% for object in objects %}
-        <tr class="task droppable" id="task_{{object.id}}">
+        <tr class="task droppable" id="task_{{object.id}}" style="font-size:9pt;">
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
             {% if delete == '' %}
@@ -75,7 +75,7 @@ from type import *
                 {% elif j == 'sender' %}
                  <td>
                 {% if object.sender != current_user%}
-                    <span class="proj_label label draggable">{{ object.sender.username }}</span>
+                    <span class="sender_label label draggable">{{ object.sender.username }}</span>
                 {% endif %}
                 </td>
                 {% elif j == 'email' %}
@@ -91,9 +91,9 @@ from type import *
                 {% endif %}
                  {% else %}
                  {% if j == 'projects'%}
-                 <td>
+                 <td class="proj_label" style="min-width:120px;">
                     {% for proj in object[j] %}
-                    <span class="proj_label label label-info draggable">{{ proj.name }}</span>
+                    <span class="proj_label label label-info draggable" >{{ proj.name }}</span>
                     {% endfor %}
                 </td>
                 {% else %}
@@ -114,7 +114,7 @@ from type import *
                 <i class="icon-remove"></i></a></td>
                  {% else %}
             {% for action in actions %}
-            <td style='width:18px;'><span onClick="return _action($(this));" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+            <td class="actions" style='width:18px;padding:8px 4px 8px 4px;'><span onClick="return _action($(this));" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
                     <i onClick="return _action($(this).parent());" class="{{action[2]}}"></i></span></td>
             {% endfor %}
                  {% endif %}

@@ -22,9 +22,11 @@
 
 {% block append_js %}
 <script>
+    $('#tasks').addClass('active');
+    $('#{{ active }}').addClass('active');
 
     $(".proj_label.label.label-info").hover(function() {
-        $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;">&times;</a>');
+        $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-right:2px;">&times;</a>');
         }, function() {
             $(".close").remove();
     });
@@ -41,8 +43,6 @@
         });
     
    // });
-    $('#tasks').addClass('active');
-    $('#{{ active }}').addClass('active');
     $(function() {
         $( ".project" ).draggable({helper: 'clone'});
         $( ".label" ).draggable();

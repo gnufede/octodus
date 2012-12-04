@@ -133,8 +133,9 @@
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
         proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
+        url='/user/projects/del/'+proj_name
         $.ajax({
-            url:'/user/projects/del/'+proj_name,
+            url:url,
             success:
             function(data){
                 document.location.reload();
@@ -183,6 +184,7 @@
                 }
                 else{
                     sel = node.val();
+                    node.val('');
                 }
 
             sel = decodeURIComponent(sel);

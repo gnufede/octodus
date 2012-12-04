@@ -21,8 +21,9 @@ class DefaultConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'mysql://octodus:sudotco@localhost/octodus'
 
     if os.environ.get('SHARED_DATABASE_URL'):
-        SQLALCHEMY_DATABASE_URI = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
-        DEBUG = True
+        SQLALCHEMY_DATABASE_URI = os.environ.get('SHARED_DATABASE_URL')
+        #'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+        DEBUG = False
 
     # Sqlite
 #    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/octodus.db'

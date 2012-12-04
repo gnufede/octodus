@@ -106,16 +106,18 @@ def edit_datos():
 @user.route('/project/<name>', methods=['POST', 'GET'])
 @login_required
 def new_project(name=None):
-    if name and name not in [project.name for project in current_user.projects]:
+    if name and (name not in [project.name for project in current_user.projects]):
         newproject = Project(name=name, owner=current_user)
         db.session.add(newproject)
         db.session.commit()
-        return redirect(url_for('user.projects'))
+        return jsonify({'1':True})
     form = ProjectForm()
     if name:
         form.name.data = name
-    if request.method == 'POST':
-        newproject = Project(name=form.name.data, owner=current_user)
+    if request.method == 'POST' or name:
+        name = form.name.data
+        if name not in [project.name for project in current_user.projects]):
+        newproject = Project(name=name, owner=current_user)
         db.session.add(newproject)
         db.session.commit()
         return redirect(url_for('user.projects'))

@@ -237,7 +237,7 @@ def tasks(name=None, done=None):
 
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            objects=tasks, fields=['id','name','sender', 'projects','props'], 
-                            actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
                            active=active,
                             current_user=current_user)
 
@@ -291,6 +291,17 @@ def new_task(name=None):
     return render_template('user_newtask.html', form=form,
                             current_user=current_user)
 
+
+@user.route('/tasks/start/<id>')
+@login_required
+def task_start(id):
+    task = Task.query.get(id)
+    if task.owner == current_user:
+        if not task.done:
+            task.begin = datetime.datetime.now()
+            db.session.commit()
+            return jsonify({'1':True})
+    return redirect(url_for('user.tasks'))
 
 @user.route('/tasks/do/<id>')
 @login_required

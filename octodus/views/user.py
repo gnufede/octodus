@@ -136,8 +136,9 @@ def projects(name=None):
 @user.route('/projects/del/<id>')
 @login_required
 def project_delete(id):
-    project = Project.query.get(id)
-    if not project:
+    if type(id) == type(9):
+        project = Project.query.get(id)
+    else:
         project = Project.query.filter_by(name=id, owner=current_user).first()
     if project.owner == current_user and\
        project.name not in ['Inbox', 'Private', 'Public']:

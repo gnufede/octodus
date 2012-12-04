@@ -30,7 +30,7 @@ def reset():
     """Reset database."""
 
     #db.reflect()
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
     user = User(username='gnufede',name='Fede', surname='Mon',
                 email='gnufede@gmail.com', points=10,

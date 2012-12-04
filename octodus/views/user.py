@@ -137,6 +137,8 @@ def projects(name=None):
 @login_required
 def project_delete(id):
     project = Project.query.get(id)
+    if not project:
+        project = Project.query.filter_by(name=id, owner=current_user).first()
     if project.owner == current_user and\
        project.name not in ['Inbox', 'Private', 'Public']:
         db.session.delete(project)
@@ -205,15 +207,16 @@ def project_tasks(name):
             if proj_name.match(each_project.name):
                 project = each_project
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
-                           objects=project.tasks, fields=['id','name','projects','props'], 
+                           objects=project.tasks, fields=['id','name','sender','projects','props'], 
                             actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
-                            current_user=current_user)
+                            current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
 
 @user.route('/tasks/')
 @login_required
 def tasks(name=None, done=None):
+    active = None
     if name:
         user = User.query.filter_by(username=name).first()
     else:
@@ -225,41 +228,58 @@ def tasks(name=None, done=None):
             if task.done:
                 done_tasks.append(task)
         tasks = done_tasks
+        active = "Done"
 
     return render_template('tasklist.html', title="Tareas", headers=False, 
-                           objects=tasks, fields=['id','name','projects','props'], 
+                           objects=tasks, fields=['id','name','sender', 'projects','props'], 
                             actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
+                           active=active,
                             current_user=current_user)
 
 @user.route('/tasks/done')
 def done():
         return tasks(name=None, done=True)
 
-@user.route('/private/')
+@user.route('/Private/')
 def private():
-        return redirect('user/project/private/tasks')
+        return redirect('user/tasks/Private')
 
 
-@user.route('/public/')
+@user.route('/Public/')
 def public():
-        return redirect('user/project/public/tasks')
+        return redirect('user/tasks/Public')
 
 
-@user.route('/inbox/')
+@user.route('/Inbox/')
 def inbox():
-        return redirect('user/project/inbox/tasks')
+        return redirect('user/tasks/Inbox')
 
 
+@user.route('/tasks/new/<name>', methods=['POST', 'GET'])
 @user.route('/tasks/new/', methods=['POST', 'GET'])
 @user.route('/newtask/', methods=['POST', 'GET'])
 @login_required
-def new_task():
+def new_task(name=None):
     form = TaskForm()
-    if request.method == 'POST':
-        newtask = Task(name=form.name.data, owner=current_user)
-        inbox = [project for project in current_user.projects
+    owner = current_user
+    if name:
+        if name[0] == '@':
+            username, space, name = name[1:].partition(' ')
+            owner = User.query.filter_by(username=username).first()
+        form.name.data = name;
+
+    if request.method == 'POST' or name:
+        if owner != current_user:
+            if owner not in current_user.following or\
+               current_user not in owner.following: #FIXME: or followers?
+                return redirect(url_for('user.tasks'))
+            else:
+                current_user.points = current_user.points - 5
+        newtask = Task(name=form.name.data, owner=owner, sender=current_user)
+        inbox = [project for project in owner.projects
                  if project.name=='Inbox']
-        newtask.projects.append(inbox[0])
+        if inbox:
+            newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
         return redirect(url_for('user.tasks'))
@@ -274,25 +294,31 @@ def task_do(id):
     if task.owner == current_user:
         if not task.done:
             task.finished = datetime.datetime.now()
-            started = [task.created_at, task.begin][bool(task.begin)]
-            #TODO: Get the latest finished task time
+            started = [task.created_at, current_user.last_action]\
+                        [task.created_at < current_user.last_action]
+            started = [started, task.begin][bool(task.begin)]
             difference = task.finished - started
             my_difference = 90
             if difference.days < 1 and difference.seconds < (60*90):
                 my_difference = difference.seconds/60
             task.duration_minutes = my_difference
-            points = 0
-            if task.duration_minutes >= 32:
-                points = int(math.sin(task.duration_minutes/20.0)+1.001 * 5)
-            else:
-                points = int(math.sin(task.duration_minutes/20.0) * 10)
+            points = task.earned_points
+            if points == 0:
+                if task.duration_minutes >= 32:
+                    points = int(math.sin(task.duration_minutes/20.0)+1.001 * 5)
+                else:
+                    points = int(math.sin(task.duration_minutes/20.0) * 10)
 
-            multip = [1,((len(task.props)**1.2) * 2.1)][bool(len(task.props))]
-            points = math.ceil((points + randint(0, 4)) * multip)
-            points = [1,points][bool(points)]
+                multip = [1,((len(task.props)**1.2) * 2.1)][bool(len(task.props))]
+                points = math.ceil((points + randint(0, 4)) * multip)
+                points = [1,points][bool(points)]
+
+            task.earned_points = points
             current_user.points = current_user.points + points
+            current_user.last_action = task.finished
         else:
             task.finished = None 
+            current_user.points = current_user.points-task.earned_points
         task.done = not task.done
         db.session.commit()
     return redirect(url_for('user.tasks'))

@@ -31,8 +31,8 @@ def reset():
 
     db.drop_all()
     db.create_all()
-    user = User(name='Fede', surname='Mon',
-                email='gnufede@gmail.com',
+    user = User(username='gnufede',name='Fede', surname='Mon',
+                email='gnufede@gmail.com', points=10,
                 password='123456', user_type=1)
 
     db.session.add(user)

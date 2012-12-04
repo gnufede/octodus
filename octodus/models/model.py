@@ -57,9 +57,13 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), unique=True)
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
-    user_type = db.Column(db.Integer)
-    points = db.Column(db.Integer)
-    tasks = relationship("Task", backref="owner")
+    user_type = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+    last_action = db.Column(db.DateTime, default=db.func.now())
+    points = db.Column(db.Integer, default=0)
+    tasks = relationship("Task", backref="owner", primaryjoin="and_(User.id==Task.owner_id)")
+    sent_tasks = relationship("Task", backref="sender", primaryjoin="and_(User.id==Task.sender_id)")
+    #tasks = relationship("Task", backref="owner")
     projects = relationship("Project", backref="owner")
     following = relationship("User", secondary=users_followers, 
                              primaryjoin=users_followers.c.user_id==id,
@@ -100,7 +104,9 @@ class User(db.Model, UserMixin):
 
     @classmethod
     def authenticate(cls, email, password):
-        user = cls.query.filter(User.email == email or User.username == email).first()
+        user = cls.query.filter(User.email == email).first()
+        if not user:
+            user = cls.query.filter(User.username == email).first()
         if user:
             authenticated = user.check_password(password)
         else:
@@ -124,6 +130,7 @@ class Task(db.Model):
     description = db.Column(db.String(256))
     priority = db.Column(db.Integer, default=0)
     duration_minutes = db.Column(db.Integer, default=30)
+    earned_points = db.Column(db.Integer, default=0)
     done = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.now())
     modified = db.Column(db.DateTime, default=db.func.now())
@@ -131,6 +138,8 @@ class Task(db.Model):
     begin = db.Column(db.DateTime)
     deadline = db.Column(db.DateTime)
     owner_id = db.Column(db.Integer, ForeignKey("users.id"))
+    sender_id = db.Column(db.Integer, ForeignKey("users.id"))
+    #sender = relationship("User", backref="sent_tasks")
     props = relationship("Prop", backref="propped_tasks")
 
     

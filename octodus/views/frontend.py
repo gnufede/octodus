@@ -149,6 +149,7 @@ def signup():
            # if group:
                 user = User()
                 form.populate_obj(user)
+                user.activation_key = form.code.data
            #     group.users.append(user)
                 user.points = 10
                 inbox = Project(name='Inbox', owner=user)

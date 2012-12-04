@@ -16,7 +16,7 @@
     {% set headers = ''%}
     {% endif %}
     
-    {{ render_tasklist(objects,'table-hover', headers, fields, delete, no_set_delete, actions) }}
+    {{ render_tasklist(objects,'table-hover', headers, fields, delete, no_set_delete, actions, current_user) }}
 </div>
 {% endblock %}
 
@@ -28,7 +28,7 @@
         }, function() {
             $(".close").remove();
     });
-    $(".close").live("click", function() {
+    $(".proj_label > .close").live("click", function() {
         var proj_label = $(this).parent();
         var proj_name = proj_label.text();
         proj_name = proj_name.replace('×','')
@@ -45,6 +45,7 @@
         });
     
    // });
+    $('#tasks').addClass('active');
     $('#{{ active }}').addClass('active');
     $(function() {
         $( ".project" ).draggable({helper: 'clone'});

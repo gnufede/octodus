@@ -54,7 +54,7 @@ from type import *
     </div>
 {% endmacro %}
 
-{% macro render_tasklist(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='') %}
+{% macro render_tasklist(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='', current_user='') %}
 
 {% if objects|length >0 %}
             {% if fields == '' %}
@@ -70,7 +70,13 @@ from type import *
             {% if j != "_sa_instance_state" and j != "_labels" %}
             {% if delete == '' %}
                 {% if object[j] is not is_list %}
-                {% if j == 'email' %}
+                {% if j == 'sender' %}
+                 <td>
+                {% if object.sender != current_user%}
+                    <span class="proj_label label draggable">{{ object.sender.username }}</span>
+                {% endif %}
+                </td>
+                {% elif j == 'email' %}
                 <td><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></td>
                  {% else %}
                 {% if object.done == True %}

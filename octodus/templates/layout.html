@@ -107,7 +107,20 @@
             <div class="page-header">
                 {% from 'macros/_misc.html' import render_flash_message %}
                 {{ render_flash_message() }}
-                <h1>{{ page_title }}</h1>
+                <h1 style="display:inline-block">{{ page_title }}</h1>
+                {% if current_user.is_authenticated() %}
+                <div id="newtask" class="input pull-right" style="display:inline-block;" >
+                    <input class="xlarge" id="newtaskname" name="name"
+                    style="display:inline-block;" type="text" value="Nueva tarea"
+                    
+            onKeyPress="return _onKeyPress();" 
+            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+            '/user/tasks/new/', false);"
+            onFocus="$(this).val('');;"
+            onBlur="return _onBlur($(this), 'Nueva tarea', false)">
+                    
+                </div>
+                {% endif %}
             </div>
 
             <div class="row">

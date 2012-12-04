@@ -117,10 +117,10 @@ def new_project(name=None):
     if request.method == 'POST' or name:
         name = form.name.data
         if name not in [project.name for project in current_user.projects]:
-        newproject = Project(name=name, owner=current_user)
-        db.session.add(newproject)
-        db.session.commit()
-        return redirect(url_for('user.projects'))
+            newproject = Project(name=name, owner=current_user)
+            db.session.add(newproject)
+            db.session.commit()
+            return redirect(url_for('user.projects'))
     return render_template('user_newproject.html', form=form,
                             current_user=current_user)
 

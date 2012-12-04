@@ -34,14 +34,10 @@
         proj_name = proj_name.replace('×','')
         var task = proj_label.parent().siblings().first();
         $.ajax({
-            url:'/user/project/'+proj_name+'/unset/'+task.text(),
-            success:
-            function(data){
-                document.location.reload();
-               // alert($(this).text());
-                //$(this).parent().empty();
-             }
-            });
+            url:'/user/project/'+proj_name+'/unset/'+task.text()
+             }).done(function() { 
+                 document.location.reload();
+        });
         });
     
    // });
@@ -57,11 +53,11 @@
     var id = task_id.substr(indexof_, task_id.length);
     var project_name = $(ui.draggable).text().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     //window.location.href = 
-    $.ajax({url:'/user/project/'+project_name+'/set/'+id,
-        success:
-        function(data) { 
-            document.location.reload();
-        }});
+      $.ajax({
+          url:'/user/project/'+project_name+'/set/'+id
+             }).done(function() { 
+                 document.location.reload();
+        });
 }});
 
              //   $( this )

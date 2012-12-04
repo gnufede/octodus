@@ -129,37 +129,8 @@
             $(".close").remove();
     });
 
-        /*
-    $(".more_projects > .close").click( function(e) {
-        e.preventDefault();
-        var proj_label = $(this).siblings('.project');
-        var proj_name = proj_label.text();
-        proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
-        url='/user/projects/del/'+proj_name;
-        $(this).parent().remove();
-        $.ajax({
-            url:url+sel
-             }).done(function() { 
-                 document.location.reload();
-        });
-
-        });
-
-        $(".more_projects > .close").hover(function() {
-        alert("heah");
-        var prev_href= $(this).parent().attr('href');
-        $(this).parent().attr('href', '#');
-        }, function(){
-        $(this).parent().attr('href', prev_href);
-    });
-*/
 
     $(".more_projects > .close").live("click", function() {
-        /*
-        $(this).parent().click(function(e) {
-            e.preventDefault();
-        });
-        */
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
         proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");

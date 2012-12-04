@@ -150,6 +150,8 @@ from type import *
             {% if delete == '' %}
                 {% if j == 'email' %}
                 <td><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></td>
+                {% elif j == 'email' %}
+                <td><a href='{{ object[j] }}'>{{ object[j] }}</a></td>
                  {% else %}
                 {% if object[j] is not is_list %}
                  <td>{{ object[j] }}</td>

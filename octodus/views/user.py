@@ -213,7 +213,7 @@ def project_tasks(name):
                 project = each_project
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            objects=project.tasks, fields=['id','name','sender','projects','props'], 
-                            actions=[['Marcar terminada', 'do', 'icon-check'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
@@ -268,7 +268,7 @@ def new_task(name=None):
     form = TaskForm()
     owner = current_user
     if name:
-        if name[0] == '@':
+        if name[0] == '@' and current_user.points > 5:
             username, space, name = name[1:].partition(' ')
             owner = User.query.filter_by(username=username).first()
         form.name.data = name;
@@ -387,7 +387,9 @@ def timeline(project_name=None):
     all_tasks = []
     for followee in users:
         if followee != current_user:
-            all_tasks = all_tasks + followee.tasks
+            for project in followee.projects:
+                if project.name == "Public" or (current_user in project.users):
+                    all_tasks = all_tasks + project.tasks
             #for task in followee.tasks:
             #    task.props_n = len(task.props)
             #    all_tasks.append(task)
@@ -401,15 +403,15 @@ def timeline(project_name=None):
 
 @user.route('/list')
 @login_required
-@admin_required
 def list():
-    users2 = User.query.all()
+    users2 = User.query.order_by(User.points.desc()).all()
     users = users2[:]
+
     return render_template('list.html', title="Usuarios", objects=users,
-                            fields=['username', 'email'],
+                            fields=['username','points'],
                             no_set_delete=True,
                             active='user_list',
-                            actions=[['Borrar', 'del', 'icon-trash']],
+                            actions=[['Follow', 'follow', 'icon-plus']],
                             current_user=current_user)
 
 
@@ -431,6 +433,41 @@ def pub(name=None):
     return render_template('user_pub.html', user=user, form=form)
 
 
+@user.route('/follow/<name>', methods=['POST', 'GET'])
+@login_required
+def follow(name=None):
+    if name:
+        followed = User.query.filter_by(username=name).first()
+    if not followed:
+        followed = User.query.get(name)
+    if followed and\
+         current_user != followed and followed not in current_user.following:
+            current_user.following.append(followed)
+            db.session.commit()
+       # return redirect(url_for('user.index'))
+            return jsonify({'1':True})
+
+
+@user.route('/project/<name>/adduser/<username>', methods=['POST', 'GET'])
+@login_required
+def project_adduser(name=None, username=None):
+    if name:
+        project = Project.query.filter_by(name=name, owner=current_user).first()
+    if not name:
+        name = Project.query.get(name)
+    if username:
+        followed = User.query.filter_by(username=username).first()
+    if not username:
+        followed = User.query.get(username)
+    if followed not in project.users:
+        project.users.append(followed)
+        db.session.commit()
+       # return redirect(url_for('user.index'))
+        return jsonify({'1':True})
+
+
+
+
 @user.route('/del/<id>')
 @login_required
 @admin_required
@@ -439,5 +476,4 @@ def delete(id):
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('user.list'))
-
 

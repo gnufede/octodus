@@ -210,13 +210,11 @@
                 sel=sel.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/ /g,"_");
             }
             $.ajax({
-               url:url+sel,
-                 success:
-                 function(data){
-                 document.location.reload();
-                //alert("success");
-                //$(this).parent().empty();
-                 }
+                url:url+sel
+                }).done(function() { 
+                     document.location.reload();
+            });
+            return true;
              });
 
             //sel.pasteHTML('<br>'); 

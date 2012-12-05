@@ -107,7 +107,13 @@ from type import *
                     {% endfor %}
                     </div>
                     {% elif j == 'props' %}
-                    <div style='display:inline-block; margin-right:20px;' class="pull-right"><span class="badge badge-inverse">{{ object.get_props() }}</span></div>
+                    <div style='display:inline-block; margin-right:20px;' class="pull-right"> 
+                            {% if  object.get_props() > 0 %}
+                           <span class="badge badge-success">
+                            {% else %}
+                           <span class="badge badge-inverse">
+                            {% endif %}
+                            {{ object.get_props() }}</span></div>
                     {% else %}
                     <div style='display:inline-block;'>{{ object[j]|length }}</div>
                     {% endif %}

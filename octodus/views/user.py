@@ -448,6 +448,21 @@ def follow(name=None):
             return jsonify({'1':True})
 
 
+@user.route('/unfollow/<name>', methods=['POST', 'GET'])
+@login_required
+def unfollow(name=None):
+    if name:
+        followed = User.query.filter_by(username=name).first()
+    if not followed:
+        followed = User.query.get(name)
+    if followed and\
+         current_user != followed and followed in current_user.following:
+            current_user.following.remove(followed)
+            db.session.commit()
+       # return redirect(url_for('user.index'))
+            return jsonify({'1':True})
+
+
 @user.route('/project/<name>/adduser/<username>', methods=['POST', 'GET'])
 @login_required
 def project_adduser(name=None, username=None):
@@ -464,6 +479,25 @@ def project_adduser(name=None, username=None):
         db.session.commit()
        # return redirect(url_for('user.index'))
         return jsonify({'1':True})
+
+@user.route('/project/<name>/deluser/<username>', methods=['POST', 'GET'])
+@login_required
+def project_deluser(name=None, username=None):
+    if name:
+        project = Project.query.filter_by(name=name, owner=current_user).first()
+    if not name:
+        name = Project.query.get(name)
+    if username:
+        followed = User.query.filter_by(username=username).first()
+    if not username:
+        followed = User.query.get(username)
+    if followed in project.users:
+        project.users.remove(followed)
+        db.session.commit()
+       # return redirect(url_for('user.index'))
+        return jsonify({'1':True})
+
+
 
 
 

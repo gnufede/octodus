@@ -229,7 +229,7 @@ def project_tasks(name):
 
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            objects=project.tasks, 
-                            fields=['id','name','props', 'projects','sender', 'owner'], 
+                            fields=['id','name', 'created_at', 'props', 'projects','sender','owner'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             current_user=current_user, active=each_project.name)

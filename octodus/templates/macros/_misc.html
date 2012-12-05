@@ -93,21 +93,21 @@ from type import *
             {% if j != "_sa_instance_state" and j != "_labels" %}
                 {% if object[j] is not is_list %}
                     {% if j == 'id' %}
-                    <div class="taskid" style="display:none">{{ object[j] }}</div>
+                    <div class="taskid">{{ object[j] }}</div>
                     {% elif j == 'owner' %}
-                     <div class="owner pull-right" style='display:inline-block;margin-right:5px;'>
+                     <div class="owner pull-right">
                         {% if object.owner != current_user%}
                         <span class="owner_label label label-important draggable">{{ object.owner.username }}</span>
                         {% endif %}
                     </div>
                     {% elif j == 'sender' %}
-                     <div class="sender pull-right" style='display:inline-block;margin-right:5px;'>
+                     <div class="sender pull-right">
                         {% if object.sender != current_user%}
                         <span class="sender_label label draggable">{{ object.sender.username }}</span>
                         {% endif %}
                     </div>
                     {% elif j == 'created_at' %}
-                    <div class="timestamp" style="display:inline-block;">
+                    <div class="timestamp">
                         {% if object['finished'] != None %}
                         Finished
                         {% set j = 'finished' %}
@@ -117,18 +117,18 @@ from type import *
                         {% else %}
                         Added 
                         {% endif %}
-                    <abbr style='display:inline-block;' class="timeago timestamp" title={{ object[j].isoformat() }}> </abbr>
+                    <abbr class="timeago timestamp" title={{ object[j].isoformat() }}> </abbr>
                     </div>
                     {% elif j == 'email' %}
                     <div style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
                     {% else %}
                         {% if j == 'name' %}
                             {% if object.done == True %}
-                            <div class="taskname" style="display:inline-block;text-decoration:line-through;font-size:10pt;">{{ object[j] }}</div>
+                            <div class="taskname done">{{ object[j] }}</div>
                             {% elif object.owner != current_user%}
-                            <div class="taskname" style="display:inline-block;font-size:10pt;">{{ object[j] }}</div>
+                            <div class="taskname notowner">{{ object[j] }}</div>
                             {% else %}
-                            <div class="taskname" style='display:inline-block;font-weight:bold;font-size:10pt;'>{{ object[j] }}</div>
+                            <div class="taskname owner undone">{{ object[j] }}</div>
                             {% endif %}
                         {% else %}
                             
@@ -139,7 +139,7 @@ from type import *
                     {% endif %}
                 {% else %}
                     {% if j == 'projects'%}
-                    <div class="proj_label pull-right" style="min-height:20px;min-width:20%;display:inline-block;">
+                    <div class="proj_labels pull-right">
                         {% for proj in object[j] %}
                         {% if proj.owner == current_user %}
                     <span class="proj_label label label-info draggable clearfix" >{{ proj.name }}</span>
@@ -147,7 +147,7 @@ from type import *
                     {% endfor %}
                     </div>
                     {% elif j == 'props' %}
-                    <div style='display:inline-block; margin-right:20px;' class="pull-right"> 
+                    <div class="pull-right props"> 
                             {% if  object.get_props() > 0 %}
                             <span class="badge badge-success"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             {% else %}

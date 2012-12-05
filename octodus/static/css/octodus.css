@@ -5,8 +5,39 @@
   border-bottom-style: none;
   border-bottom: inherit;
 }
+.taskid{
+  display: none;
+}
+
+.owner,
+.sender,
+.timestamp,
+.timeago,
+.props, 
+.proj-label, 
+.proj-labels, 
+.taskname {
+  display: inline-block;
+}
 .taskname {
   font-size: 9pt;
+}
+.taskname.owner {
+  font-weight: bold;
+}
+.taskname.done {
+    text-decoration: line-through;
+}
+.proj_labels {
+    min-height:20px;
+    min-width:20%;
+}
+.props {
+    margin-right:20px;
+}
+.sender, 
+.owner {
+    margin-right:5px;
 }
 abbr[title], abbr[data-original-title]{
   border-bottom: inherit;

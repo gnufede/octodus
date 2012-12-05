@@ -139,7 +139,7 @@ from type import *
                     {% endif %}
                 {% else %}
                     {% if j == 'projects'%}
-                    <div class="proj_label pull-right" style="min-height:20px;min-width:25%;display:inline-block;">
+                    <div class="proj_label pull-right" style="min-height:20px;min-width:20%;display:inline-block;">
                         {% for proj in object[j] %}
                         {% if proj.owner == current_user %}
                     <span class="proj_label label label-info draggable clearfix" >{{ proj.name }}</span>

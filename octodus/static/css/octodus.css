@@ -5,6 +5,9 @@
   border-bottom-style: none;
   border-bottom: inherit;
 }
+.taskname {
+  font-size: 9pt;
+}
 abbr[title], abbr[data-original-title]{
   border-bottom: inherit;
 }

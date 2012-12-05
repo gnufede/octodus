@@ -75,15 +75,15 @@ from type import *
             {% if object.owner == current_user %}
             <div class="actions pull-right btn-group" style="display:inline-block;padding:0;">
             {% for action in actions %}
-            <div class="actions clearfix btn " style='display:inline-block;padding-top:0;padding-bottom:0;'><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i onClick="return _action($(this).parent());" class="{{action[2]}}"></i>
+            <div class="action clearfix btn " style='display:inline-block;padding:0 8px 0 8px;'><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}}"></i>
             </span></div>
             {% endfor %}
             </div>
             {% else %}
             <div class="actions pull-right btn-group disabled" style="display:inline-block;padding:0;">
             {% for action in actions %}
-            <div class="actions clearfix btn disabled" style='display:inline-block;padding-top:0;padding-bottom:0;'><a onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+            <div class="action clearfix btn disabled" style='display:inline-block;padding:0 8px 0 8px;'><a onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
                     <i onClick="return _action($(this).parent());" class="disabled {{action[2]}}"></i>
             </a></div>
             {% endfor %}

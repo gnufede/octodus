@@ -213,6 +213,7 @@
     {
         if (node.attr('title') == "Enviar"){
             setTaskToSend(node.attr('href'))
+            $('#tasknametosend').text(node.parent().parent().parent().children('.taskname').text());
             $('#myModal').modal();
             // node.children().first().removeClass('icon-envelope');
             // node.parent().parent().parent().remove();

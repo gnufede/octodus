@@ -185,11 +185,12 @@ def unset_project_tasks(name, task_id):
         if proj_name.match(each_project.name):
             project = each_project
             task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
-            project.tasks.remove(task)
-            db.session.commit()
+            if task in project.tasks:
+                project.tasks.remove(task)
+                db.session.commit()
             in_project = None
             for project in current_user.projects:
-                if task not in project:
+                if task in project.tasks:
                     in_project = True
             if not in_project: 
                 inbox = [proj for proj in current_user.projects 
@@ -322,16 +323,20 @@ def new_task(name=None):
 
     if request.method == 'POST' or name:
         if owner != current_user:
-            if owner not in current_user.following or\
-               current_user not in owner.following: #FIXME: or followers?
+            if owner not in current_user.getContacts():
                 return redirect(url_for('user.tasks'))
             else:
                 current_user.points = current_user.points - 5
         newtask = Task(name=form.name.data, owner=owner, sender=current_user)
-        inbox = [project for project in owner.projects
+        inbox = [project for project in current_user.projects
                  if project.name=='Inbox']
         if inbox:
             newtask.projects.append(inbox[0])
+        if owner != current_user:
+            inbox = [project for project in owner.projects
+                 if project.name=='Inbox']
+            if inbox and inbox not in newtask.projects:
+                newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
         return jsonify({'1':True})

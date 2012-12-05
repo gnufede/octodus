@@ -59,11 +59,14 @@
     $("#showhide_done").button();
     $("#showhide_done").click(function() {
         if ($("#showhide_done").hasClass('active')){
-            $('.taskdone').css('display','inherit');
+           $('.taskdone').fadeIn();//css('display','inherit');
+           //$('.taskdone').show( 'blind', {}, 500, {} );
             $("#showhide_done").removeClass('active');
         }
         else{
-            $('.taskdone').css('display','none');
+            $('.taskdone').fadeOut();//css('display','none');
+           //$('.taskdone').hide( 'blind', {}, 500, {} );
+            //$('.taskdone').css('display','none');
             $("#showhide_done").addClass('active');
         }
         });

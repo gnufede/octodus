@@ -5,10 +5,24 @@
   border-bottom-style: none;
   border-bottom: inherit;
 }
-.taskid{
+.taskid {
   display: none;
 }
 
+.taskdiv {
+min-height: 25px;
+border-top-style: solid;
+border-width: 1px;
+border-color: #E9E9E9;
+padding-top: 5px;
+padding-bottom: 2px;
+}
+
+.actions{
+padding:0;
+}
+
+.actions,
 .owner,
 .sender,
 .timestamp,

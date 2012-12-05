@@ -122,6 +122,15 @@ class User(db.Model, UserMixin):
         q = reduce(db.and_, criteria)
         return cls.query.filter(q)
 
+    def getContactNames(self):
+        return [contact.username for contact in self.following 
+                    if self in contact.following]
+
+    def getContacts(self):
+        return [contact for contact in self.following 
+                    if self in contact.following]
+
+
 
 class Task(db.Model):
     __tablename__ = "tasks"

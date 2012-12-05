@@ -155,26 +155,6 @@
         else return true;
         }
 
-    function _action(node)
-    {
-        url = node.attr('href');
-        if (node.attr('title') == "Comenzar"){
-             node.children().first().removeClass('icon-play');
-             node.children().first().addClass('icon-pause');
-         }
-        $.ajax({
-            url:url
-            }).done(function() { 
-            if (node.attr('title') == "Borrar"){
-                node.parent().parent().parent().remove();
-            }
-            if (node.attr('title') == "Marcar terminada"){
-                 document.location.reload();
-            }
-        });
-        return true;
-    }
-
     function _onBlur(node, defaultText, isProject)
     {
         if (isProject){
@@ -224,5 +204,56 @@
     { 
         return checkEnter();
     }
+
+
+    var task_to_send = '';
+    var username_to_send = '';
+
+    function _action(node)
+    {
+        if (node.attr('title') == "Enviar"){
+            setTaskToSend(node.attr('href'))
+            $('#myModal').modal();
+            // node.children().first().removeClass('icon-envelope');
+            // node.parent().parent().parent().remove();
+         }else{
+        url = node.attr('href');
+        if (node.attr('title') == "Comenzar"){
+             node.children().first().removeClass('icon-play');
+             node.children().first().addClass('icon-pause');
+         }
+        $.ajax({
+            url:url
+            }).done(function() { 
+            if (node.attr('title') == "Borrar"){
+                node.parent().parent().parent().remove();
+            }
+            if (node.attr('title') == "Marcar terminada"){
+                 document.location.reload();
+            }
+        });
+        }
+        return true;
+    }
+
+
+    function setTaskToSend(id){
+        task_to_send = id;
+    }
+
+    function setUserToSend(id){
+        username_to_send = id;
+    }
+
+    function sendTask(){
+      $.ajax({
+          url:'/user/tasks/send'+task_to_send+'/'+username_to_send
+             }).done(function() { 
+                 document.location.reload();
+        });
+    }
+
+
+
 </script>
 {% endblock %}

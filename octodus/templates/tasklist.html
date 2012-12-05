@@ -21,10 +21,33 @@
     
     {{ render_tasklist(objects,'table-hover', headers, fields, delete, no_set_delete, actions, current_user) }}
 </div>
+ 
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Delegar tarea</h3>
+  </div>
+  <div class="modal-body">
+    <p>One fine body…</p>
+                <div id="newownerdiv" class="input" style="display:inline-block;" >
+                    <select class="xlarge" id="newtaskowner" name="name"
+                        type="text"></select>
+                </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-primary"
+        onClick="setUserToSend($('#newtaskowner').val());return sendTask();" >Send</button>
+  </div>
+</div>
+
+
 {% endblock %}
 
 {% block append_js %}
 <script>
+
     $('#tasks').addClass('active');
     $('#{{ active }}').addClass('active');
 
@@ -74,9 +97,15 @@
                  document.location.reload();
         });
 }});
+    var contacts ={{ contacts|safe }}; 
 
-             //   $( this )
-             //       .addClass( "success" );
+    $.each(contacts, function(key, value) {   
+     $('#newtaskowner')
+          .append($('<option>', { value : key })
+          .text(value)); 
+    });
+
+
     });
     </script>
 {% endblock %}

@@ -72,6 +72,7 @@ from type import *
         {% endif %}
         <div class="taskdiv" style="min-height:25px;border-top-style:solid;border-width:1px;border-color:#e9e9e9;padding-top:5px;padding-bottom:2px;">
 
+            {% if object.owner == current_user %}
             <div class="actions pull-right btn-group" style="display:inline-block;padding:0;">
             {% for action in actions %}
             <div class="actions clearfix btn " style='display:inline-block;padding-top:0;padding-bottom:0;'><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
@@ -79,11 +80,26 @@ from type import *
             </span></div>
             {% endfor %}
             </div>
+            {% else %}
+            <div class="actions pull-right btn-group disabled" style="display:inline-block;padding:0;">
+            {% for action in actions %}
+            <div class="actions clearfix btn disabled" style='display:inline-block;padding-top:0;padding-bottom:0;'><a onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i onClick="return _action($(this).parent());" class="disabled {{action[2]}}"></i>
+            </a></div>
+            {% endfor %}
+            </div>
+            {% endif %}
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
                 {% if object[j] is not is_list %}
                     {% if j == 'id' %}
                     <div class="taskid" style="display:none">{{ object[j] }}</div>
+                    {% elif j == 'owner' %}
+                     <div class="owner pull-right" style='display:inline-block;margin-right:5px;'>
+                        {% if object.owner != current_user%}
+                        <span class="owner_label label label-important draggable">{{ object.owner.username }}</span>
+                        {% endif %}
+                    </div>
                     {% elif j == 'sender' %}
                      <div class="sender pull-right" style='display:inline-block;margin-right:5px;'>
                         {% if object.sender != current_user%}
@@ -96,6 +112,8 @@ from type import *
                         {% if j == 'name' %}
                             {% if object.done == True %}
                             <div class="taskname" style="display:inline-block;text-decoration:line-through;font-size:10pt;">{{ object[j] }}</div>
+                            {% elif object.owner != current_user%}
+                            <div class="taskname" style="display:inline-block;font-size:10pt;">{{ object[j] }}</div>
                             {% else %}
                             <div class="taskname" style='display:inline-block;font-weight:bold;font-size:10pt;'>{{ object[j] }}</div>
                             {% endif %}
@@ -106,8 +124,10 @@ from type import *
                 {% else %}
                     {% if j == 'projects'%}
                     <div class="proj_label pull-right" style="min-width:25%;display:inline-block;">
-                    {% for proj in object[j] %}
+                        {% for proj in object[j] %}
+                        {% if proj.owner == current_user %}
                     <span class="proj_label label label-info draggable clearfix" >{{ proj.name }}</span>
+                    {% endif %}
                     {% endfor %}
                     </div>
                     {% elif j == 'props' %}

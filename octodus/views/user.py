@@ -18,11 +18,14 @@ from sqlalchemy import Date, cast
 import re
 import math
 from random import randint
+import json
 #import datetime
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
 
+
+               
 
 
 @user.route('/')
@@ -184,7 +187,11 @@ def unset_project_tasks(name, task_id):
             task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
             project.tasks.remove(task)
             db.session.commit()
-            if len(task.projects) == 0: 
+            in_project = None
+            for project in current_user.projects:
+                if task not in project:
+                    in_project = True
+            if not in_project: 
                 inbox = [proj for proj in current_user.projects 
                          if proj.name == 'Inbox']
                 inbox[0].tasks.append(task)
@@ -211,10 +218,17 @@ def project_tasks(name):
         for each_project in current_user.projects:
             if proj_name.match(each_project.name):
                 project = each_project
+
+                contacts = dict()
+                for contact in current_user.following:
+                    if current_user in contact.following:
+                        contacts[str(contact.id)] = contact.username
+
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            objects=project.tasks, 
-                            fields=['id','name','props', 'projects','sender'], 
-                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
+                            fields=['id','name','props', 'projects','sender', 'owner'], 
+                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
+                           contacts=json.dumps(contacts),
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
@@ -235,12 +249,17 @@ def tasks(name=None, done=None):
                 done_tasks.append(task)
         tasks = done_tasks
         active = "Done"
+    contacts = dict()
+    for contact in user.following:
+        if current_user in contact.following:
+            contacts[str(contact.id)] = contact.username
 
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            objects=tasks, 
                             fields=['id','name','props', 'projects','sender'], 
-                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
+                           contacts=json.dumps(contacts),
                             current_user=current_user)
 
 @user.route('/tasks/done')
@@ -260,6 +279,32 @@ def public():
 @user.route('/Inbox/')
 def inbox():
         return redirect('user/tasks/Inbox')
+
+
+@user.route('/tasks/send/<taskid>/<userid>', methods=['POST', 'GET'])
+@login_required
+def send_task(taskid=None, userid=None):
+    if taskid:
+        task = Task.query.filter_by(name=userid, owner=current_user).first()
+    if not task:
+        task = Task.query.get(taskid)
+    if userid:
+        followed = User.query.filter_by(username=userid).first()
+    if not followed:
+        followed = User.query.get(userid)
+    if task and (task.owner == current_user) and\
+       followed and followed!=current_user and\
+       (followed in current_user.getContacts()):
+        if current_user.points > 5 :
+            task.owner = followed
+            current_user.points = current_user.points - 5
+            owner = followed
+            inbox = [project for project in owner.projects
+                 if project.name=='Inbox']
+            if inbox:
+                task.projects.append(inbox[0])
+            db.session.commit()
+            return jsonify({'1':True})
 
 
 @user.route('/tasks/new/<name>', methods=['POST', 'GET'])
@@ -471,11 +516,11 @@ def unfollow(name=None):
 def project_adduser(name=None, username=None):
     if name:
         project = Project.query.filter_by(name=name, owner=current_user).first()
-    if not name:
-        name = Project.query.get(name)
+    if not project:
+        project = Project.query.get(name)
     if username:
         followed = User.query.filter_by(username=username).first()
-    if not username:
+    if not followed:
         followed = User.query.get(username)
     if followed not in project.users:
         project.users.append(followed)

@@ -34,7 +34,7 @@
         var proj_label = $(this).parent();
         var proj_name = proj_label.text();
         proj_name = proj_name.replace('×','')
-        var task = proj_label.parent().siblings().first();
+        var task = proj_label.parent().siblings().first().next();
         $.ajax({
             url:'/user/project/'+proj_name+'/unset/'+task.text()
              }).done(function() { 

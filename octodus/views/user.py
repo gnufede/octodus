@@ -212,7 +212,8 @@ def project_tasks(name):
             if proj_name.match(each_project.name):
                 project = each_project
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
-                           objects=project.tasks, fields=['id','name','sender','projects','props'], 
+                           objects=project.tasks, 
+                            fields=['id','name','props', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
@@ -236,7 +237,8 @@ def tasks(name=None, done=None):
         active = "Done"
 
     return render_template('tasklist.html', title="Tareas", headers=False, 
-                           objects=tasks, fields=['id','name','sender', 'projects','props'], 
+                           objects=tasks, 
+                            fields=['id','name','props', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Borrar', 'del', 'icon-trash']],
                            active=active,
                             current_user=current_user)

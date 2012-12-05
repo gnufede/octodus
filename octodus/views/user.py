@@ -184,10 +184,12 @@ def unset_project_tasks(name, task_id):
     for each_project in current_user.projects:
         if proj_name.match(each_project.name):
             project = each_project
-            task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
+            task = Task.query.filter_by(id=task_id).first_or_404()
             if task in project.tasks:
                 project.tasks.remove(task)
                 db.session.commit()
+                if task.owner != current_user:
+                    return jsonify({'1':True})
             in_project = None
             for project in current_user.projects:
                 if task in project.tasks:
@@ -257,7 +259,7 @@ def tasks(name=None, done=None):
 
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            objects=tasks, 
-                            fields=['id','name','props', 'projects','sender'], 
+                            fields=['id','name', 'created_at', 'props', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            contacts=json.dumps(contacts),
@@ -315,10 +317,17 @@ def send_task(taskid=None, userid=None):
 def new_task(name=None):
     form = TaskForm()
     owner = current_user
+    project = None
     if name:
         if name[0] == '@' and current_user.points > 5:
             username, space, name = name[1:].partition(' ')
             owner = User.query.filter_by(username=username).first()
+        elif name[0] == '+': 
+            project_name, space, name = name[1:].partition(' ')
+            proj_name = re.compile('^'+project_name+'$', re.I)
+            for each_project in current_user.projects:
+                if proj_name.match(each_project.name):
+                    project = each_project
         form.name.data = name;
 
     if request.method == 'POST' or name:
@@ -328,15 +337,18 @@ def new_task(name=None):
             else:
                 current_user.points = current_user.points - 5
         newtask = Task(name=form.name.data, owner=owner, sender=current_user)
-        inbox = [project for project in current_user.projects
-                 if project.name=='Inbox']
-        if inbox:
-            newtask.projects.append(inbox[0])
-        if owner != current_user:
-            inbox = [project for project in owner.projects
-                 if project.name=='Inbox']
-            if inbox and inbox not in newtask.projects:
+        if project:
+            newtask.projects.append(project)
+        else:
+            inbox = [project for project in current_user.projects
+                        if project.name=='Inbox']
+            if inbox:
                 newtask.projects.append(inbox[0])
+            if owner != current_user:
+                inbox = [project for project in owner.projects
+                     if project.name=='Inbox']
+                if inbox and inbox not in newtask.projects:
+                    newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
         return jsonify({'1':True})

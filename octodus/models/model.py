@@ -155,6 +155,14 @@ class Task(db.Model):
     def get_props(self):
         return sum([prop.points for prop in self.props])
 
+    def get_propped_users(self):
+        usernames = [prop.propped_users.username for prop in self.props]
+        tostring = '';
+        for user in usernames:
+            tostring += user+','
+        return tostring[:-1]
+
+
 
 
 

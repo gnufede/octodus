@@ -106,6 +106,19 @@ from type import *
                         <span class="sender_label label draggable">{{ object.sender.username }}</span>
                         {% endif %}
                     </div>
+                    {% elif j == 'created_at' %}
+                    <div class="timestamp" style="display:inline-block;">
+                        {% if object['finished'] != None %}
+                        Finished
+                        {% set j = 'finished' %}
+                        {% elif object['begin'] != None %}
+                        Started 
+                        {% set j = 'begin' %}
+                        {% else %}
+                        Added 
+                        {% endif %}
+                    <abbr style='display:inline-block;' class="timeago timestamp" title={{ object[j].isoformat() }}> </abbr>
+                    </div>
                     {% elif j == 'email' %}
                     <div style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
                     {% else %}
@@ -118,7 +131,10 @@ from type import *
                             <div class="taskname" style='display:inline-block;font-weight:bold;font-size:10pt;'>{{ object[j] }}</div>
                             {% endif %}
                         {% else %}
+                            
+                        {% if object[j] != None%}
                         <div style='display:inline-block;'>{{ object[j] }}</div>
+                        {% endif %}
                         {% endif %}
                     {% endif %}
                 {% else %}
@@ -133,7 +149,7 @@ from type import *
                     {% elif j == 'props' %}
                     <div style='display:inline-block; margin-right:20px;' class="pull-right"> 
                             {% if  object.get_props() > 0 %}
-                           <span class="badge badge-success">
+                            <span class="badge badge-success"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             {% else %}
                            <span class="badge badge-inverse">
                             {% endif %}

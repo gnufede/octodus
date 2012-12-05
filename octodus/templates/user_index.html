@@ -162,7 +162,7 @@
             url:url
             }).done(function() { 
             if (node.attr('title') == "Borrar"){
-                node.parent().parent().remove();
+                node.parent().parent().parent().remove();
             }
             if (node.attr('title') == "Marcar terminada"){
                  document.location.reload();

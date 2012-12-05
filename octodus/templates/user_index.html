@@ -158,6 +158,10 @@
     function _action(node)
     {
         url = node.attr('href');
+        if (node.attr('title') == "Comenzar"){
+             node.children().first().removeClass('icon-play');
+             node.children().first().addClass('icon-pause');
+         }
         $.ajax({
             url:url
             }).done(function() { 

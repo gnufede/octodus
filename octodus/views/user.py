@@ -303,7 +303,8 @@ def task_start(id):
             task.begin = datetime.datetime.now()
             db.session.commit()
             return jsonify({'1':True})
-    return redirect(url_for('user.tasks'))
+    return jsonify({'1':False})
+
 
 @user.route('/tasks/do/<id>')
 @login_required

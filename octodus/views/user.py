@@ -233,9 +233,10 @@ def project_tasks(name):
                         contacts[str(contact.id)] = contact.username
                 tasks = sorted(project.tasks, key=lambda task: task.modified, reverse=True)
                 tasks = sorted(tasks, key=lambda task: task.get_props(), reverse=True)
+                #tasks = sorted(tasks, key=lambda task: task.earned_points, reverse=True)
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'created_at', 'props', 'projects','sender','owner'], 
+                            fields=['id','name', 'created_at', 'props', 'earned_points', 'projects','sender', 'owner'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
@@ -258,6 +259,32 @@ def followers():
 def following():
     return redirect('user/contacts/following')
 
+@user.route('/users/')
+@user.route('/users/search/<query>')
+@login_required
+def users(query=None):
+    active=None
+    timeline=current_user.timeline()
+    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    if not query:
+        users = User.query.all()
+    else:
+        users = User.query.all()
+ #       users = User.search(query).paginate(1,1)
+    contacts = sorted(users, key=lambda contact: contact.points, reverse=True)
+    return render_template('userlist.html', title="Contactos", headers=False, 
+                           objects=contacts, 
+                            fields=['id','username','points', 'projects'], 
+                            actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                           active=active,
+                           cls='userlist',
+                            timeline=timeline,
+                            timeline_fields=timeline_fields,
+                            timeline_actions=timeline_actions,
+                           contacts=[],
+                           project=None,
+                            current_user=current_user)
 
 @user.route('/contacts/')
 @user.route('/contacts/<name>')
@@ -283,10 +310,10 @@ def contacts(name=None):
                 project = each_project
         contacts = current_user.getContacts(name)
         
-    timeline=current_user.timeline()
+    contacts = sorted(contacts, key=lambda contact: contact.points, reverse=True)
     return render_template('userlist.html', title="Contactos", headers=False, 
                            objects=contacts, 
-                            fields=['id','username','email', 'points', 'projects'], 
+                            fields=['id','username','points', 'projects'], 
                             actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
                            active=active,
                            cls='userlist',
@@ -324,10 +351,11 @@ def tasks(name=None, done=None):
 
     tasks = sorted(tasks, key=lambda task: task.modified, reverse=True)
     tasks = sorted(tasks, key=lambda task: task.get_props(), reverse=True)
+    #tasks = sorted(tasks, key=lambda task: task.earned_points, reverse=True)
     timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'created_at', 'props', 'projects','sender'], 
+                            fields=['id','name', 'created_at', 'props', 'earned_points', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',
@@ -568,6 +596,7 @@ def list():
 
 
 @user.route('/profile', methods=['GET'])
+@user.route('/users/<name>', methods=['POST', 'GET'])
 @user.route('/<name>', methods=['POST', 'GET'])
 def pub(name=None):
     form = FollowForm()

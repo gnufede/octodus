@@ -110,8 +110,13 @@ from type import *
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% endif %}
                     </div>
+                    {% elif j == 'earned_points' and object.done %}
+                    <div class="pull-right points {{class}}"> 
+                            <span class="badge badge-success {{class}}"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
+                            +{{ object.earned_points }}</span></div>
+                    {% elif j =='earned_points' %}
                     {% elif j == 'sender' %}
-                     <div class="sender pull-right {{ class }}">
+                     <div class="sender {{ class }}">
                         {% if object.sender != current_user%}
                         <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable {{ class }}">{{ object.sender.username }}</a>
                         {% endif %}
@@ -151,7 +156,11 @@ from type import *
                     {% endif %}
                 {% else %}
                     {% if j == 'projects'%}
+                    {% if class == 'timeline'%}
                     <div class="proj_labels pull-right {{class}}">
+                    {% else %}
+                    <div class="proj_labels {{class}}">
+                    {% endif %}
                         {% set proj_label = 'proj_label'%}
                         {% if object.owner == current_user %}
                         {% for proj in object[j] %}
@@ -160,7 +169,7 @@ from type import *
                         {% set proj_label = proj_label+' this_project'%}
                         {% endif %}
                         {% if proj.owner == current_user %}
-                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}</span>
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}<a class="label label-info close">&times;</a></span>
                         {% else %}
                         <span class="{{proj_label}} owned others label clearfix {{class}}" >{{ proj.name }}</span>
                         {% endif %}
@@ -180,8 +189,12 @@ from type import *
                     </div>
                     {% elif j == 'props' %}
                     <div class="pull-right props {{class}}"> 
-                            {% if  object.get_props() > 0 %}
-                            <span class="badge badge-success {{class}}"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
+                        {% if  object.get_props() > 0 %}
+                        {% set prop_placement = 'top' %}
+                        {% if class == 'timeline' %}
+                        {% set prop_placement = 'left' %}
+                        {% endif %}
+                        <span class="badge badge-inverse {{class}} launchpopover"  rel="popover" data-placement="{{prop_placement}}" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             {% else %}
                            <span class="badge badge-inverse {{class}}">
                             {% endif %}
@@ -220,7 +233,8 @@ from type import *
             <div class="actions pull-right btn-group {{ class }}">
                 {% for action in actions %}
                 {% if ('unfollow' in action[2] and object not in current_user.following)
-                  or ('unfollow' not in action[2] and object in current_user.following)
+                or ('unfollow' not in action[2] and object in current_user.following)
+                or (current_user == object)
                 %}
             <div class="action clearfix btn disabled {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
                     <i class="{{action[2]}} disabled {{ class }}"></i>
@@ -242,16 +256,16 @@ from type import *
                     {% elif j == 'points' %}
                             <div class="points badge badge-success {{class}}">{{ object[j] }}</div>
                     {% elif j == 'username' %}
-                    <div class="username {{class}}"><a href="{{ object[j] }}">{{ object[j] }}</a></div>
+                    <div class="username {{class}}"><a href="/user/{{ object[j] }}">{{ object[j] }}</a></div>
                     {% elif object[j] != None%}
                         <div class="{{class}} field"style='display:inline-block;'>{{ object[j] }}</div>
                     {% endif %}
                 {% else %}
                     {% if j == 'projects'%}
-                    <div class="proj_labels pull-right {{class}}">
+                    <div class="proj_labels  {{class}}">
                         {% set proj_label = 'proj_label'%}
                         {% for proj in current_user.getProjs(object) %}
-                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}</span>
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}<a class="label label-info close">&times;</a></span>
                         {% endfor %}
                     </div>
                     {% else %}

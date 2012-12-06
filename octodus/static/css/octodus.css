@@ -37,8 +37,10 @@
   margin-bottom: 3px;
 }
 .proj_labels {
+    clear: both;
+    overflow: hidden;
     min-height:20px;
-   // min-width:20%;
+    min-width:40%;
    margin-right:6px;
 }
 .userid, 
@@ -65,6 +67,10 @@ min-height: 35px;
 padding:0 8px 0 8px;
 }
 
+.points,
+.props{
+    margin-left: 5px;
+}
 .actions{
     margin-left: 10px;
 padding:0;
@@ -75,6 +81,17 @@ padding:0;
 min-height:15px;
 }
 
+a.label.close {
+color:white;
+float:inherit;
+padding-top:0;
+padding-bottom:0;
+padding-right:2px;
+opacity:0.4;
+}
+a.label.close:hover {
+opacity:1;
+}
 
 .action,
 .actions,
@@ -82,9 +99,9 @@ min-height:15px;
 .sender,
 .timestamp,
 .timeago,
+.points, 
 .props, 
-.proj-label, 
-.proj-labels, 
+.proj_label, 
 .username,
 .taskname {
   display: inline-block;

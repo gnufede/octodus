@@ -71,14 +71,17 @@
 {% block append_js %}
 <script>
 
-    $('#contacts').addClass('active');
+    $('#users').addClass('active');
     $('#{{ active }}').addClass('active');
 
+/*
+    $(".proj_label.label.label-info").append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
     $(".proj_label.label.label-info").hover(function() {
         $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
         }, function() {
             $(".close").remove();
         });
+    */
     $("#showhide_done").button();
     $("#showhide_done").click(function() {
         if ($("#showhide_done").hasClass('active')){
@@ -114,7 +117,7 @@
    // });
     $(function() {
     jQuery("abbr.timeago").timeago();
-    $('.badge-success').popover();
+    $('.launchpopover').popover();
         $( ".project" ).draggable({helper: 'clone'});
         $( ".label" ).draggable();
         $( ".droppable" ).droppable({

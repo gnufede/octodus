@@ -74,11 +74,14 @@
     $('#tasks').addClass('active');
     $('#{{ active }}').addClass('active');
 
+/*
+    $(".proj_label.label.label-info").append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
     $(".proj_label.label.label-info").hover(function() {
         $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
         }, function() {
             $(".close").remove();
         });
+    */
     $("#showhide_done").button();
     $("#showhide_done").click(function() {
         if ($("#showhide_done").hasClass('active')){
@@ -114,7 +117,7 @@
    // });
     $(function() {
     jQuery("abbr.timeago").timeago();
-    $('.badge-success').popover();
+    $('.launchpopover').popover();
         $( ".project" ).draggable({helper: 'clone'});
         $( ".label" ).draggable();
         $( ".droppable" ).droppable({
@@ -122,11 +125,12 @@
     var task_id =  $(this).attr('id');
     var indexof_ = task_id.indexOf('_')+1;
     var id = task_id.substr(indexof_, task_id.length);
+    var type = task_id.substr(0, indexof_-1);
     var project_name = $(ui.draggable).text().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     //window.location.href = 
-    var action = 'set';
-    if ($('this').hasClass('userlist')){
-        action = 'adduser';
+    var action = 'adduser';
+    if ( type==="task"){
+        action = 'set';
     }
      url='/user/project/'+project_name+'/'+action+'/'+id;
 

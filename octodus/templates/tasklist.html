@@ -5,7 +5,19 @@
 {% extends "user_index.html" %}
 
 {% block body %}
-<div class="btn-toolbar span9 pull-right"> <!--navbar navbar-inner navbar-form -->
+<div class="btn-toolbar span9"> <!--navbar navbar-inner navbar-form -->
+    <div id="newtask" class="input pull-left" style="display:inline-block;" >
+                    <input class="input-xxlarge" id="newtaskname" name="name"
+                    style="display:inline-block;" type="text" value="Nueva tarea"
+                    
+            onKeyPress="return _onKeyPress();" 
+            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+            '/user/tasks/new/', false);"
+            onFocus="$(this).val('');;">
+            <!--onBlur="return _onBlur($(this), 'Nueva tarea', false)"-->
+                    
+                </div>
+
         <button id="showhide_done" type="button" class="btn pull-right" data-toggle="buttons-checkbox">Hide done tasks</button>
     </div>
 <div class="span6">

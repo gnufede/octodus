@@ -51,7 +51,18 @@
           <div class="nav-collapse collapse">
       	  <ul class="nav pull-right">
               {% if current_user.is_authenticated() %}
-                  <li><a class="badge badge-success brand" style="color:white; margin-top:3px; margin-right:20px;"> {{current_user.points}} puntos </a></li>
+              <li>
+                    <form class="form-search navbar-search" action="">
+                    <input class="xlarge" id="globalnewtaskname" name="name"
+                    style="display:inline-block;" type="text" value="New Task"
+                    
+            onKeyPress="return _onKeyPress();" 
+            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+            '/user/tasks/new/', false);"
+            onFocus="$(this).val('');;">
+        </form>
+        </li>
+                  <li><a class="badge badge-success brand" style="color:white; margin:3px 20px;"> {{current_user.points}} puntos </a></li>
                   <li class="dropdown">
                   <a href="#" class="dropdown-toggle brand" data-toggle="dropdown">{{ current_user.username }} 
                       <b class="caret"></b>
@@ -105,19 +116,6 @@
                 {% from 'macros/_misc.html' import render_flash_message %}
                 {{ render_flash_message() }}
                 <h1 style="display:inline-block">{{ page_title }}</h1>
-                {% if current_user.is_authenticated() %}
-                <div id="newtask" class="input pull-right" style="display:inline-block;" >
-                    <input class="xlarge" id="newtaskname" name="name"
-                    style="display:inline-block;" type="text" value="Nueva tarea"
-                    
-            onKeyPress="return _onKeyPress();" 
-            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
-            '/user/tasks/new/', false);"
-            onFocus="$(this).val('');;">
-            <!--onBlur="return _onBlur($(this), 'Nueva tarea', false)"-->
-                    
-                </div>
-                {% endif %}
             </div>
 
             <div class="row-fluid">

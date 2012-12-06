@@ -127,15 +127,15 @@ from type import *
                     </div>
                     {% elif j == 'created_at' %}
                         {% if object['finished'] != None %}
-                        <div class="timestamp finished {{ class }}">
+                        <div class="timestamp pull-right finished {{ class }}">
                         Finished
                         {% set j = 'finished' %}
                         {% elif object['begin'] != None %}
-                        <div class="timestamp started {{ class }}">
+                        <div class="timestamp pull-right started {{ class }}">
                         Started 
                         {% set j = 'begin' %}
                         {% else %}
-                        <div class="timestamp added {{ class }}">
+                        <div class="timestamp pull-right added {{ class }}">
                         Added 
                         {% endif %}
                     <abbr class="timeago timestamp {{ class }}" title={{ object[j].isoformat() }}> </abbr>

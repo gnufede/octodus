@@ -218,7 +218,7 @@ def project_tasks(name):
     project = None
     proj_name = re.compile('^'+name+'$', re.I)
     timeline=current_user.timeline(name)
-    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_fields=['id','owner','props', 'created_at',  'name', 'projects']
     timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if proj_name.match('done'):
         return redirect(url_for('user.done'))
@@ -236,7 +236,7 @@ def project_tasks(name):
                 #tasks = sorted(tasks, key=lambda task: task.earned_points, reverse=True)
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'created_at', 'props', 'earned_points', 'projects','sender', 'owner'], 
+                            fields=['id','name', 'props', 'earned_points', 'created_at', 'projects','sender', 'owner'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
@@ -265,7 +265,7 @@ def following():
 def users(query=None):
     active=None
     timeline=current_user.timeline()
-    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if not query:
         users = User.query.all()
@@ -301,7 +301,7 @@ def contacts(name=None):
         contacts = current_user.followers
         name = None
     timeline=current_user.timeline(name)
-    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if name:
         proj_name = re.compile('^'+name+'$', re.I)
@@ -330,7 +330,7 @@ def contacts(name=None):
 @login_required
 def tasks(name=None, done=None):
     active = None
-    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if name:
         user = User.query.filter_by(username=name).first()
@@ -355,7 +355,7 @@ def tasks(name=None, done=None):
     timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'created_at', 'props', 'earned_points', 'projects','sender'], 
+                            fields=['id','name', 'props', 'earned_points',  'created_at', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',

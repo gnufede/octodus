@@ -73,7 +73,16 @@
                 	 <ul class="nav">
                 	  <li id='tasks' ><a href="/user/tasks">Tasks</a></li>
                 	  <li id='profile' ><a href="/user/profile">Profile</a></li>
-                	  <li id='timeline' ><a href="/user/timeline">Timeline</a></li>
+                        <li id='contacts' class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contacts
+                            <b class="caret"></b>
+                        </a>
+                      <ul class="dropdown-menu">
+                          <li><a href="/user/contacts">Contacts</a></li>
+                          <li><a href="/user/contacts/following">Following</a></li>
+                          <li><a href="/user/contacts/followers">Followers</a></li>
+                      </ul>
+                      </li>
                     </ul>
                     <form class="pull-left form-search navbar-search" action="{{ url_for('frontend.search') }}">
                         <input class="search-query" type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />

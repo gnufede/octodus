@@ -5,11 +5,50 @@
   border-bottom-style: none;
   border-bottom: inherit;
 }
+.timestamp.timeline.finished{
+  color: #e77;
+}
+
+.timestamp.timeline.started{
+  color: #7e7;
+}
+
+.timestamp.timeline.added{
+  color: #77e;
+}
+
+.timeline.proj_label{
+  margin: 1px;
+  margin-top: 4px;
+}
+.timeline.owner_label{
+  font-weight: bold;
+  font-size: 11pt;
+}
+.timeline.taskname {
+    overflow: hidden;
+  min-width: 35%;
+  margin-bottom: 3px;
+}
+.timeline.proj_labels {
+    clear: both;
+    overflow: hidden;
+  min-width: 15%;
+  margin-bottom: 3px;
+}
+.proj_labels {
+    min-height:20px;
+   // min-width:20%;
+   margin-right:6px;
+}
+.userid, 
 .taskid {
   display: none;
 }
 
+.userdiv,
 .taskdiv {
+    overflow: hidden;
 min-height: 25px;
 border-top-style: solid;
 border-width: 1px;
@@ -18,14 +57,20 @@ padding-top: 5px;
 padding-bottom: 2px;
 }
 
+.taskdiv.timeline {
+min-height: 35px;
+}
+
 .action{
 padding:0 8px 0 8px;
 }
 
 .actions{
+    margin-left: 10px;
 padding:0;
 }
 
+.user,
 .task{
 min-height:15px;
 }
@@ -40,24 +85,32 @@ min-height:15px;
 .props, 
 .proj-label, 
 .proj-labels, 
+.username,
 .taskname {
   display: inline-block;
+}
+.email {
+  font-size: 9pt;
+}
+.username {
+  font-size: 11pt;
 }
 .taskname {
   font-size: 9pt;
 }
+.username,
 .taskname.owner {
   font-weight: bold;
 }
-.taskname.done {
+.taskname.tasklist.done {
     text-decoration: line-through;
 }
-.proj_labels {
-    min-height:20px;
-    min-width:20%;
+
+.this_project {
+    background-color: #08e;
 }
-.props {
-    margin-right:20px;
+.actions.timeline {
+    margin-left:5px;
 }
 .sender, 
 .owner {

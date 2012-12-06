@@ -89,6 +89,38 @@ class User(db.Model, UserMixin):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
+    def timeline(self, project_name=None):
+        project = None
+        users = None
+        if project_name:
+            for each_project in self.projects:
+                if each_project.name == project_name:
+                    project = each_project
+                    break
+            if project:
+                users = project.users
+        else:
+            users = self.following
+        all_tasks = []
+        if users:
+            for followee in users:
+                if followee != self:
+                    for project in followee.projects:
+                        if project.name == "Public" or (self in project.users):
+                            for task in project.tasks:
+                                if task not in all_tasks:
+                                    all_tasks.append(task)
+        return sorted(all_tasks, key=lambda task: task.modified, reverse=True)
+
+    def getProjs(self, user):
+        all_projects = self.projects
+        return_projects = []
+        for project in all_projects:
+            if user in project.users:
+                return_projects.append(project)
+        return return_projects
+
+
     password = property(get_password, set_password)
 
     def check_password(self, password):
@@ -126,9 +158,18 @@ class User(db.Model, UserMixin):
         return [contact.username for contact in self.following 
                     if self in contact.following]
 
-    def getContacts(self):
-        return [contact for contact in self.following 
+    def getContacts(self, projectname=None):
+        if not projectname:
+            return [contact for contact in self.following 
                     if self in contact.following]
+        contacts = [contact for contact in self.following 
+                    if self in contact.following]
+        project = Project.query.filter_by(name=projectname, owner=self).first()
+        if project:
+            return [contact for contact in contacts
+                           if contact in project.users]
+        else: return []
+
 
 
 
@@ -162,8 +203,13 @@ class Task(db.Model):
             tostring += user+','
         return tostring[:-1]
 
-
-
+    def getProjs(self, user):
+        all_projects = self.projects
+        return_projects = []
+        for project in all_projects:
+            if user in project.users or project.name=='Public':
+                return_projects.append(project)
+        return return_projects
 
 
 class Project(db.Model):

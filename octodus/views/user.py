@@ -31,6 +31,8 @@ user = Blueprint('user', __name__, url_prefix='/user')
 @user.route('/')
 @login_required
 def index():
+    #return tasks(name=None, done=False)
+    return redirect(url_for('user.tasks'))
     return render_template('user_index.html', current_user=current_user,
                             today=datetime.datetime.now())
 
@@ -215,6 +217,9 @@ def unset_project_tasks(name, task_id):
 def project_tasks(name):
     project = None
     proj_name = re.compile('^'+name+'$', re.I)
+    timeline=current_user.timeline(name)
+    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if proj_name.match('done'):
         return redirect(url_for('user.done'))
     else:
@@ -226,20 +231,78 @@ def project_tasks(name):
                 for contact in current_user.following:
                     if current_user in contact.following:
                         contacts[str(contact.id)] = contact.username
-
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
-                           objects=project.tasks, 
+                           tasks=project.tasks, 
                             fields=['id','name', 'created_at', 'props', 'projects','sender','owner'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
+                            timeline=timeline,
+                            timeline_fields=timeline_fields,
+                            timeline_actions=timeline_actions,
+                            cls='tasklist',
+                            project = project,
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
 
+@user.route('/followers/')
+@login_required
+def followers():
+    return redirect('user/contacts/followers')
+
+
+@user.route('/following/')
+@login_required
+def following():
+    return redirect('user/contacts/following')
+
+
+@user.route('/contacts/')
+@user.route('/contacts/<name>')
+@login_required
+def contacts(name=None):
+    active = None
+    project = None
+    if name != "following" and name != "followers":
+        contacts = current_user.getContacts()
+    elif name == "following":
+        contacts = current_user.following
+        name = None
+    elif name == "followers":
+        contacts = current_user.followers
+        name = None
+    timeline=current_user.timeline(name)
+    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    if name:
+        proj_name = re.compile('^'+name+'$', re.I)
+        for each_project in current_user.projects:
+            if proj_name.match(each_project.name):
+                project = each_project
+        contacts = current_user.getContacts(name)
+        
+    timeline=current_user.timeline()
+    return render_template('userlist.html', title="Contactos", headers=False, 
+                           objects=contacts, 
+                            fields=['id','username','email', 'points', 'projects'], 
+                            actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                           active=active,
+                           cls='userlist',
+                            timeline=timeline,
+                            timeline_fields=timeline_fields,
+                            timeline_actions=timeline_actions,
+                           contacts=[],
+                           project=project,
+                            current_user=current_user)
+
+
+#@user.route('/')
 @user.route('/tasks/')
 @login_required
 def tasks(name=None, done=None):
     active = None
+    timeline_fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
     if name:
         user = User.query.filter_by(username=name).first()
     else:
@@ -257,12 +320,18 @@ def tasks(name=None, done=None):
         if current_user in contact.following:
             contacts[str(contact.id)] = contact.username
 
+    timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
-                           objects=tasks, 
+                           tasks=tasks, 
                             fields=['id','name', 'created_at', 'props', 'projects','sender'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
+                           cls='tasklist',
+                            timeline=timeline,
+                            timeline_fields=timeline_fields,
+                            timeline_actions=timeline_actions,
                            contacts=json.dumps(contacts),
+                           project=None,
                             current_user=current_user)
 
 @user.route('/tasks/done')
@@ -363,6 +432,7 @@ def task_start(id):
     if task.owner == current_user:
         if not task.done:
             task.begin = datetime.datetime.now()
+            task.modified = task.begin
             db.session.commit()
             return jsonify({'1':True})
     return jsonify({'1':False})
@@ -375,6 +445,7 @@ def task_do(id):
     if task.owner == current_user:
         if not task.done:
             task.finished = datetime.datetime.now()
+            task.modified = task.finished
             started = [task.created_at, current_user.last_action]\
                         [task.created_at < current_user.last_action]
             started = [started, task.begin][bool(task.begin)]
@@ -419,6 +490,8 @@ def task_delete(id):
 
 @user.route('/prop/<id>/')
 @user.route('/prop/<id>/<value>/')
+@user.route('/contacts/prop/<id>/')
+@user.route('/contacts/prop/<id>/<value>/')
 @user.route('/timeline/prop/<id>/')
 @user.route('/timeline/prop/<id>/<value>/')
 @user.route('/tasks/prop/<id>/')
@@ -433,6 +506,7 @@ def task_prop(id, value=1):
         db.session.add(prop)
         db.session.commit()
         flash('You have propped '+task.name+' for '+str(value)+' points!', 'success')
+        return jsonify({'1':True})
     return redirect(url_for('user.timeline'))
 
 
@@ -454,14 +528,23 @@ def timeline(project_name=None):
         if followee != current_user:
             for project in followee.projects:
                 if project.name == "Public" or (current_user in project.users):
-                    all_tasks = all_tasks + project.tasks
+                    for task in project.tasks:
+                        if task not in all_tasks:
+                            all_tasks.append(task)
+    all_tasks = sorted(all_tasks, key=lambda task: task.modified).reverse()
             #for task in followee.tasks:
             #    task.props_n = len(task.props)
             #    all_tasks.append(task)
 
-    return render_template('list.html', title="Timeline", headers=False, 
-                           objects=all_tasks, fields=['name', 'props'], 
+    fields=['id','owner', 'created_at', 'props', 'name', 'projects']
+    actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    return all_tasks
+    return render_template('timeline.html', title="Timeline", headers=False, 
+                           objects=all_tasks,
+                           cls="timeline",
+                            fields=['id','owner', 'created_at', 'props', 'name', 'projects'], 
                             actions=[['Prop', 'prop', 'icon-thumbs-up']],
+                           contacts=[],
                             current_user=current_user)
 
 
@@ -498,6 +581,7 @@ def pub(name=None):
     return render_template('user_pub.html', user=user, form=form)
 
 
+@user.route('/contacts/follow/<name>', methods=['POST', 'GET'])
 @user.route('/follow/<name>', methods=['POST', 'GET'])
 @login_required
 def follow(name=None):
@@ -513,6 +597,7 @@ def follow(name=None):
             return jsonify({'1':True})
 
 
+@user.route('/contacts/unfollow/<name>', methods=['POST', 'GET'])
 @user.route('/unfollow/<name>', methods=['POST', 'GET'])
 @login_required
 def unfollow(name=None):
@@ -550,11 +635,11 @@ def project_adduser(name=None, username=None):
 def project_deluser(name=None, username=None):
     if name:
         project = Project.query.filter_by(name=name, owner=current_user).first()
-    if not name:
+    if not project:
         name = Project.query.get(name)
     if username:
         followed = User.query.filter_by(username=username).first()
-    if not username:
+    if not followed:
         followed = User.query.get(username)
     if followed in project.users:
         project.users.remove(followed)

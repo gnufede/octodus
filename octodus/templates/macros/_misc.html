@@ -54,7 +54,7 @@ from type import *
     </div>
 {% endmacro %}
 
-{% macro render_tasklist(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='', current_user='') %}
+{% macro render_tasklist(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='', current_user='', projectname='') %}
 
 {% if objects|length >0 %}
             {% if fields == '' %}
@@ -62,104 +62,136 @@ from type import *
             {% else %}
             {% set f = fields %}
             {% endif %}
-<div class='tasklist table {{ class }}'>
-    <ul type=none style="margin-left:0;" class="sortable">
+<div class='table table-hover {{ class }}'>
+    <ul type=none style="margin-left:0;" class="{{class}} sortable">
         {% for object in objects %}
         {% if object.done == True %}
-        <li class="task droppable taskdone" id="task_{{object.id}}">
+        <li class="task droppable taskdone {{ class }}" id="task_{{object.id}}">
         {% else %}
-        <li class="task droppable" id="task_{{object.id}}">
+        <li class="task droppable {{ class }}" id="task_{{object.id}}">
         {% endif %}
-        <div class="taskdiv" >
+        <div class="taskdiv {{ class }}" >
 
-            {% if object.owner == current_user %}
-            <div class="actions pull-right btn-group">
-            {% for action in actions %}
-            <div class="action clearfix btn " ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i class="{{action[2]}}"></i>
-            </span></div>
-            {% endfor %}
-            </div>
+            {% if (object.owner == current_user) or class=="timeline" %}
+            <div class="actions pull-right btn-group {{ class }}">
             {% else %}
-            <div class="actions pull-right btn-group disabled" >
+            <div class="actions pull-right disabled btn-group {{ class }}" >
+            {% endif %}
             {% for action in actions %}
-            <div class="action clearfix btn disabled" ><a onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i onClick="return _action($(this).parent());" class="disabled {{action[2]}}"></i>
+            {% if (action[2] == 'icon-thumbs-up' and current_user.username not in object.get_propped_users().split(',')) or (object.owner == current_user and  not (action[2] in ['icon-play', 'icon-envelope'] and (object['begin']!=None or object['finished']!=None) )) %}
+            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} {{ class }}"></i>
+            </span></div>
+            {% else %}
+            <div class="action clearfix btn disabled {{ class }}" ><a onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} disabled {{ class }}"></i>
             </a></div>
+            {% endif %}
             {% endfor %}
             </div>
-            {% endif %}
+
+
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
                 {% if object[j] is not is_list %}
                     {% if j == 'id' %}
-                    <div class="taskid">{{ object[j] }}</div>
+                    <div class="taskid {{ class }}">{{ object[j] }}</div>
                     {% elif j == 'owner' %}
-                     <div class="owner pull-right">
-                        {% if object.owner != current_user%}
-                        <span class="owner_label label label-important draggable">{{ object.owner.username }}</span>
+                      {% if class != 'tasklist' %}
+                      <div class="owner {{ class }}">
+                      {% else %}
+                      <div class="owner pull-right {{ class }}">
+                      {% endif %}
+                        {% if object.owner != current_user and class == 'timeline'%}
+                        <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
+                        {% elif object.owner != current_user and class == 'tasklist'%}
+                        <span class="owner_label label {{ class }}">{{ object.owner.username }}</span>
+                        {% else %}
+                        <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% endif %}
                     </div>
                     {% elif j == 'sender' %}
-                     <div class="sender pull-right">
+                     <div class="sender pull-right {{ class }}">
                         {% if object.sender != current_user%}
-                        <span class="sender_label label draggable">{{ object.sender.username }}</span>
+                        <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable {{ class }}">{{ object.sender.username }}</a>
                         {% endif %}
                     </div>
                     {% elif j == 'created_at' %}
-                    <div class="timestamp">
                         {% if object['finished'] != None %}
+                        <div class="timestamp finished {{ class }}">
                         Finished
                         {% set j = 'finished' %}
                         {% elif object['begin'] != None %}
+                        <div class="timestamp started {{ class }}">
                         Started 
                         {% set j = 'begin' %}
                         {% else %}
+                        <div class="timestamp added {{ class }}">
                         Added 
                         {% endif %}
-                    <abbr class="timeago timestamp" title={{ object[j].isoformat() }}> </abbr>
+                    <abbr class="timeago timestamp {{ class }}" title={{ object[j].isoformat() }}> </abbr>
                     </div>
                     {% elif j == 'email' %}
-                    <div style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
+                    <div class="{{ class }} field" style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
                     {% else %}
                         {% if j == 'name' %}
                             {% if object.done == True %}
-                            <div class="taskname done">{{ object[j] }}</div>
+                            <div class="taskname done {{class}}">{{ object[j] }}</div>
                             {% elif object.owner != current_user%}
-                            <div class="taskname notowner">{{ object[j] }}</div>
+                            <div class="taskname notowner {{class}}">{{ object[j] }}</div>
                             {% else %}
-                            <div class="taskname owner undone">{{ object[j] }}</div>
+                            <div class="taskname owner undone {{class}}">{{ object[j] }}</div>
                             {% endif %}
                         {% else %}
                             
                         {% if object[j] != None%}
-                        <div style='display:inline-block;'>{{ object[j] }}</div>
+                        <div class="{{class}} field"style='display:inline-block;'>{{ object[j] }}</div>
                         {% endif %}
                         {% endif %}
                     {% endif %}
                 {% else %}
                     {% if j == 'projects'%}
-                    <div class="proj_labels pull-right">
+                    <div class="proj_labels pull-right {{class}}">
+                        {% set proj_label = 'proj_label'%}
+                        {% if object.owner == current_user %}
                         {% for proj in object[j] %}
+                        {% set proj_label = 'proj_label'%}
+                        {% if projectname == proj.name %}
+                        {% set proj_label = proj_label+' this_project'%}
+                        {% endif %}
                         {% if proj.owner == current_user %}
-                    <span class="proj_label label label-info draggable clearfix" >{{ proj.name }}</span>
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}</span>
+                        {% else %}
+                        <span class="{{proj_label}} owned others label clearfix {{class}}" >{{ proj.name }}</span>
+                        {% endif %}
+                        {% endfor %}
+                        {% else %}
+                        {% for proj in object.getProjs(current_user) %}
+                        {% if projectname == proj.name %}
+                        {% set proj_label = proj_label+' this_project'%}
+                        {% endif %}
+                        {% if class == 'timeline' %}
+                        <span class="{{proj_label}} others label pull-right {{class}}" >{{ proj.name }}</span>
+                        {% else %}
+                        <span class="{{proj_label}} others label {{class}}" >{{ proj.name }}</span>
+                        {% endif %}
+                        {% endfor %}
                     {% endif %}
-                    {% endfor %}
                     </div>
                     {% elif j == 'props' %}
-                    <div class="pull-right props"> 
+                    <div class="pull-right props {{class}}"> 
                             {% if  object.get_props() > 0 %}
-                            <span class="badge badge-success"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
+                            <span class="badge badge-success {{class}}"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             {% else %}
-                           <span class="badge badge-inverse">
+                           <span class="badge badge-inverse {{class}}">
                             {% endif %}
                             {{ object.get_props() }}</span></div>
                     {% else %}
-                    <div style='display:inline-block;'>{{ object[j]|length }}</div>
+                    <div  class="{{class}} field" style='display:inline-block;'>{{ object[j]|length }}</div>
                     {% endif %}
                 {% endif %}
                  {% else %}
-                 <div style='display:inline-block;'><a href="#">{{ object[j] }}</a></div>
+                 <div class="{{class}} field" style='display:inline-block;'><a href="#">{{ object[j] }}</a></div>
                  {% endif %}
             {% endfor %}
         </div>
@@ -169,6 +201,75 @@ from type import *
 </div>
 {% endif %}
 {% endmacro %}
+
+
+{% macro render_userlist(objects, class='',  fields='', actions='', current_user='', projectname='') %}
+
+{% if objects|length >0 %}
+            {% if fields == '' %}
+            {% set f = objects[0].__dict__ %}
+            {% else %}
+            {% set f = fields %}
+            {% endif %}
+<div class='table table-hover {{ class }}'>
+    <ul type=none style="margin-left:0;" class="{{class}} sortable">
+        {% for object in objects %}
+        <li class="user droppable {{ class }}" id="user_{{object.id}}">
+        <div class="userdiv {{ class }}" >
+
+            <div class="actions pull-right btn-group {{ class }}">
+                {% for action in actions %}
+                {% if ('unfollow' in action[2] and object not in current_user.following)
+                  or ('unfollow' not in action[2] and object in current_user.following)
+                %}
+            <div class="action clearfix btn disabled {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} disabled {{ class }}"></i>
+            </span></div>
+            {% else %}
+            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} {{ class }}"></i>
+            </span></div>
+            {% endif %}
+            {% endfor %}
+            </div>
+            {% for j in f %}
+            {% if j != "_sa_instance_state" and j != "_labels" %}
+                {% if object[j] is not is_list %}
+                    {% if j == 'id' %}
+                    <div class="userid {{ class }}">{{ object[j] }}</div>
+                    {% elif j == 'email' %}
+                    <div class="{{ class }} field email" style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
+                    {% elif j == 'points' %}
+                            <div class="points badge badge-success {{class}}">{{ object[j] }}</div>
+                    {% elif j == 'username' %}
+                    <div class="username {{class}}"><a href="{{ object[j] }}">{{ object[j] }}</a></div>
+                    {% elif object[j] != None%}
+                        <div class="{{class}} field"style='display:inline-block;'>{{ object[j] }}</div>
+                    {% endif %}
+                {% else %}
+                    {% if j == 'projects'%}
+                    <div class="proj_labels pull-right {{class}}">
+                        {% set proj_label = 'proj_label'%}
+                        {% for proj in current_user.getProjs(object) %}
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div  class="{{class}} field" style='display:inline-block;'>{{ object[j]|length }}</div>
+                    {% endif %}
+                {% endif %}
+                 {% else %}
+                 <div class="{{class}} field" style='display:inline-block;'><a href="#">{{ object[j] }}</a></div>
+                 {% endif %}
+            {% endfor %}
+        </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endmacro %}
+
 
 {% macro render_table(objects, class='', headers='', fields='', delete='', no_set_delete=False, actions='') %}
 

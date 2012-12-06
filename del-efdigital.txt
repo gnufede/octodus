@@ -1,0 +1,25 @@
+deploy.sh:rsync -az /home/efdigital/lib/python2.6/octodus-0.1-py2.6.egg/octodus/static/offers/ ~/offers
+deploy.sh:rsync -az ~/offers/ /home/efdigital/lib/python2.6/octodus-0.1-py2.6.egg/octodus/static/offers
+build/lib/octodus/config.py:        SQLALCHEMY_DATABASE_URI = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+build/lib/octodus/config.py:    MAIL_USERNAME = 'efdigital'
+build/lib/octodus/config.py:    DEFAULT_MAIL_SENDER = 'efdigital@efdigitalorlas.com'
+build/lib/octodus/templates/index.html:                        Avenida de Roma, nº 7, local<br>28820 Coslada (Madrid)&nbsp;<br><br><b>Tfno.: 912477428</b><br><b>Email: </b><a href="mailto:efdigitalorlas@gmail.com" rel="nofollow"><b>efdigitalorlas@gmail.com</b></a><b>&nbsp;</b><br>METRO: LINEA 7 - PARADA LA RAMBLA (COSLADA)&nbsp;<br>AUTOBUS: L. 286 (Ciudad Lineal-Coslada Ciudad 70)&nbsp;<br>CERCANÍAS: C1, C2, C7 <br><br>
+build/lib/octodus/templates/user_email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+build/lib/octodus/templates/email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+build/lib/octodus/templates/emails/reset_password.html:Si no quieres cambiar tu contraseña, simplemente ignora este mensaje y tu contraseña no cambiará. Si tienes alguna duda, ponte en contacto con nosotros en el email: efdigitalorlas@gmail.com
+Binary file venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/config.pyc matches
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/config.py:        SQLALCHEMY_DATABASE_URI = 'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/config.py:    MAIL_USERNAME = 'efdigital'
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/config.py:    DEFAULT_MAIL_SENDER = 'efdigital@efdigitalorlas.com'
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/templates/index.html:                        Avenida de Roma, nº 7, local<br>28820 Coslada (Madrid)&nbsp;<br><br><b>Tfno.: 912477428</b><br><b>Email: </b><a href="mailto:efdigitalorlas@gmail.com" rel="nofollow"><b>efdigitalorlas@gmail.com</b></a><b>&nbsp;</b><br>METRO: LINEA 7 - PARADA LA RAMBLA (COSLADA)&nbsp;<br>AUTOBUS: L. 286 (Ciudad Lineal-Coslada Ciudad 70)&nbsp;<br>CERCANÍAS: C1, C2, C7 <br><br>
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/templates/user_email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/templates/email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+venv/lib/python2.6/site-packages/octodus-0.1-py2.6.egg/octodus/templates/emails/reset_password.html:Si no quieres cambiar tu contraseña, simplemente ignora este mensaje y tu contraseña no cambiará. Si tienes alguna duda, ponte en contacto con nosotros en el email: efdigitalorlas@gmail.com
+Binary file octodus/config.pyc matches
+octodus/config.py:        #'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
+octodus/config.py:    MAIL_USERNAME = 'efdigital'
+octodus/config.py:    DEFAULT_MAIL_SENDER = 'efdigital@efdigitalorlas.com'
+octodus/templates/user_email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+octodus/templates/email.html:    Por favor, envía un email a <a href="mailto:efdigitalorlas@gmail.com">efdigitalorlas@gmail.com</a>
+octodus/templates/emails/reset_password.html:Si no quieres cambiar tu contraseña, simplemente ignora este mensaje y tu contraseña no cambiará. Si tienes alguna duda, ponte en contacto con nosotros en el email: efdigitalorlas@gmail.com
+

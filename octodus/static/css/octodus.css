@@ -27,6 +27,7 @@
 }
 .timeline.taskname {
     overflow: hidden;
+  display: block;
   min-width: 35%;
   margin-bottom: 3px;
 }

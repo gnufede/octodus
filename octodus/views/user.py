@@ -614,6 +614,7 @@ def pub(name=None):
     return render_template('user_pub.html', user=user, form=form)
 
 
+@user.route('/users/follow/<name>', methods=['POST', 'GET'])
 @user.route('/contacts/follow/<name>', methods=['POST', 'GET'])
 @user.route('/follow/<name>', methods=['POST', 'GET'])
 @login_required

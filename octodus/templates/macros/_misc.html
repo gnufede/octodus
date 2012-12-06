@@ -106,7 +106,7 @@ from type import *
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% elif object.owner != current_user and class == 'tasklist'%}
                         <span class="owner_label label {{ class }}">{{ object.owner.username }}</span>
-                        {% else %}
+                        {% elif class == 'timeline' %}
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% endif %}
                     </div>

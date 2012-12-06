@@ -231,8 +231,10 @@ def project_tasks(name):
                 for contact in current_user.following:
                     if current_user in contact.following:
                         contacts[str(contact.id)] = contact.username
+                tasks = sorted(project.tasks, key=lambda task: task.modified, reverse=True)
+                tasks = sorted(tasks, key=lambda task: task.get_props(), reverse=True)
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
-                           tasks=project.tasks, 
+                           tasks=tasks, 
                             fields=['id','name', 'created_at', 'props', 'projects','sender','owner'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
@@ -320,6 +322,8 @@ def tasks(name=None, done=None):
         if current_user in contact.following:
             contacts[str(contact.id)] = contact.username
 
+    tasks = sorted(tasks, key=lambda task: task.modified, reverse=True)
+    tasks = sorted(tasks, key=lambda task: task.get_props(), reverse=True)
     timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 

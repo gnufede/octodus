@@ -199,9 +199,9 @@ from type import *
                            <span class="badge badge-inverse {{class}}">
                             {% endif %}
                             {% if (current_user.username not in object.get_propped_users().split(',')) and (object.owner != current_user ) and (class=='timeline') %}
-                                <a onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop!">
+                                <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
                     <i class="icon-thumbs-up icon-white {{ class }}"></i>
-            </a>
+            </span>
                     {% endif %}
                             {{ object.get_props() }}</span></div>
                     {% else %}

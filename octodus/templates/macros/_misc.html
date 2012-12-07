@@ -101,11 +101,7 @@ from type import *
                     {% if j == 'id' %}
                     <div class="taskid {{ class }}">{{ object[j] }}</div>
                     {% elif j == 'owner' %}
-                      {% if class != 'tasklist' %}
-                      <div class="owner {{ class }}">
-                      {% else %}
-                      <div class="owner pull-right {{ class }}">
-                      {% endif %}
+                      <div class="owner owner_label {{ class }}">
                         {% if object.owner != current_user and class == 'timeline'%}
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% elif object.owner != current_user and class == 'tasklist'%}
@@ -120,7 +116,7 @@ from type import *
                             +{{ object.earned_points }}</span></div>
                     {% elif j =='earned_points' %}
                     {% elif j == 'sender' %}
-                     <div class="sender {{ class }}">
+                     <div class="sender sender_label {{ class }}">
                         {% if object.sender != current_user%}
                         <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable {{ class }}">{{ object.sender.username }}</a>
                         {% endif %}
@@ -202,6 +198,7 @@ from type import *
                             {% else %}
                            <span class="badge badge-inverse {{class}}">
                             {% endif %}
+                            <i class="icon-thumbs-up icon-white"></i>
                             {{ object.get_props() }}</span></div>
                     {% else %}
                     <div  class="{{class}} field" style='display:inline-block;'>{{ object[j]|length }}</div>

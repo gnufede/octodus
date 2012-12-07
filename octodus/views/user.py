@@ -236,7 +236,7 @@ def project_tasks(name):
                 #tasks = sorted(tasks, key=lambda task: task.earned_points, reverse=True)
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'props', 'earned_points', 'created_at', 'projects','sender', 'owner'], 
+                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
@@ -355,7 +355,7 @@ def tasks(name=None, done=None):
     timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'props', 'earned_points',  'created_at', 'projects','sender'], 
+                            fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',

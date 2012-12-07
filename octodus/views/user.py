@@ -355,7 +355,8 @@ def tasks(name=None, done=None):
     timeline=current_user.timeline()
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
+                            #fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
+                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-envelope'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',

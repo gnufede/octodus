@@ -25,6 +25,7 @@ import json
 user = Blueprint('user', __name__, url_prefix='/user')
 
 
+timeline_fields=['id','owner', 'props', 'earned_points','created_at', 'name', 'projects']
                
 
 
@@ -218,7 +219,6 @@ def project_tasks(name):
     project = None
     proj_name = re.compile('^'+name+'$', re.I)
     timeline=current_user.timeline(name)
-    timeline_fields=['id','owner','props', 'created_at',  'name', 'projects']
     timeline_actions=[]
     if proj_name.match('done'):
         return redirect(url_for('user.done'))
@@ -267,7 +267,6 @@ def following():
 def users(query=None):
     active=None
     timeline=current_user.timeline()
-    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[]
     if not query:
         users = User.query.all()
@@ -303,7 +302,6 @@ def contacts(name=None):
         contacts = current_user.followers
         name = None
     timeline=current_user.timeline(name)
-    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[]
     if name:
         proj_name = re.compile('^'+name+'$', re.I)
@@ -332,7 +330,6 @@ def contacts(name=None):
 @login_required
 def tasks(name=None, done=None):
     active = None
-    timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
     timeline_actions=[]
     if name:
         user = User.query.filter_by(username=name).first()

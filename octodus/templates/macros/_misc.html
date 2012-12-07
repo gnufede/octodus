@@ -103,9 +103,9 @@ from type import *
                     {% elif j == 'owner' %}
                       <div class="owner owner_label {{ class }}">
                         {% if object.owner != current_user and class == 'timeline'%}
-                        <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
+                        <a class="owner_label {{ class }}" href="/user/{{object.owner.username}}">{{ object.owner.username }}</a>
                         {% elif object.owner != current_user and class == 'tasklist'%}
-                        <span class="owner_label label {{ class }}">{{ object.owner.username }}</span>
+                        <a href="/user/{{object.owner.username}}" class="owner_label label launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="This user owns the task">{{ object.owner.username }}</a>
                         {% elif class == 'timeline' %}
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% endif %}
@@ -118,7 +118,7 @@ from type import *
                     {% elif j == 'sender' %}
                      <div class="sender sender_label {{ class }}">
                         {% if object.sender != current_user%}
-                        <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable {{ class }}">{{ object.sender.username }}</a>
+                        <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="This user sent you the task">{{ object.sender.username }}</a>
                         {% endif %}
                     </div>
                     {% elif j == 'created_at' %}

@@ -219,7 +219,7 @@ def project_tasks(name):
     proj_name = re.compile('^'+name+'$', re.I)
     timeline=current_user.timeline(name)
     timeline_fields=['id','owner','props', 'created_at',  'name', 'projects']
-    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    timeline_actions=[]
     if proj_name.match('done'):
         return redirect(url_for('user.done'))
     else:
@@ -266,7 +266,7 @@ def users(query=None):
     active=None
     timeline=current_user.timeline()
     timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
-    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    timeline_actions=[]
     if not query:
         users = User.query.all()
     else:
@@ -302,7 +302,7 @@ def contacts(name=None):
         name = None
     timeline=current_user.timeline(name)
     timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
-    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    timeline_actions=[]
     if name:
         proj_name = re.compile('^'+name+'$', re.I)
         for each_project in current_user.projects:
@@ -331,7 +331,7 @@ def contacts(name=None):
 def tasks(name=None, done=None):
     active = None
     timeline_fields=['id','owner', 'props', 'created_at', 'name', 'projects']
-    timeline_actions=[['Prop', 'prop', 'icon-thumbs-up']]
+    timeline_actions=[]
     if name:
         user = User.query.filter_by(username=name).first()
     else:

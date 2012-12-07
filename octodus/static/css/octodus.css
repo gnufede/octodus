@@ -29,6 +29,9 @@
     clear: both;
     float: left;
 }
+.userlist.proj_labels {
+    float:right;
+}
 .proj_labels {
     float:left;
    margin-left:3px;

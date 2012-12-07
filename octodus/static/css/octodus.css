@@ -112,7 +112,7 @@ opacity:1;
   font-size: 11pt;
 }
 .tasklist.taskname {
-    //max-width: 50%;
+    max-width: 100%;
 }
 .taskname {
     margin-left: 2px;

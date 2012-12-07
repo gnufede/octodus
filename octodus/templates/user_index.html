@@ -187,6 +187,7 @@
             if (isProject){
                 sel=sel.replace(/^\s\s*/, '').replace(/\s\s*$/, '').replace(/ /g,"_");
             }
+            $(document.body).addClass('loading');
             $.ajax({
                 url:url+sel
                 }).done(function() { 

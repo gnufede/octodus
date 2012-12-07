@@ -76,14 +76,17 @@
         <li id="new_project" onClick="document.getElementById('newproject').focus();">
         <a>
         <i class='icon-plus' style="display:inline-block;" ></i>
-        <div id='newproject' style="display:inline-block; cursor:text; padding:2px 2px 0 0;" 
-            contenteditable onKeyPress="return _onKeyPress();" 
-            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
-            '/user/project/', true);"
+        <span id='newproject' style="display:inline-block; cursor:text; padding:2px 2px 0 0;" 
+            contenteditable="true"
+           onKeyUp="return _onKeyUp(event, $(this), 
+            '/user/project/', true);"  onKeyPress="return _onKeyPress(event, $(this), '/user/project/', true);" 
             onFocus="$(this).text('');$(this).parent().css('background-color', 'white');"
             onBlur="$(this).parent().css('background-color', 'inherit');return _onBlur($(this), 'Nuevo Proyecto', true);">
         Nuevo Proyecto
-        </div> 
+        </span> 
+        <!-- onKeyUp="return _onKeyUp(event, $(this), 
+            '/user/project/', true);" onInput="return _onKeyUp(event, $(this), 
+            '/user/project/', true);"-->
         </a>
         </li>
     {% if current_user.projects|length %}
@@ -141,15 +144,24 @@
                  document.location.reload();
         });
         $(this).parent().remove();
-        });
+    });
+/*
+    $('#newproject').keyup(function (event){
+        alert(event.keycode);
+        alert(e.keycode);
+        alert('aqui tampoco llega?');
+        return _onKeyUp(e,'/user/project/', true);
+    });
+*/
     function show()
     {
     alert(editor.innerHTML);
     }
 
-    function checkEnter() {
-        if (window.event.keyCode == 13) { 
-            window.event.cancelBubble = true;
+    function checkEnter(event) {
+        if (event.keyCode == 13) { 
+            event.cancelBubble = true;
+            
             return false;
         }
         else return true;
@@ -166,14 +178,14 @@
         return true;
     }
 
-    function _onKeyDown()
+    function _onKeyDown(event)
     {
-        return checkEnter();
+        return checkEnter(event);
     }
 
-    function _onKeyUp(node, url, isProject)
+    function _onKeyUp(event, node, url, isProject)
     {
-            if (window.event.keyCode == 13) { 
+            if (event.charCode == 13 || event.keyCode == 13) { 
                 var sel = "";
                 if (isProject){
                     sel = node.text();
@@ -201,9 +213,12 @@
         return true;
     }
 
-    function _onKeyPress()
+    function _onKeyPress(event, node, url, isProject)
     { 
-        return checkEnter();
+       // return checkEnter(event, node, url, isProject);
+        if (!checkEnter(event)){
+            return _onKeyUp(event, node, url, isProject)
+        }
     }
 
 
@@ -228,7 +243,7 @@
             url:url
             }).done(function() { 
             if (node.attr('title') == "Borrar"){
-                node.parent().parent().parent().remove();
+                node.parent().parent().parent().parent().remove();
             }
             if (node.attr('title') == "Prop"){
                  document.location.reload();

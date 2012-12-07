@@ -56,8 +56,7 @@
                     <input class="xlarge" id="globalnewtaskname" name="name"
                     style="display:inline-block;" type="text" value="New Task"
                     
-            onKeyPress="return _onKeyPress();" 
-            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+            onKeyDown="return _onKeyDown(event);" onKeyUp="return _onKeyUp(event, $(this), 
             '/user/tasks/new/', false);"
             onFocus="$(this).val('');;">
         </form>

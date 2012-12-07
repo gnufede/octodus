@@ -10,8 +10,7 @@
                     <input class="input-xxlarge" id="newtaskname" name="name"
                     style="display:inline-block;" type="text" value="Nueva tarea"
                     
-            onKeyPress="return _onKeyPress();" 
-            onKeyDown="return _onKeyDown();" onKeyUp="return _onKeyUp($(this), 
+             onKeyUp="return _onKeyUp(event, $(this), 
             '/user/tasks/new/', false);"
             onFocus="$(this).val('');;">
             <!--onBlur="return _onBlur($(this), 'Nueva tarea', false)"-->

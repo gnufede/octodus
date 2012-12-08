@@ -14,14 +14,12 @@
     <meta name="google-site-verification" content="" />
     <link rel="Shortcut Icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
     {% block css %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/t1_core.bundle.css') }}"-->
-    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/t1_more.bundle.css') }}"-->
-    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"-->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"-->
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/octodus.css') }}">
-    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styleorlas.css') }}"-->
     <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}"-->
     {% endblock %}
     {% block append_css %}
@@ -138,7 +136,8 @@
 
     {% block jquery %}
     {% set jquery_path = url_for('static', filename='js/libs/jquery-1.7.2.min.js') %}
-    <script>window.jQuery || document.write('<script type="text/javascript" src="{{ jquery_path }}"><\/script>')</script>
+    <!-- js/libs/jquery-1.7.2.min.js {{ jquery_path }} -->
+    <script>window.jQuery || document.write('<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"><\/script>')</script>
 
     {% endblock %}
 
@@ -147,10 +146,14 @@
     {% endblock %}
 
     {% block js_script %}
-    <!--script src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script-->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery.timeago.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script>
+    <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery.timeago.js') }}"></script-->
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/0.11.4/jquery.timeago.js"></script>
+    <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script-->
+
 <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script-->
 

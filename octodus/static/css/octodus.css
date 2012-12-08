@@ -87,6 +87,9 @@ padding-top:0;
 padding-bottom:0;
 padding-right:2px;
 opacity:0.4;
+font-weight: normal;
+font-size: 12px;
+line-height: 10px;
 }
 a.label.close:hover {
 opacity:1;

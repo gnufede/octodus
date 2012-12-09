@@ -167,6 +167,21 @@
 <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/bootstrap-wysihtml5.js') }}"></script-->
 
+    {% endblock %}
+    {% block append_js %}
+    {% endblock %}
+    {% block append_js2 %}
+    {% endblock %}
+
+<script type="text/javascript">
+  var uvOptions = {};
+  (function() {
+    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/Rp4RBSUjI7K20BCb1HfqQ.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+  })();
+</script>
+
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -180,12 +195,7 @@
 	s.parentNode.insertBefore(ga, s);
   })();
 
-</script>
 
-    {% endblock %}
-    {% block append_js %}
-    {% endblock %}
-    {% block append_js2 %}
-    {% endblock %}
+</script>
 </body>
 </html>

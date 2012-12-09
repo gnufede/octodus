@@ -147,21 +147,20 @@
     {% block jquery %}
     {% set jquery_path = url_for('static', filename='js/libs/jquery-1.7.2.min.js') %}
     <!-- js/libs/jquery-1.7.2.min.js {{ jquery_path }} -->
-    <script>window.jQuery || document.write('<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"><\/script>')</script>
+    <script >window.jQuery || document.write('<script  type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"><\/script>')</script>
 
     {% endblock %}
 
     {% block js_plugins %}
-    <script src="{{ url_for('static', filename='js/plugins.js') }}"></script>
-    {% endblock %}
-
-    {% block js_script %}
-    <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery.timeago.js') }}"></script-->
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/0.11.4/jquery.timeago.js"></script>
     <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-ui-1.8.16.custom.min.js') }}"></script-->
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
     
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    {% endblock %}
+
+    {% block js_script %}
+    <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery.timeago.js') }}"></script-->
     <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script-->
 
 <!--script type="text/javascript" src="{{ url_for('static', filename='js/libs/wysihtml5/wysihtml5-0.3.0.js') }}"></script>
@@ -172,8 +171,7 @@
     {% endblock %}
     {% block append_js2 %}
     {% endblock %}
-
-<script type="text/javascript">
+<script async type="text/javascript">
   var uvOptions = {};
   (function() {
     var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
@@ -181,8 +179,7 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
   })();
 </script>
-
-<script type="text/javascript">
+<script async type="text/javascript">
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '']);

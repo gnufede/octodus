@@ -80,9 +80,11 @@
 {% endblock %}
 
 {% block append_js %}
-<script>
+<script async>
 
+    $(function() {
     $('#tasks').addClass('active');
+    $("#showhide_done").button();
     $('#{{ active }}').addClass('active');
 
 /*
@@ -93,7 +95,6 @@
             $(".close").remove();
         });
     */
-    $("#showhide_done").button();
     $("#showhide_done").click(function() {
         if ($("#showhide_done").hasClass('active')){
            $('.taskdone').fadeIn();//css('display','inherit');
@@ -126,7 +127,6 @@
         });
     
    // });
-    $(function() {
     jQuery("abbr.timeago").timeago();
     $('.launchtooltip').tooltip();
     $('.launchpopover').popover();

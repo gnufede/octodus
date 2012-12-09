@@ -198,7 +198,7 @@ from type import *
                             {% else %}
                            <span class="badge badge-inverse {{class}}">
                             {% endif %}
-                            {% if (current_user.username not in object.get_propped_users().split(',')) and (object.owner != current_user ) and (class=='timeline') %}
+                            {% if (current_user.username not in object.get_propped_users().split(',') and not object.done) and (object.owner != current_user ) and (class=='timeline') %}
                                 <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
                     <i class="icon-thumbs-up icon-white {{ class }}"></i>
             </span>

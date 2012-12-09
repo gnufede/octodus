@@ -26,12 +26,14 @@
     {% endblock %}
     <style type="text/css">
       body {
-        padding-top: 40px;
         padding-bottom: 40px;
       }
       .sidebar-nav {
         padding: 9px 0;
       }
+    .content {
+        padding-top: 40px;
+    }
     </style>
 </head>
 <body> <!--'background-color: #FFF;'-->
@@ -40,12 +42,47 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <!--a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </a>
-          <a id='index' class='brand' href='{{ url_for('frontend.index') }}'>Octodus</a>
+          </a-->
+          <a class='btn btn-navbar' data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </a>
+        	{% if current_user.is_authenticated() %}
+                	 <ul class="nav">
+                	  <li id='tasks' ><a href="/user/tasks">Tasks</a></li>
+                        <li id='users' class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users
+                            <b class="caret"></b>
+                        </a>
+                      <ul class="dropdown-menu dropdown">
+                          <li><a href="/user/contacts">Contacts</a></li>
+                          <li><a href="/user/contacts/following">Following</a></li>
+                          <li><a href="/user/contacts/followers">Followers</a></li>
+                          <li><a href="/user/users">All Users</a></li>
+                      </ul>
+                      </li>
+                    </ul>
+                	 <ul class="nav pull-right">
+                  <li><a class="badge badge-success" style="color:white; margin:3px 5px; font-weight:bold;"> {{current_user.points}} puntos </a></li>
+                  <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" style="font-weight:bold;" data-toggle="dropdown">{{ current_user.username }} 
+                      <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                	  <li id='profile' ><a href="/user/profile">Profile</a></li>
+                      <li><a href="{{ url_for('user.edit_datos') }}">Preferencias</a></li>
+                      <li><a href="{{ url_for('frontend.change_password') }}">Cambiar contraseña</a></li>
+                      <li class="divider"></li>
+                      <li><a href="{{ url_for('frontend.logout') }}">Salir</a></li>
+                  </ul>
+                  </li>
+                  </ul>
+				    {% endif %}
           <div class="nav-collapse collapse">
       	  <ul class="nav pull-right">
               {% if current_user.is_authenticated() %}
@@ -59,18 +96,6 @@
             onFocus="$(this).val('');;">
         </form>
         </li>
-                  <li><a class="badge badge-success brand" style="color:white; margin:3px 20px;"> {{current_user.points}} puntos </a></li>
-                  <li class="dropdown">
-                  <a href="#" class="dropdown-toggle brand" data-toggle="dropdown">{{ current_user.username }} 
-                      <b class="caret"></b>
-                  </a>
-                  <ul class="dropdown-menu">
-                      <li><a href="{{ url_for('user.edit_datos') }}">Preferencias</a></li>
-                      <li><a href="{{ url_for('frontend.change_password') }}">Cambiar contraseña</a></li>
-                      <li class="divider"></li>
-                      <li><a href="{{ url_for('frontend.logout') }}">Salir</a></li>
-                  </ul>
-                  </li>
               </ul>
               {% elif login_form is defined %}
 	  			<li id='login'><a href='{{ url_for('frontend.login') }}'>Entrar</a></li>
@@ -78,21 +103,6 @@
           	</ul>
               {% endif %}
                 	{% if current_user.is_authenticated() %}
-                	 <ul class="nav">
-                	  <li id='tasks' ><a href="/user/tasks">Tasks</a></li>
-                	  <li id='profile' ><a href="/user/profile">Profile</a></li>
-                        <li id='users' class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users
-                            <b class="caret"></b>
-                        </a>
-                      <ul class="dropdown-menu">
-                          <li><a href="/user/contacts">Contacts</a></li>
-                          <li><a href="/user/contacts/following">Following</a></li>
-                          <li><a href="/user/contacts/followers">Followers</a></li>
-                          <li><a href="/user/users">All Users</a></li>
-                      </ul>
-                      </li>
-                    </ul>
                     <form class="pull-left form-search navbar-search" action="{{ url_for('frontend.search') }}">
                         <input class="search-query" type='text' name='keywords' value='{{ keywords|default('') }}' placeholder='{{ _('Search...') }}' />
                     </form>

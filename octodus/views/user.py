@@ -410,6 +410,7 @@ def send_task(taskid=None, userid=None):
                 task.projects.append(inbox[0])
             db.session.commit()
             return jsonify({'1':True})
+    return jsonify({'1':False})
 
 
 @user.route('/tasks/new/<name>', methods=['POST', 'GET'])

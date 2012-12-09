@@ -19,11 +19,13 @@
     {% set headers = ''%}
     {% endif %}
     
+<div class="list">
     {% if not project %}
     {{ render_userlist(objects, 'userlist', fields, actions, current_user, '') }}
     {% else %}
     {{ render_userlist(objects, 'userlist', fields, actions, current_user, project.name) }}
     {% endif %}
+</div>
 </div>
 <div class="span3">
     {% if not fields %}
@@ -36,11 +38,13 @@
     {% set headers = ''%}
     {% endif %}
     
+<div class="list">
     {% if not project %}
     {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, '') }}
     {% else %}
     {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, project.name) }}
     {% endif %}
+</div>
 </div>
  
  

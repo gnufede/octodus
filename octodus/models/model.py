@@ -7,6 +7,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
 from flask import url_for
+import datetime
 
 #import datetime
 
@@ -58,8 +59,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(64))
     activation_key = db.Column(db.String(128))
     user_type = db.Column(db.Integer, default=0)
-    created_at = db.Column(db.DateTime, default=db.func.now())
-    last_action = db.Column(db.DateTime, default=db.func.now())
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    last_action = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     points = db.Column(db.Integer, default=0)
     tasks = relationship("Task", backref="owner", primaryjoin="and_(User.id==Task.owner_id)")
     sent_tasks = relationship("Task", backref="sender", primaryjoin="and_(User.id==Task.sender_id)")
@@ -182,8 +183,9 @@ class Task(db.Model):
     duration_minutes = db.Column(db.Integer, default=30)
     earned_points = db.Column(db.Integer, default=0)
     done = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=db.func.now())
-    modified = db.Column(db.DateTime, default=db.func.now())
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    modified = db.Column(db.DateTime, default=datetime.datetime.utcnow,
+                         onupdate=datetime.datetime.utcnow)
     finished = db.Column(db.DateTime)
     begin = db.Column(db.DateTime)
     deadline = db.Column(db.DateTime)

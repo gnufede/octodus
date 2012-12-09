@@ -115,7 +115,7 @@ opacity:1;
   font-size: 11pt;
 }
 .tasklist.taskname {
-    max-width: 100%;
+    max-width: 53%;
 }
 .taskname {
     margin-left: 2px;
@@ -151,4 +151,23 @@ opacity:1;
 abbr[title], abbr[data-original-title]{
   border-bottom: inherit;
 }
-
+.mypoints
+{
+    padding:9px;
+    margin:3px 5px;
+    font-weight: bold;
+}
+.whiteshadow {
+   //-moz-box-shadow:    inset -0px -1px 5px rgba(0,0,0,0.6), 0 0 5px 5px #7e6;
+   //-webkit-box-shadow: inset -1px -1px 5px rgba(0,0,0,0.6), 0 0 5px 5px #7e6;
+   box-shadow:         0 0 5px 5px #7e6;
+   
+   /*-moz-box-shadow:    inset 1px 2px 4px rgba(255,255,255,0.4),inset -1px -2px 4px rgba(0,0,0,0.6), 0 0 5px 5px #9f6;
+   -webkit-box-shadow: inset 1px 2px 4px rgba(255,255,255,0.4),inset -1px -2px 4px rgba(0,0,0,0.6), 0 0 5px 5px #9f6;
+   box-shadow:         inset 1px 2px 4px rgba(255, 255,255,0.4),inset -1px -2px 4px rgba(0,0,0,0.6), 0 0 5px 5px #9f6;
+   */
+/*   -moz-box-shadow:    inset -1px -2px 5px rgba(0,0,0,0.5);
+   -webkit-box-shadow: inset -1px -2px 5px rgba(0,0,0,0.5);
+   box-shadow:         inset -1px -2px 5px rgba(0,0,0,0.5);
+*/
+}

@@ -134,7 +134,7 @@ from type import *
                         <div class="timestamp pull-right added {{ class }}">
                         Added 
                         {% endif %}
-                    <abbr class="timeago timestamp {{ class }}" title={{ object[j].isoformat() }}> </abbr>
+                    <abbr class="timeago timestamp {{ class }}" title={{ object[j].isoformat() }}Z> </abbr>
                     </div>
                     {% elif j == 'email' %}
                     <div class="{{ class }} field" style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>

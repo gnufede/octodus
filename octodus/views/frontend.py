@@ -140,9 +140,10 @@ def signup():
 
     if form.validate_on_submit() or \
         (request.method == 'POST' and form.nocode.data):
-        if form.nocode.data:
-            return redirect(url_for('frontend.email'))
-        else:
+        #if form.nocode.data:
+        #    return redirect(url_for('frontend.email'))
+        #else:
+        if True:
            # activation_key = form.code.data
            # group = Project.query.\
            #         filter_by(activation_key=activation_key).first()

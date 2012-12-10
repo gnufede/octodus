@@ -12,7 +12,7 @@ from octodus.models import User
 class LoginForm(Form):
     next = HiddenField()
     remember = BooleanField(_(u'Recuérdame'))  # Remember me
-    email = TextField(_(u'Dirección de email'), [required()])
+    email = TextField(_(u'Username / Dirección de email'), [required()])
                 # Username or email address
     password = PasswordField(_(u'Contraseña'), [required(),
         length(min=6, max=56)])  # Password
@@ -22,7 +22,7 @@ class LoginForm(Form):
 class SignupForm(Form):
     next = HiddenField()
     code = TextField(_(u'Código'), [required()]) # Code
-    username = TextField(_(u'Nombre'), [required()])  # Username
+    username = TextField(_(u'Username'), [required()])  # Username
     password = PasswordField(u'Contraseña',  # Password
         [required(), length(min=8, max=56)])
     password_again = PasswordField(_(u'Contraseña otra vez'),  # Password again
@@ -30,7 +30,7 @@ class SignupForm(Form):
     email = TextField(_(u'Dirección de email'), [required(), email(
         message=_(u'Vamos a informarte vía emails, danos el tuyo por favor'))])
         # Email address  # A valid email address is required
-    nocode = BooleanField(_(u'No tengo código para registrarme'))
+    #nocode = BooleanField(_(u'No tengo código para registrarme'))
     submit = SubmitField(_(u'Registrarse'))  # Signup
 
     def validate_email(self, field):

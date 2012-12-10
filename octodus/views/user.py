@@ -239,7 +239,7 @@ def project_tasks(name):
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
                             fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects'], 
-                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-envelope'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
                             timeline_fields=timeline_fields,

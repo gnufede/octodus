@@ -118,7 +118,7 @@ from type import *
                         {% set badges = "badge badge-important" %}
                     <div class="pull-right points {{class}}"> 
                             {% if object.owner != current_user and object.sender==current_user %}
-                            <span class="{{badges}} {{class}} launchpopover"  rel="popover" data-placement="top" data-content="Puntos perdidos al mandar la tarea" data-original-title="Puntos" data-trigger="hover">-5</span>
+                            <span class="{{badges}} {{class}} launchpopover"  rel="popover" data-placement="top" data-content="Puntos gastados al mandar la tarea" data-original-title="Puntos" data-trigger="hover">-5</span>
                             {% else %}
                         <span class="{{badges}} {{class}}"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             +{{ object.earned_points }}</span>

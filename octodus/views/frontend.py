@@ -139,7 +139,8 @@ def signup():
                         email=request.args.get('email'))
 
     if form.validate_on_submit() or \
-        (request.method == 'POST' and form.nocode.data):
+        (request.method == 'POST' ):
+#        (request.method == 'POST' and form.nocode.data):
         #if form.nocode.data:
         #    return redirect(url_for('frontend.email'))
         #else:

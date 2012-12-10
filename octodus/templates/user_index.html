@@ -18,7 +18,7 @@
     </li>
     <li class="divider"></li>
 {% endif %}
-<li id="Inbox"> <a href='Inbox'>
+<li id="Inbox"> <a href='/user/tasks/inbox'>
         <i class='icon-inbox' style="display:inline-block;"></i>
         <div class='project draggable'  style="display:inline-block;">
         Inbox
@@ -34,7 +34,7 @@
         {% endfor %}
         </a> 
         </li>
-        <li id="Private"><a href='Private'>
+        <li id="Private"><a href='/user/tasks/private'>
         <i class='icon-user' style="display:inline-block;"></i>
         <div class='project draggable' style="display:inline-block;">
         Private
@@ -50,7 +50,7 @@
         {% endfor %}
         </a> 
         </li>
-        <li id="Public"><a href='Public'>
+        <li id="Public"><a href='/user/tasks/public'>
         <i class='icon-bullhorn' style="display:inline-block;"></i>
         <div class='project draggable' style="display:inline-block;">
         Public
@@ -66,7 +66,14 @@
         {% endfor %}
         </a> 
         </li>
-        <li id="Done"><a href='Done'>
+        <li id="sent_received"><a href='/user/tasks/sent_received'>
+        <i class='icon-retweet' style="display:inline-block;"></i>
+        <div class='project draggable' style="display:inline-block;">
+        Sent/Received
+        </div>
+        </a> 
+        </li>
+        <li id="Done"><a href='/user/tasks/done'>
         <i class='icon-check' style="display:inline-block;"></i>
         <div class='project draggable' style="display:inline-block;">
         Done

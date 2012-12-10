@@ -328,7 +328,7 @@ def contacts(name=None):
 #@user.route('/')
 @user.route('/tasks/')
 @login_required
-def tasks(name=None, done=None):
+def tasks(name=None, done=None, sent_received=None):
     active = None
     timeline_actions=[]
     if name:
@@ -337,12 +337,25 @@ def tasks(name=None, done=None):
         user = current_user
     tasks = user.tasks
     if done:
-        done_tasks = []
-        for task in tasks:
-            if task.done:
-                done_tasks.append(task)
+        done_tasks = [task for task in tasks
+                            if task.done]
         tasks = done_tasks
         active = "Done"
+    if sent_received:
+        active = "sent_received"
+        from sqlalchemy import or_, and_
+        received_tasks =  Task.query.filter(
+            and_ (Task.owner == current_user,Task.sender != current_user)).all()
+        sent_tasks =  Task.query.filter(
+            and_(Task.sender==current_user, Task.owner != current_user)
+        ).all()
+        sent_received_tasks = received_tasks + sent_tasks
+        
+       #     [task for task in tasks 
+       #                       if (task.sender != current_user or
+       #                        task.owner != current_user)] 
+        tasks = sent_received_tasks
+
     contacts = dict()
     for contact in user.following:
         if current_user in contact.following:
@@ -366,6 +379,10 @@ def tasks(name=None, done=None):
                            contacts=json.dumps(contacts),
                            project=None,
                             current_user=current_user)
+
+@user.route('/tasks/sent_received')
+def sent_received():
+        return tasks(name=None, done=False, sent_received=True)
 
 @user.route('/tasks/done')
 def done():

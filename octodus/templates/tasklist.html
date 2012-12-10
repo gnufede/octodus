@@ -119,7 +119,7 @@
         proj_name = proj_name.replace('×','');
         var element = proj_label.parent().siblings().first().next();
         var action = 'deluser';
-        if (element.hasClass('taskname')){
+        if (element.hasClass('tasklist')){
             action = 'unset'
         }
         url='/user/project/'+proj_name+'/'+action+'/'+element.text()

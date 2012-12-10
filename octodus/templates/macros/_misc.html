@@ -106,6 +106,10 @@ from type import *
                         <a class="owner_label {{ class }}" href="/user/{{object.owner.username}}">{{ object.owner.username }}</a>
                         {% elif object.owner != current_user and class == 'tasklist'%}
                         <a href="/user/{{object.owner.username}}" class="owner_label label launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="This user owns the task">{{ object.owner.username }}</a>
+                        {% if object.sender == current_user %}
+                        <span class="badge badge-important {{class}} launchpopover"  rel="popover" data-placement="top" data-content="Puntos perdidos al mandar la tarea" data-original-title="Puntos" data-trigger="hover">-5</span>
+                        {% endif %}
+
                         {% elif class == 'timeline' %}
                         <span class="owner_label {{ class }}">{{ object.owner.username }}</span>
                         {% endif %}
@@ -189,14 +193,16 @@ from type import *
                     </div>
                     {% elif j == 'props' %}
                     <div class="pull-right props {{class}}"> 
+                        {% set badge = 'badge-inverse' %}
                         {% if  object.get_props() > 0 %}
                         {% set prop_placement = 'top' %}
+                        {% set badge = 'badge-important' %}
                         {% if class == 'timeline' %}
                         {% set prop_placement = 'left' %}
                         {% endif %}
-                        <span class="badge badge-inverse {{class}} launchpopover"  rel="popover" data-placement="{{prop_placement}}" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
+                        <span class="badge {{badge}} {{class}} launchpopover"  rel="popover" data-placement="{{prop_placement}}" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             {% else %}
-                           <span class="badge badge-inverse {{class}}">
+                            <span class="badge {{badge}} {{class}}">
                             {% endif %}
                             {% if (current_user.username not in object.get_propped_users().split(',') and not object.done) and (object.owner != current_user ) and (class=='timeline') %}
                                 <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">

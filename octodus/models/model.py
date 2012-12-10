@@ -114,7 +114,7 @@ class User(db.Model, UserMixin):
                     for project in followee.projects:
                         if project.name == "Public" or (self in project.users):
                             for task in project.tasks:
-                                if task not in all_tasks:
+                                if task.owner == followee and task not in all_tasks:
                                     all_tasks.append(task)
         return sorted(all_tasks, key=lambda task: task.modified, reverse=True)
 

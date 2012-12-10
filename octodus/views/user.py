@@ -328,7 +328,7 @@ def contacts(name=None):
 #@user.route('/')
 @user.route('/tasks/')
 @login_required
-def tasks(name=None, done=None, sent_received=None):
+def tasks(name=None, done=None):
     active = None
     timeline_actions=[]
     if name:
@@ -336,24 +336,29 @@ def tasks(name=None, done=None, sent_received=None):
     else:
         user = current_user
     tasks = user.tasks
-    if done:
+    if done and done=="done":
         done_tasks = [task for task in tasks
                             if task.done]
         tasks = done_tasks
         active = "Done"
-    if sent_received:
+    if done and done=="sent_received":
         active = "sent_received"
-        from sqlalchemy import or_, and_
+        from sqlalchemy import and_
         received_tasks =  Task.query.filter(
             and_ (Task.owner == current_user,Task.sender != current_user)).all()
         sent_tasks =  Task.query.filter(
             and_(Task.sender==current_user, Task.owner != current_user)
         ).all()
         sent_received_tasks = received_tasks + sent_tasks
-        
-       #     [task for task in tasks 
-       #                       if (task.sender != current_user or
-       #                        task.owner != current_user)] 
+        tasks = sent_received_tasks
+    if done and done=="done_sent":
+        from sqlalchemy import and_
+        sent_tasks =  Task.query.filter(
+            and_(Task.sender==current_user, Task.owner != current_user)
+        ).all()
+        done_tasks = [task for task in tasks
+                            if task.done]
+        sent_received_tasks = done_tasks + sent_tasks
         tasks = sent_received_tasks
 
     contacts = dict()
@@ -380,13 +385,17 @@ def tasks(name=None, done=None, sent_received=None):
                            project=None,
                             current_user=current_user)
 
+@user.route('/tasks/done_sent')
+def done_sent():
+        return tasks(name=None, done="done_sent")
+
 @user.route('/tasks/sent_received')
 def sent_received():
-        return tasks(name=None, done=False, sent_received=True)
+        return tasks(name=None, done="sent_received")
 
 @user.route('/tasks/done')
 def done():
-        return tasks(name=None, done=True)
+        return tasks(name=None, done="done")
 
 @user.route('/Private/')
 def private():

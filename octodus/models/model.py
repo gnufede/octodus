@@ -94,6 +94,7 @@ class User(db.Model, UserMixin):
         project = None
         userid = None
         users = None
+        self_timeline = None
         if project_name:
             for each_project in self.projects:
                 if each_project.name == project_name:

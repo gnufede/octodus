@@ -8,12 +8,12 @@
 <div class="btn-toolbar span9"> <!--navbar navbar-inner navbar-form -->
     <div id="newtask" class="input pull-left" style="display:inline-block;" >
                     <input class="input-xxlarge" id="newtaskname" name="name"
-                    style="display:inline-block;" type="text" value="Nueva tarea"
+                    style="display:inline-block;" type="text" value="New Task"
                     
              onKeyUp="return _onKeyUp(event, $(this), 
             '/user/tasks/new/', false);"
-            onFocus="$(this).val('');;">
-            <!--onBlur="return _onBlur($(this), 'Nueva tarea', false)"-->
+            onFocus="if ($(this).val()=='New Task'){$(this).val('')};"
+            onBlur="if ($(this).val()==''){$(this).val('New Task')};">
                     
                 </div>
 

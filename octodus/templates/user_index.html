@@ -87,10 +87,8 @@
             contenteditable="true"
            onKeyUp="return _onKeyUp(event, $(this), 
             '/user/project/', true);"  onKeyPress="return _onKeyPress(event, $(this), '/user/project/', true);" 
-            onFocus="$(this).text('');$(this).parent().css('background-color', 'white');"
-            onBlur="$(this).parent().css('background-color', 'inherit');return _onBlur($(this), 'Nuevo Proyecto', true);">
-        Nuevo Proyecto
-        </span> 
+            onFocus="if($(this).text()=='New Project'){$(this).text('');};$(this).parent().css('background-color', 'white');"
+            onBlur="$(this).parent().css('background-color', 'inherit');if($(this).text()==''){$(this).text('New Project');};return _onBlur($(this), 'New Project', true);">New Project</span> 
         <!-- onKeyUp="return _onKeyUp(event, $(this), 
             '/user/project/', true);" onInput="return _onKeyUp(event, $(this), 
             '/user/project/', true);"-->

@@ -602,24 +602,42 @@ def list():
 @user.route('/<name>', methods=['POST', 'GET'])
 def pub(name=None):
     form = FollowForm()
+    timeline_actions=[]
+    user = None
     if request.method == 'POST':
         followed = User.query.filter_by(username=name).first()
         current_user.following.append(followed)
         db.session.commit()
-    if current_user.is_authenticated() and \
-       (current_user.username == name or name==None):
-        return render_template('user_pub.html', user=current_user, form=form)
+#    if current_user.is_authenticated() and \
+#       (current_user.username == name or name==None):
+#        return render_template('user_pub.html', user=current_user, form=form)
        # return redirect(url_for('user.index'))
-    if name:
+    if not name:
+        user = current_user
+    else:
         proj_name = re.compile('^'+name+'$', re.I)
         for each_project in current_user.projects:
             if proj_name.match(each_project.name):
                 project = each_project
                 return redirect('user/contacts/'+name)
 
-    user = User.query.filter_by(username=name).first_or_404()
+    if not user:
+        user = User.query.filter_by(username=name).first_or_404()
+    timeline=current_user.timeline(user=user)
     form.follow = name
-    return render_template('user_pub.html', user=user, form=form)
+
+    contacts = user.getContacts()
+        
+    contacts = sorted(contacts, key=lambda contact: contact.points, reverse=True)
+    return render_template('user_pub.html', user=user, form=form,
+                            timeline=timeline,
+                            timeline_fields=timeline_fields,
+                            timeline_actions=timeline_actions,
+                            objects=contacts, 
+                            fields=['id','username','points', 'projects'], 
+                            actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                          
+                          )
 
 
 @user.route('/users/follow/<name>', methods=['POST', 'GET'])

@@ -30,6 +30,7 @@
     {% set headers = ''%}
     {% endif %}
     
+    <h4>Tasks</h4> 
     <div class="list" >
     {% if not project %}
     {{ render_tasklist(tasks, 'tasklist', headers, fields, delete, no_set_delete, actions, current_user, '') }}
@@ -49,6 +50,7 @@
     {% set headers = ''%}
     {% endif %}
     
+    <h4>Timeline</h4> 
     <div class="list" >
     {% if not project %}
     {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, '') }}

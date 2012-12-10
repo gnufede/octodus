@@ -90,8 +90,9 @@ class User(db.Model, UserMixin):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
-    def timeline(self, project_name=None):
+    def timeline(self, project_name=None, user=None):
         project = None
+        userid = None
         users = None
         if project_name:
             for each_project in self.projects:
@@ -100,12 +101,15 @@ class User(db.Model, UserMixin):
                     break
             if project:
                 users = project.users
+        elif user:
+            self_timeline = True
+            users = [user,]
         else:
             users = self.following
         all_tasks = []
         if users:
             for followee in users:
-                if followee != self:
+                if followee != self or self_timeline:
                     for project in followee.projects:
                         if project.name == "Public" or (self in project.users):
                             for task in project.tasks:

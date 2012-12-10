@@ -19,6 +19,7 @@
     {% set headers = ''%}
     {% endif %}
     
+    <h4>Users</h4> 
 <div class="list">
     {% if not project %}
     {{ render_userlist(objects, 'userlist', fields, actions, current_user, '') }}
@@ -37,7 +38,7 @@
     {% if not headers %}
     {% set headers = ''%}
     {% endif %}
-    
+    <h4>Timeline</h4> 
 <div class="list">
     {% if not project %}
     {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, '') }}

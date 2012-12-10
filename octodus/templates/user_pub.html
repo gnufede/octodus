@@ -1,17 +1,42 @@
-{% from "macros/_misc.html" import render_input, render_action %}
+{% from "macros/_misc.html" import render_input, render_action, render_tasklist, render_userlist %}
 
 {% set page_title = user.username %}
 
-{% extends "layout.html" %}
+{% extends "user_index.html" %}
 
 {% block body %}
-<div class='span10'>
+<div class='span6'>
+    <div class="points ">
+        <span class="badge badge-success mypoints " >
+        {{ user.points }} puntos
+        </span>
+    </div>
+    <br/>
+    <br/>
+    <h4>{{user.username}}'s Tasks</h4>
+    <div class="list" > 
+    {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, '') }}
+    </div>
+    <br/>
     <form class='form-stacked' method="POST" action="{{ url_for('user.pub', name=user.username) }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
-        {{ form.follow }}
         {{ render_action(form.submit) }}
      </form>
      </div>
+<div class='span3'>
+    <h4>{{user.username}}'s Contacts</h4>
+    <div class="list" >
+        {{ render_userlist(objects, 'userlist', fields, actions, current_user, '') }}
+    </div>
+</div>
 
+{% endblock %}
+{% block append_js %}
+<script>
+    $(function() {
+    jQuery("abbr.timeago").timeago();
+    $('.launchpopover').popover();
+    });
+</script>
 {% endblock %}

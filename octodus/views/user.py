@@ -217,6 +217,7 @@ def unset_project_tasks(name, task_id):
 @login_required
 def project_tasks(name):
     project = None
+    users = current_user.getContacts()
     proj_name = re.compile('^'+name+'$', re.I)
     timeline=current_user.timeline(name)
     timeline_actions=[]
@@ -226,6 +227,8 @@ def project_tasks(name):
         for each_project in current_user.projects:
             if proj_name.match(each_project.name):
                 project = each_project
+                users = current_user.getContacts(project.name)
+                users = sorted(users, key=lambda user: user.points, reverse=True)
 
                 contacts = dict()
                 for contact in current_user.following:
@@ -244,6 +247,9 @@ def project_tasks(name):
                             timeline=timeline,
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
+                            objects=users,
+                            usersactions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                            usersfields=['id','username','points', 'projects'],
                             cls='tasklist',
                             project = project,
                             current_user=current_user, active=each_project.name)
@@ -330,6 +336,8 @@ def contacts(name=None):
 @login_required
 def tasks(name=None, done=None):
     active = None
+    users = current_user.getContacts()
+    users = sorted(users, key=lambda user: user.points, reverse=True)
     timeline_actions=[]
     if name:
         user = User.query.filter_by(username=name).first()
@@ -381,6 +389,9 @@ def tasks(name=None, done=None):
                             timeline=timeline,
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
+                            objects=users,
+                            usersactions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                            usersfields=['id','username','points', 'projects'],
                            contacts=json.dumps(contacts),
                            project=None,
                             current_user=current_user)

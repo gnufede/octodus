@@ -238,13 +238,13 @@ from type import *
 {% endmacro %}
 
 
-{% macro render_userlist(objects, class='',  fields='', actions='', current_user='', projectname='') %}
+{% macro render_userlist(objects, class='',  usersfields='', usersactions='', current_user='', projectname='') %}
 
 {% if objects|length >0 %}
-            {% if fields == '' %}
+            {% if usersfields == '' %}
             {% set f = objects[0].__dict__ %}
             {% else %}
-            {% set f = fields %}
+            {% set f = usersfields %}
             {% endif %}
 <div class='table table-hover {{ class }}'>
     <ul type=none style="margin-left:0;" class="{{class}} sortable">
@@ -253,7 +253,7 @@ from type import *
         <div class="userdiv {{ class }}" >
 
             <div class="actions pull-right btn-group {{ class }}">
-                {% for action in actions %}
+                {% for action in usersactions %}
                 {% if ('unfollow' in action[2] and object not in current_user.following)
                 or ('unfollow' not in action[2] and object in current_user.following)
                 or (current_user == object)
@@ -262,7 +262,7 @@ from type import *
                     <i class="{{action[2]}} disabled {{ class }}"></i>
             </span></div>
             {% else %}
-            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="/user/{{action[1]}}/{{object.id}}" title="{{action[0]}}">
                     <i class="{{action[2]}} {{ class }}"></i>
             </span></div>
             {% endif %}

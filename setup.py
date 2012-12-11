@@ -24,6 +24,7 @@ setup(
         'Flask-Mail ==0.6.1',
         'Flask-Cache ==0.4.0',
         'Flask-Login ==0.1.3',
+        'Flask-gzip ==0.1',
         'MySQL-python ==1.2.3',
         'nose ==1.1.2',
         'python-dateutil ==2.1',

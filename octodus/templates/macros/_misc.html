@@ -48,9 +48,13 @@ from type import *
 {% endmacro %}
 
 
-{% macro render_action(field) %}
+{% macro render_action(field, nocancel='') %}
     <div class='actions'>
+{% if nocancel != '' %}
+        {{ field(class_='btn btn-primary') }}
+    {% else %}
         {{ field(class_='btn btn-primary') }}&nbsp;&nbsp;&nbsp;&nbsp;<a href='{{ url_for("frontend.index") }}'>{{ _('Cancel') }}</a>
+{% endif %}
     </div>
 {% endmacro %}
 

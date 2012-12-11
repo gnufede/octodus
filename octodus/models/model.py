@@ -207,8 +207,8 @@ class Task(db.Model):
         usernames = [prop.propped_users.username for prop in self.props]
         tostring = '';
         for user in usernames:
-            tostring += user+','
-        return tostring[:-1]
+            tostring += user+', '
+        return tostring[:-2]
 
     def getProjs(self, user):
         all_projects = self.projects

@@ -632,7 +632,10 @@ def pub(name=None):
     user = None
     if request.method == 'POST':
         followed = User.query.filter_by(username=name).first()
-        current_user.following.append(followed)
+        if followed in current_user.following:
+            current_user.following.remove(followed)
+        else:
+            current_user.following.append(followed)
         db.session.commit()
 #    if current_user.is_authenticated() and \
 #       (current_user.username == name or name==None):
@@ -651,6 +654,11 @@ def pub(name=None):
         user = User.query.filter_by(username=name).first_or_404()
     timeline=current_user.timeline(user=user)
     form.follow = name
+
+    if user not in current_user.following:
+        form.submit.label.text = "Follow"
+    else:
+        form.submit.label.text = "Unfollow"
 
     contacts = user.getContacts()
         

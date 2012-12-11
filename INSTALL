@@ -1,5 +1,12 @@
 #sudo apt-get install mysql-server phpmyadmin
-sudo apt-get install python-virtualenv python-mysqldb
+
+## Database setup:
+#read -p "Enter a mysql administrator name: " db_admin
+#mysql -u $db_admin -p < setup_db.sql 
+#unset db_admin
+
+sudo apt-get install python-virtualenv python-mysqldb libmysqlclient-dev python-dev
+
 virtualenv venv
 . venv/bin/activate
 

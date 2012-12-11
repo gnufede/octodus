@@ -21,7 +21,7 @@
     <form class='form-stacked' method="POST" action="{{ url_for('user.pub', name=user.username) }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
-        {% if user not in current_user.following %}
+        {% if user not in current_user.following and user != current_user %}
         {{ render_action(form.submit) }}
         {% endif %}
      </form>

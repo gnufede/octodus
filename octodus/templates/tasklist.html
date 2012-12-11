@@ -5,7 +5,8 @@
 {% extends "user_index.html" %}
 
 {% block body %}
-<div class="btn-toolbar span9"> <!--navbar navbar-inner navbar-form -->
+<div class="row offset3 ">
+<div class="btn-toolbar span12"> <!--navbar navbar-inner navbar-form -->
     <div id="newtask" class="input pull-left" style="display:inline-block;" >
                     <input class="input-xxlarge" id="newtaskname" name="name"
                     style="display:inline-block;" type="text" value="New Task"
@@ -19,7 +20,8 @@
 
         <button id="showhide_done" type="button" class="btn btn-small  pull-right" data-toggle="buttons-checkbox">Hide done tasks</button>
     </div>
-<div class="span6">
+<div class="row-fluid ">
+<div class="span8">
     {% if not fields %}
     {% set fields = ''%}
     {% endif %}
@@ -39,7 +41,7 @@
     {% endif %}
     </div>
 </div>
-<div class="span3">
+<div class="span4">
     {% if not fields %}
     {% set fields = ''%}
     {% endif %}
@@ -73,6 +75,8 @@
     {% endif %}
     </div>
     </div>
+</div>
+</div>
 </div>
  
  
@@ -109,6 +113,8 @@
     $("#showhide_timeline").button();
     $("#showhide_userlist").button();
     $('#{{ active }}').addClass('active');
+    /*$('.affix').affix()*/
+    
 
 /*
     $(".proj_label.label.label-info").append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');

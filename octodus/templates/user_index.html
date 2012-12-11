@@ -3,9 +3,9 @@
 {% extends "layout.html" %}
 
 {% block menu %}
-<div class="span3">	
-<div class="well" style="padding: 8px 0;">
-<ul class="nav nav-list ">
+<div class="span3 usernav affix" >	
+<div class="well usernav" style="padding: 8px 0;" >
+<ul class="nav nav-list">
 {% if current_user.is_admin() %}
     <li class='nav-header'>
     <i class='icon-user'></i>
@@ -130,6 +130,7 @@
 {% endblock %}
 
 {% block append_js2 %}
+<script src="{{ url_for('static', filename='js/libs/portamento-min.js') }}"></script>
 <script async>
     $('.active a i').addClass('icon-white');
     

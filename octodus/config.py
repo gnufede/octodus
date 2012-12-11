@@ -22,8 +22,10 @@ class DefaultConfig(BaseConfig):
 
     if os.environ.get('SHARED_DATABASE_URL'):
         SQLALCHEMY_DATABASE_URI = os.environ.get('SHARED_DATABASE_URL')
+        DEBUG = False
     if os.environ.get('DATABASE_URL'):
         SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+        DEBUG = False
         #'mysql://51828:EFDOtest;;@mysql2.alwaysdata.com/efdigitalorlas_orlas'
 
     # Sqlite

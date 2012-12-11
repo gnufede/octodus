@@ -1,42 +1,10 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Quiénes somos.') %}
+{% set page_title = _('Octodus') %}
 
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="span6">	
-    <h2>Presentación.</h2>
-    <p>
-    	Somos una empresa formada por un grupo de profesionales con larga experiencia con el objetivo primordial 
-    	de ofrecerles un servicio cimentado en la garantía de calidad, que conseguimos gracias a nuestros equipos 
-    	fotográficos de alta definición.
-    </p>
-    <p>
-    	Al mismo tiempo, disponemos de una plataforma on-line, en la que le ofrecemos un abanico de múltiples 
-    	posibilidades a la hora de diseñar su orla, reportaje fotográfico, etc... y que ponemos a su disposición 
-    	para mejorar nuestros tiempos de respuesta, gestión y, en definitiva, conseguir su total satisfacción.
-    </p>
-</div>
-<div class="span6">
-	
-    <h2>Localización.</h2>
-    <p></p>
-	
-    <!--form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
-        {{ signup_form.hidden_tag() }}
-        {{ signup_form.next }}
-        <fieldset>
-            <legend><h5>Already have account? <a href="{{ url_for('frontend.login') }}">Login</a> please.</h5></legend>
-            {{ render_input(signup_form.code, 'large') }}
-            {{ render_input(signup_form.username, 'large') }}
-            {{ render_input(signup_form.email, 'large') }}
-            {{ render_input(signup_form.password, 'large') }}
-            {{ render_input(signup_form.password_again, 'large') }}
-            {{ render_action(signup_form.submit) }}
-        </fieldset>
-    </form-->
-</div>
 {% endblock %}
 
 {% block append_js %}

@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Registrarse en Octodus') %}
+{% set page_title = _('Octodus - Register') %}
 
 {% extends 'layout.html' %}
 
@@ -10,7 +10,7 @@
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
-            <legend>Ya tienes cuenta? <a href="{{ url_for('frontend.login') }}">Entra</a> por favor.</legend>
+            <legend>Already registered? <a href="{{ url_for('frontend.login') }}">Login</a> here.</legend>
             {{ render_input(form.code, 'xlarge') }}
             {{ render_input(form.username, 'xlarge') }}
             {# { render_input(form.surname, 'xlarge') }#}
@@ -50,7 +50,7 @@ $('#email').on('blur', function() {
     suggested: function(element, suggestion) {
        if (suggestion){
         var ayudita = $('#email').next();
-        $('<p>Quiso decir <a href="javascript:void(0)" onclick="changeEmail(\''+suggestion.full+'\');">'+suggestion.full+'</a>?</p>').appendTo(ayudita)
+        $('<p>Did you mean <a href="javascript:void(0)" onclick="changeEmail(\''+suggestion.full+'\');">'+suggestion.full+'</a>?</p>').appendTo(ayudita)
         }
     },
     empty: function(element) {

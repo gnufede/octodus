@@ -97,7 +97,7 @@
     {% if current_user.projects|length %}
     {% for project in current_user.projects: %}
     {% if project.name not in ['Inbox','Private','Public'] %}
-    <li id="{{project.name}}"><a href='{{project.name}}'  class='more_projects'>
+    <li id="{{project.name}}"><a   class='more_projects'>
             <i class='icon-tag' style="display:inline-block;"></i>
             <div class='project proj_name draggable' style="display:inline-block;">
             {{project.name}}
@@ -107,7 +107,9 @@
             {{project.get_undone_tasks()}}
             </div>
             {% endif%}
-                </a> 
+            <a href='/user/tasks/{{project.name}}'>Tasks</a>
+            <a href='/user/contacts/{{project.name}}'>People</a>
+            </a>
             </li>
     {% endif %}
         {% endfor %}

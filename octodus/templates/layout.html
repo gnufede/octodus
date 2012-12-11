@@ -100,8 +100,8 @@
         </li>
               </ul>
               {% elif login_form is defined %}
-	  			<li id='login'><a href='{{ url_for('frontend.login') }}'>Entrar</a></li>
-	  			<li id='signup'><a href='{{ url_for('frontend.signup') }}'>Registrarse</a></li>
+	  			<li id='login'><a href='{{ url_for('frontend.login') }}'>Login</a></li>
+	  			<li id='signup'><a href='{{ url_for('frontend.signup') }}'>Signup</a></li>
           	</ul>
               {% endif %}
                 	{% if current_user.is_authenticated() %}
@@ -110,7 +110,7 @@
                     </form>
                 	{% else %}
                  	  <ul class="nav">
-						<li id='galeria'><a href="{{ url_for('frontend.index') }}">Actos de graduación</a></li>
+						<!--li id='galeria'><a href="{{ url_for('frontend.index') }}">Actos de graduación</a></li-->
                       </ul>
 				    {% endif %}
           </div><!--/.nav-collapse -->

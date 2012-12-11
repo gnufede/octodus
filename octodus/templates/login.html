@@ -1,6 +1,6 @@
 {% from "macros/_misc.html" import render_input, render_action %}
 
-{% set page_title = _('Entrar en Octodus') %}
+{% set page_title = _('Octodus - Login') %}
 
 {% extends "layout.html" %}
 
@@ -11,21 +11,59 @@
         {{ form.next }}
         <fieldset>
         	{% if not tries -%}
-            <legend>Aún no tienes cuenta? <a href="{{ url_for('frontend.signup') }}">Regístrate</a> por favor.</legend>
+            <legend>Don't have an account yet? <a href="{{ url_for('frontend.signup') }}">Register</a> please.</legend>
             {% endif %}
             {% if tries -%}
-            <legend>Olvidaste la contraseña? <a href="{{ url_for('frontend.reset_password',value=form.data.email) }}">Recupera tu contraseña</a>.</legend>
+            <legend>Forgot your password? <a href="{{ url_for('frontend.reset_password',value=form.data.email) }}">Get your password back</a>.</legend>
             {% endif %}
             {{ render_input(form.email, 'xlarge', value=email) }}
             {{ render_input(form.password, 'xlarge') }}
             <div class='clearfix'>
                 <label></label>
                 <div class="input">
-                    {{ form.remember() }}<span class='remember_me'>{{ _('Recuérdame') }}</span>
+                    {{ form.remember() }}<span class='remember_me'>{{ _('Remember me') }}</span>
                 </div>
             </div>
             {{ render_action(form.submit) }}
         </fieldset>
     </form>
 </div>
+{% endblock %}
+
+{% block append_js %}
+<script  src="{{ url_for('static', filename='js/libs/mailcheck.min.js') }}"></script>
+<script>
+    $('#login').addClass('active');
+    $('label[for="nocode"]').css('display','inline-block');
+    $('.actions').css('margin-top','12px');
+</script>
+
+<script>
+function changeEmail(suggestion){
+        $('#email').val(suggestion);
+  $('#email').next().text('');// callback code
+}
+/*var domains = ['hotmail.com', 'gmail.com', 'aol.com'];
+var topLevelDomains = ["com", "net", "org"];
+
+var superStringDistance = function(string1, string2) {
+  // a string distance algorithm of your choosing
+}
+*/
+$('#email').on('blur', function() {
+  $('#email').next().text('');// callback code
+  $(this).mailcheck({
+    suggested: function(element, suggestion) {
+       if (suggestion){
+        var ayudita = $('#email').next();
+        $('<p>Did you mean <a href="javascript:void(0)" onclick="changeEmail(\''+suggestion.full+'\');">'+suggestion.full+'</a>?</p>').appendTo(ayudita)
+        }
+    },
+    empty: function(element) {
+      // callback code
+    }
+  });
+});
+
+</script>
 {% endblock %}

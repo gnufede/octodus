@@ -76,6 +76,7 @@ def login():
     form = LoginForm(email=request.args.get('email', None),
                      next=request.args.get('next', None))
     tries = request.args.get('tries', 0)
+    login_form = form
     if form.validate_on_submit():
         user, authenticated = User.authenticate(form.email.data,
                                     form.password.data)
@@ -85,22 +86,22 @@ def login():
                 remember = request.form.get('remember') == 'y'
                 if login_user(user, remember=remember):
                     name = [user.username,user.name][bool(user.name)]
-                    flash("Bienvenido, " + name + '!', 'success')
+                    flash("Welcome, " + name + '!', 'success')
                          # Logged in!
                 return redirect(form.next.data or url_for('user.index'))
             else:
-                flash(_('Vaya, no es correcto'), 'error')
+                flash(_('Sorry, invalid login'), 'error')
                     # Sorry, invalid login
                 tries = tries + 1
 
         else:
-            flash(_('Lo sentimos, esa cuenta no existe'), 'error')
+            flash(_('Sorry, there is no such account'), 'error')
                     #Sorry, there is no such account
             return redirect(url_for('frontend.signup', email=form.email.data))
     if form.email.data:
-        return render_template('login.html', form=form, tries=tries,
-                                email=form.email.data)
-    return render_template('login.html', form=form, tries=tries)
+        return render_template('login.html', form=form, tries=tries, 
+                                email=form.email.data, login_form=login_form)
+    return render_template('login.html', form=form, tries=tries, login_form=login_form)
     #return redirect(url_for('frontend.login',email=email))
 
 
@@ -115,10 +116,10 @@ def reauth():
         if user and authenticated:
             confirm_login()
             current_app.logger.debug('reauth: %s' % session['_fresh'])
-            flash(_('Reautenticado.'), 'success')  # Reauthenticate
+            flash(_('Reauthenticate.'), 'success')  # Reauthenticate
             return redirect('/change_password')
 
-        flash(_(u'La contraseña no es correcta.'), 'error') #Password is wrong.
+        flash(_(u'Password is wrong.'), 'error') #Password is wrong.
     return render_template('reauth.html', form=form)
 
 
@@ -127,7 +128,7 @@ def reauth():
 def logout():
     if current_user:
         logout_user()
-        flash(_('Has salido correctamente'), 'success')
+        flash(_('You are now logged out'), 'success')
                   # You are now logged out
     return redirect(url_for('frontend.index'))
 
@@ -138,8 +139,8 @@ def signup():
     form = SignupForm(next=request.args.get('next'),
                         email=request.args.get('email'))
 
-    if form.validate_on_submit() or \
-        (request.method == 'POST' ):
+    if form.validate_on_submit(): # or \
+        #(request.method == 'POST' ):
 #        (request.method == 'POST' and form.nocode.data):
         #if form.nocode.data:
         #    return redirect(url_for('frontend.email'))
@@ -210,12 +211,12 @@ def change_password():
         session.pop('email', None)
         session.pop('activation_code', None)
         if current_user.is_authenticated():
-            flash(_(u"Se ha cambiado tu contraseña correctamente"),
+            flash(_(u"Your password has been changed, please log in again"),
                     #Your password has been changed, please log in again
               "success")
             return redirect(url_for("user.index", email=email))
         else:
-            flash(_(u"Se ha cambiado tu contraseña, por favor, entra otra vez"),
+            flash(_(u"Your password has been changed, please log in again"),
                  #Your password has been changed, please log in again
               "success")
             return redirect(url_for("frontend.login", email=email))
@@ -236,10 +237,9 @@ def reset_password():
         user = User.query.filter_by(email=form.email.data).first()
 
         if user:
-            flash(_('Sigue las indicaciones que hemos enviado a tu correo '
-                  'para acceder a tu cuenta'), 'success')
-                  #Please see your email for instructions on
-                  #how to access your account
+            flash(_('Please see your email for instructions on '
+                  'how to access your account'
+                   ), 'success')
             user.activation_key = str(uuid4())
             db.session.add(user)
             db.session.commit()
@@ -250,7 +250,7 @@ def reset_password():
 
             return redirect(url_for('frontend.index'))
         else:
-            flash(_('Lo sentimos, no hay ningún usuario con esa dirección'),
+            flash(_('Sorry, no user found for that email address'),
                     'error')  # Sorry, no user found for that email address
 
     return render_template('reset_password.html', form=form, value=value)

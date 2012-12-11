@@ -119,7 +119,7 @@ from type import *
                         {% endif %}
                     </div>
                     {% elif j == 'earned_points' and (object.done or (object.owner != current_user and class=="tasklist")) %}
-                        {% set badges = "badge badge-important" %}
+                    {% set badges = "badge badge-points" %}
                     <div class="pull-right points {{class}}"> 
                             {% if object.owner != current_user and object.sender==current_user %}
                             <span class="{{badges}} {{class}} launchpopover"  rel="popover" data-placement="top" data-content="Puntos gastados al mandar la tarea" data-original-title="Puntos" data-trigger="hover">-5</span>
@@ -276,7 +276,7 @@ from type import *
                     {% elif j == 'email' %}
                     <div class="{{ class }} field email" style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
                     {% elif j == 'points' %}
-                            <div class="points badge badge-important {{class}}">{{ object[j] }}</div>
+                            <div class="points badge badge-points {{class}}">{{ object[j] }}</div>
                     {% elif j == 'username' %}
                     <div class="username {{class}}"><a href="/user/{{ object[j] }}">{{ object[j] }}</a></div>
                     {% elif object[j] != None%}

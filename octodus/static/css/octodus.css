@@ -229,3 +229,12 @@ box-shadow: inset 0 -7px 22px -3px black;
 
 .navbar-inverse{color:#999999;}.navbar-inverse .navbar-inner{background-color:#1b1b1b;background-image:-moz-linear-gradient(top, #444444, #222222);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));background-image:-webkit-linear-gradient(top, #444444, #222222);background-image:-o-linear-gradient(top, #444444, #222222);background-image:linear-gradient(to bottom, #444444, #222222);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);border-color:#252525;}
 
+#mypoints ,
+.badge-points{
+    background-color: #F89406;
+    background-image::-moz-linear-gradient(top, #FD9, #F89406);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#FD9), to(#F89406));background-image:-webkit-linear-gradient(top, #FD9, #F89406);background-image:-o-linear-gradient(top, #FD9, #F89406);background-image:linear-gradient(to bottom, #FD9, #F89406);
+    box-shadow: 1px 1px 0 #B04C00, 0 0 7px 4px #FDA;
+    color: #B04C00;
+    text-shadow: 0 0 1px rgba(250, 250, 90, 0.95);
+
+}

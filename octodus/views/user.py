@@ -683,6 +683,7 @@ def follow(name=None):
             return jsonify({'1':True})
 
 
+@user.route('/users/unfollow/<name>', methods=['POST', 'GET'])
 @user.route('/contacts/unfollow/<name>', methods=['POST', 'GET'])
 @user.route('/unfollow/<name>', methods=['POST', 'GET'])
 @login_required
@@ -692,7 +693,7 @@ def unfollow(name=None):
     if not followed:
         followed = User.query.get(name)
     if followed and\
-         current_user != followed and followed in current_user.following:
+          followed in current_user.following:
             current_user.following.remove(followed)
             db.session.commit()
        # return redirect(url_for('user.index'))

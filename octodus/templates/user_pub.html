@@ -5,7 +5,8 @@
 {% extends "user_index.html" %}
 
 {% block body %}
-<div class='span6'>
+<div class="offset3 row">
+<div class='span8'>
     <div class="points ">
         <span class="badge badge-success mypoints " >
         {{ user.points }} puntos
@@ -26,11 +27,12 @@
         {% endif %}
      </form>
      </div>
-<div class='span3'>
+<div class='span4'>
     <h4>{{user.username}}'s Contacts</h4>
     <div class="list" >
         {{ render_userlist(objects, 'userlist', fields, actions, current_user, '') }}
     </div>
+</div>
 </div>
 
 {% endblock %}

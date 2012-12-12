@@ -19,6 +19,7 @@ from octodus.extensions import db, mail, login_manager  # cache
 from octodus.forms import (SignupForm, LoginForm, RecoverPasswordForm,
                          ChangePasswordForm, ReauthForm)
 import os
+import re
 from werkzeug import check_password_hash  # generate_password_hash
 
 frontend = Blueprint('frontend', __name__)
@@ -137,7 +138,8 @@ def logout():
 def signup():
     login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'),
-                        email=request.args.get('email'))
+                        email=request.args.get('email'),
+                     code=request.args.get('code'))
 
     if form.validate_on_submit(): # or \
         #(request.method == 'POST' ):
@@ -163,6 +165,13 @@ def signup():
                 db.session.add(inbox)
                 db.session.add(private)
                 db.session.add(public)
+
+                activation = re.compile('^'+user.activation_key+'$', re.I)
+                for friend in User.query.all():
+                    if activation.match(friend.username):
+                        friend.points += 1
+                        friend.follow(user)
+                        user.follow(friend)
 
                 db.session.commit()
 

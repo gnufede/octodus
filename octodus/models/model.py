@@ -127,6 +127,16 @@ class User(db.Model, UserMixin):
         return return_projects
 
 
+    def follow(self, user):
+        if user not in self.following:
+            self.following.append(user)
+
+
+    def unfollow(self, user):
+        if user in self.following:
+            self.following.remove(user)
+
+
     password = property(get_password, set_password)
 
     def check_password(self, password):

@@ -252,6 +252,9 @@
             if (node.attr('title') == "Borrar"){
                 node.parent().parent().parent().parent().remove();
             }
+            if (node.attr('title') == "Unprop"){
+                 document.location.reload();
+            }
             if (node.attr('title') == "Prop"){
                  document.location.reload();
             }
@@ -263,7 +266,7 @@
             }
             if (node.attr('title') == "Follow"){
                  document.location.reload();
-            }
+             }
         });
         }
         return true;

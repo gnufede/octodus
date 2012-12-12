@@ -177,14 +177,31 @@ class User(db.Model, UserMixin):
         else: return []
 
     def prop(self, task, points=1):
-        if task.owner != self and self.points >= points and \
-           self.id not in [prop.user_id for prop in task.props]:
-            prop = Prop(user_id=self.id, task_id=task.id, points=points)
+        if task.owner != self and self.points >= points:
+            if self.id not in [prop.user_id for prop in task.props]:
+                prop = Prop(user_id=self.id, task_id=task.id, points=points)
+                db.session.add(prop)
+            else:
+                prop = Prop.query.filter_by(user_id=self.id, task_id=task.id).first()
+                prop.points += points
             self.points -= points
-            db.session.add(prop)
             db.session.commit()
             return True
         return False
+
+    def unprop(self, task, points=1):
+        if task.owner != self:
+            if self.id in [prop.user_id for prop in task.props]:
+                prop = Prop.query.filter_by(user_id=self.id, task_id=task.id).first()
+                if prop.points > 0:
+                    prop.points -= points
+                    self.points += points
+                if prop.points == 0:
+                    db.session.delete(prop)
+                db.session.commit()
+                return True
+        return False
+
 
 
 
@@ -214,11 +231,15 @@ class Task(db.Model):
         return sum([prop.points for prop in self.props])
 
     def get_propped_users(self):
-        usernames = [prop.propped_users.username for prop in self.props]
         tostring = '';
-        for user in usernames:
-            tostring += user+', '
+        for prop in self.props:
+            tostring += str(prop.propped_users.username)+\
+                        '('+str(prop.points)+'), '
         return tostring[:-2]
+
+    def get_propped_usernames(self):
+        return [prop.propped_users.username for prop in self.props] 
+
 
     def getProjs(self, user):
         all_projects = self.projects

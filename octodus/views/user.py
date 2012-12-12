@@ -609,6 +609,23 @@ def task_prop(id, value=1):
     return redirect(url_for('user.timeline'))
 
 
+@user.route('/unprop/<id>/')
+@user.route('/unprop/<id>/<value>/')
+@user.route('/contacts/unprop/<id>/')
+@user.route('/contacts/unprop/<id>/<value>/')
+@user.route('/timeline/unprop/<id>/')
+@user.route('/timeline/unprop/<id>/<value>/')
+@user.route('/tasks/unprop/<id>/')
+@user.route('/tasks/unprop/<id>/<value>/')
+@login_required
+def task_unprop(id, value=1):
+    task = Task.query.get(id)
+    if current_user.unprop(task, value):
+        flash('You have unpropped '+task.name+' for '+str(value)+' points :(', 'success')
+        return jsonify({'1':True})
+    return redirect(url_for('user.timeline'))
+
+
 
 @user.route('/timeline/')
 @user.route('/timeline/<project_name>')

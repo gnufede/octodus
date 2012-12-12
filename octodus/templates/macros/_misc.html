@@ -86,7 +86,7 @@ from type import *
             <div class="action clearfix btn disabled {{ class }}" ><span type="button" >
                     <i class="icon-play {{ class }}"></i>
             </span></div>
-            {% elif (action[2] == 'icon-thumbs-up' and current_user.username not in object.get_propped_users().split(',')) or (object.owner == current_user and  not (action[2] in ['icon-ok', 'icon-play', 'icon-share-alt'] and object['finished']!=None) ) %}
+            {% elif (action[2] == 'icon-thumbs-up') or (object.owner == current_user and  not (action[2] in ['icon-ok', 'icon-play', 'icon-share-alt'] and object['finished']!=None) ) %}
             <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
                     <i class="{{action[2]}} {{ class }}"></i>
             </span></div>
@@ -215,12 +215,19 @@ from type import *
                             {% else %}
                             <span class="badge {{badge}} {{class}}">
                             {% endif %}
-                            {% if (current_user.username not in object.get_propped_users().split(',') and not object.done) and (object.owner != current_user ) and (class=='timeline') %}
+                            {% if (not object.done) and (object.owner != current_user ) and (class=='timeline') %}
                                 <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
                     <i class="icon-thumbs-up icon-white {{ class }}"></i>
             </span>
                     {% endif %}
-                            {{ object.get_props() }}</span></div>
+                    {{ object.get_props() }}
+                     {% if (not object.done) and (object.owner != current_user ) and (class=='timeline') and (current_user.username in object.get_propped_usernames() ) %}
+                                <span onClick="return _action($(this));" type="button" href="unprop/{{object.id}}" title="Unprop" style="cursor:pointer;">
+                    <i class="icon-thumbs-down icon-white {{ class }}"></i>
+            </span>
+                    {% endif %}
+            
+            </span></div>
                     {% else %}
                     <div  class="{{class}} field" style='display:inline-block;'>{{ object[j]|length }}</div>
                     {% endif %}

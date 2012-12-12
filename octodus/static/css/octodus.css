@@ -36,11 +36,13 @@
     float:left;
    margin-left:3px;
    margin-right:6px;
-   min-width: 20%;
 }
-.timeline.proj_labels {
+.timeline .proj_labels {
     float:right;
   margin-bottom: 3px;
+}
+.tasklist .proj_labels {
+   min-width: 20%;
 }
 .userid, 
 .taskid {

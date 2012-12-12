@@ -176,6 +176,16 @@ class User(db.Model, UserMixin):
                            if contact in project.users]
         else: return []
 
+    def prop(self, task, points=1):
+        if task.owner != self and self.points >= points and \
+           self.id not in [prop.user_id for prop in task.props]:
+            prop = Prop(user_id=self.id, task_id=task.id, points=points)
+            self.points -= points
+            db.session.add(prop)
+            db.session.commit()
+            return True
+        return False
+
 
 
 

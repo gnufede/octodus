@@ -162,7 +162,9 @@ def set_project_tasks(name, task_id):
     for each_project in current_user.projects:
         if proj_name.match(each_project.name):
             project = each_project
-            task = Task.query.filter_by(id=task_id, owner=current_user).first_or_404()
+            task = Task.query.filter_by(id=task_id, owner=current_user).first()
+            if not task:
+                task = Task.query.filter_by(id=task_id, sender=current_user).first_or_404()
             project.addTask(task)
             if project.name != 'Inbox':
                 inbox = [proj for proj in current_user.projects 
@@ -187,7 +189,9 @@ def unset_project_tasks(name, task_id):
     for each_project in current_user.projects:
         if proj_name.match(each_project.name):
             project = each_project
-            task = Task.query.filter_by(id=task_id).first_or_404()
+            task = Task.query.filter_by(id=task_id, owner=current_user).first()
+            if not task:
+                task = Task.query.filter_by(id=task_id, sender=current_user).first_or_404()
             if task in project.tasks:
                 project.tasks.remove(task)
                 db.session.commit()
@@ -486,7 +490,11 @@ def new_task(name=None):
     if name:
         if name[0] == '@' and current_user.points > 5:
             username, space, name = name[1:].partition(' ')
-            owner = User.query.filter_by(username=username).first()
+            allusers = User.query.all()
+            username = re.compile('^'+username+'$', re.I)
+            for each_user in allusers:
+                if username.match(each_user.username):
+                    owner = each_user
         elif name[0] == '+': 
             project_name, space, name = name[1:].partition(' ')
             proj_name = re.compile('^'+project_name+'$', re.I)
@@ -499,8 +507,6 @@ def new_task(name=None):
         if owner != current_user:
             if owner not in current_user.getContacts():
                 return redirect(url_for('user.tasks'))
-            else:
-                current_user.points = current_user.points - 5
         newtask = Task(name=form.name.data, owner=owner, sender=current_user)
         if project:
             newtask.projects.append(project)
@@ -516,6 +522,8 @@ def new_task(name=None):
                     newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
+        current_user.prop(newtask)
+        flash('You have sent '+newtask.name+' to '+owner.username+' and propped for '+str(value)+' points!', 'success')
         return jsonify({'1':True})
     return render_template('user_newtask.html', form=form,
                             current_user=current_user)
@@ -595,12 +603,7 @@ def task_delete(id):
 @login_required
 def task_prop(id, value=1):
     task = Task.query.get(id)
-    if task.owner != current_user and current_user.points > value and \
-          current_user.id not in [prop.user_id for prop in task.props]:
-        prop = Prop(user_id=current_user.id, task_id=task.id, points=value)
-        current_user.points=current_user.points-value
-        db.session.add(prop)
-        db.session.commit()
+    if current_user.prop(task, value):
         flash('You have propped '+task.name+' for '+str(value)+' points!', 'success')
         return jsonify({'1':True})
     return redirect(url_for('user.timeline'))

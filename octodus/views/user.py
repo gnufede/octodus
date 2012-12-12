@@ -257,14 +257,20 @@ def project_tasks(name):
 
 
 @user.route('/followers/')
+@user.route('/<name>/followers/')
 @login_required
-def followers():
+def followers(name=None):
+    if name:
+        return redirect('user/contacts/'+name+'/followers')
     return redirect('user/contacts/followers')
 
 
 @user.route('/following/')
+@user.route('/<name>/following/')
 @login_required
-def following():
+def following(name=None):
+    if name:
+        return redirect('user/contacts/'+name+'/following')
     return redirect('user/contacts/following')
 
 @user.route('/users/')
@@ -280,7 +286,7 @@ def users(query=None):
         users = User.query.all()
  #       users = User.search(query).paginate(1,1)
     contacts = sorted(users, key=lambda contact: contact.points, reverse=True)
-    return render_template('userlist.html', title="Contactos", headers=False, 
+    return render_template('userlist.html', title="All users", headers=False, 
                            objects=contacts, 
                             fields=['id','username','points', 'projects'], 
                             actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
@@ -295,17 +301,35 @@ def users(query=None):
 
 @user.route('/contacts/')
 @user.route('/contacts/<name>')
+@user.route('/contacts/<name>/<followho>')
 @login_required
-def contacts(name=None):
+def contacts(name=None, followho=None):
     active = None
     project = None
+    title = ""
     if name != "following" and name != "followers":
-        contacts = current_user.getContacts()
+        if followho:
+            user = User.query.filter_by(username=name).first()
+            if followho == "following":
+                contacts = user.following
+                title = user.username + " follows"
+            elif followho == "followers":
+                contacts = user.followers
+                title = user.username + "'s followers"
+            else:
+                contacts = user.getContacts()
+                title = user.username + "'s contacts (following each other)"
+            name = None
+        else:
+            contacts = current_user.getContacts()
+            title = "My contacts (following each other)"
     elif name == "following":
         contacts = current_user.following
         name = None
+        title = "I follow"
     elif name == "followers":
         contacts = current_user.followers
+        title = "My followers"
         name = None
     timeline=current_user.timeline(name)
     timeline_actions=[]
@@ -315,9 +339,10 @@ def contacts(name=None):
             if proj_name.match(each_project.name):
                 project = each_project
         contacts = current_user.getContacts(name)
+        title = project.name+"'s contacts (following each other)"
         
     contacts = sorted(contacts, key=lambda contact: contact.points, reverse=True)
-    return render_template('userlist.html', title="Contactos", headers=False, 
+    return render_template('userlist.html', title=title, headers=False, 
                            objects=contacts, 
                             fields=['id','username','points', 'projects'], 
                             actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],

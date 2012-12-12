@@ -7,10 +7,39 @@
 {% block body %}
 <div class="offset3 row">
 <div class='span8'>
-    <div class="points ">
-        <span class="badge badge-success mypoints " >
+    <div class="points " style="display:inline-block">
+        <span class="badge badge-points mypoints " >
         {{ user.points }} puntos
         </span>
+    </div>
+    <div class="" style="display:inline-block">
+        <a href="/user/{{user.username}}/followers">Followers</a>
+        <a href="/user/{{user.username}}/following">Following</a>
+    </div>
+    <div class="relation label" style="display:inline-block; font-size:11pt;">
+    {% if user != current_user %}
+        {% if user in current_user.following %}
+        {% set following = True %}
+        {% else %}
+        {% set following = False %}
+        {% endif %}
+        {% if user in current_user.followers %}
+        {% set follower = True %}
+        {% else %}
+        {% set follower = False %}
+        {% endif %}
+        {% if following and follower %}
+        Following each other
+        {% elif following %}
+        You follow
+        {% elif follower %}
+        Follows you
+        {% else %}
+        Mutually oblivious
+        {% endif %}
+    {% else %}
+    That's you!
+    {% endif %}
     </div>
     <br/>
     <br/>

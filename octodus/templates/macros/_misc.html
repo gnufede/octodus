@@ -76,27 +76,6 @@ from type import *
         {% endif %}
         <div class="taskdiv {{ class }}" >
 
-            {% if (object.owner == current_user) or class=="timeline" %}
-            <div class="actions pull-right btn-group {{ class }}">
-            {% else %}
-            <div class="actions pull-right disabled btn-group {{ class }}" >
-            {% endif %}
-            {% for action in actions %}
-            {% if (action[2] == 'icon-play') and object['begin']!=None and not object['done'] %}
-            <div class="action clearfix btn disabled {{ class }}" ><span type="button" >
-                    <i class="icon-play {{ class }}"></i>
-            </span></div>
-            {% elif (action[2] == 'icon-thumbs-up') or (object.owner == current_user and  not (action[2] in ['icon-ok', 'icon-play', 'icon-share-alt'] and object['finished']!=None) ) %}
-            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i class="{{action[2]}} {{ class }}"></i>
-            </span></div>
-            {% else %}
-            <div class="action clearfix btn disabled {{ class }}" ><span type="button">
-                    <i class="{{action[2]}} disabled {{ class }}"></i>
-            </span></div>
-            {% endif %}
-            {% endfor %}
-            </div>
 
 
             {% for j in f %}
@@ -237,6 +216,27 @@ from type import *
                  <div class="{{class}} field" style='display:inline-block;'><a href="#">{{ object[j] }}</a></div>
                  {% endif %}
             {% endfor %}
+
+            {% if "timeline" not in class%}
+            {% if (object.owner == current_user) %}
+            <div class="actions pull-right btn-group {{ class }}">
+            {% else %}
+            <div class="actions pull-right disabled btn-group {{ class }}" >
+            {% endif %}
+            {% for action in actions %}
+            {% if (action[2] == 'icon-play') and object['begin']!=None and not object['done'] %}
+            <div class="action clearfix btn btn-small disabled {{ class }}" ><span type="button" >
+                    <i class="icon-play {{ class }}"></i> {{action[0]}}</span></div>
+            {% elif (action[2] == 'icon-thumbs-up') or (object.owner == current_user and  not (action[2] in ['icon-ok', 'icon-play', 'icon-share-alt'] and object['finished']!=None) ) %}
+            <div class="action clearfix btn  btn-small {{ class }}" ><span onClick="return _action($(this));" type="button" href="{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} {{ class }}"></i> {{action[0]}}</span></div>
+            {% else %}
+            <div class="action clearfix btn btn-small disabled {{ class }}" ><span type="button">
+                    <i class="{{action[2]}} disabled {{ class }}"></i> {{action[0]}}</span></div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
         </div>
         </li>
         {% endfor %}
@@ -260,22 +260,6 @@ from type import *
         <li class="user droppable {{ class }}" id="user_{{object.id}}">
         <div class="userdiv {{ class }}" >
 
-            <div class="actions pull-right btn-group {{ class }}">
-                {% for action in usersactions %}
-                {% if ('unfollow' in action[2] and object not in current_user.following)
-                or ('unfollow' not in action[2] and object in current_user.following)
-                or (current_user == object)
-                %}
-            <div class="action clearfix btn disabled {{ class }}" ><span type="button" title="{{action[0]}}">
-                    <i class="{{action[2]}} disabled {{ class }}"></i>
-            </span></div>
-            {% else %}
-            <div class="action clearfix btn  {{ class }}" ><span onClick="return _action($(this));" type="button" href="/user/{{action[1]}}/{{object.id}}" title="{{action[0]}}">
-                    <i class="{{action[2]}} {{ class }}"></i>
-            </span></div>
-            {% endif %}
-            {% endfor %}
-            </div>
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
                 {% if object[j] is not is_list %}
@@ -306,6 +290,20 @@ from type import *
                  <div class="{{class}} field" style='display:inline-block;'><a href="#">{{ object[j] }}</a></div>
                  {% endif %}
             {% endfor %}
+            <div class="actions pull-right btn-group {{ class }}">
+                {% for action in usersactions %}
+                {% if ('unfollow' in action[2] and object not in current_user.following)
+                or ('unfollow' not in action[2] and object in current_user.following)
+                or (current_user == object)
+                %}
+            <div class="action clearfix btn btn-small disabled {{ class }}" ><span type="button" title="{{action[0]}}">
+                    <i class="{{action[2]}} disabled {{ class }}"></i> {{action[0]}}</span></div>
+            {% else %}
+            <div class="action clearfix btn btn-small {{ class }}" ><span onClick="return _action($(this));" type="button" href="/user/{{action[1]}}/{{object.id}}" title="{{action[0]}}">
+                    <i class="{{action[2]}} {{ class }}"></i> {{action[0]}}</span></div>
+            {% endif %}
+            {% endfor %}
+            </div>
         </div>
         </li>
         {% endfor %}

@@ -138,7 +138,7 @@
            <select class="xlarge" id="task_to_owner" name="name"
                type="text"></select>
        </div-->
-       <form class='form-stacked' method="POST" 
+       <form class='form-stacked' method="POST" style="margin:0;"
              onsubmit="return _onsubmit(event, $(this), 
             '/user/tasks/new/');"
            action="{{ url_for('user.new_task') }}">
@@ -151,8 +151,8 @@
              {{ render_input(newtaskform.name, 'input-xlarge') }}
              {{ render_input(newtaskform.description, 'input-xlarge') }}
              {{ render_input(newtaskform.priority, 'input-xlarge') }}
-             {{ render_input(newtaskform.deadline, 'input-xlarge') }}
-             {{ render_input(newtaskform.duration_minutes, 'input-xlarge') }}
+             {{ render_input(newtaskform.deadline, 'input-xlarge', extra='calendar', value=today) }}
+             {{ render_input(newtaskform.duration_minutes, 'input-xlarge', extra='time') }}
              
         </fieldset>
 
@@ -197,6 +197,8 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
     
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <script  src="{{ url_for('static', filename='js/libs/bootstrap-timepicker.js') }}"></script>
+    
     {% endblock %}
 
     {% block js_script %}
@@ -211,6 +213,18 @@
     {% endblock %}
     {% block append_js2 %}
     {% endblock %}
+<script async>
+    $(function() {
+    {% block append_js_on_load %}
+    {% endblock %}
+    $('#deadline').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            weekStart: 1
+        });
+
+});
+</script>
 <script async type="text/javascript">
   var uvOptions = {};
   (function() {

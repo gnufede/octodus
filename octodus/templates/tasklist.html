@@ -111,10 +111,15 @@
 
 {% endblock %}
 
-{% block append_js %}
-<script async>
+{% block append_js_on_load %}
+    var contacts ={{ contacts|safe }}; 
 
-    $(function() {
+    $.each(contacts, function(key, value) {   
+     $('#newtaskowner')
+          .append($('<option>', { value : key })
+          .text(value)); 
+    });
+
     $('#tasks').addClass('active');
     $("#showhide_done").button();
     $("#showhide_timeline").button();
@@ -202,17 +207,11 @@
           url:url
              }).done(function() { 
                  document.location.reload();
+                 });
+    }
+
         });
-}});
-    var contacts ={{ contacts|safe }}; 
-
-    $.each(contacts, function(key, value) {   
-     $('#newtaskowner')
-          .append($('<option>', { value : key })
-          .text(value)); 
-    });
 
 
-    });
-    </script>
+   
 {% endblock %}

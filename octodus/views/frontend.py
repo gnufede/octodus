@@ -105,6 +105,7 @@ def login():
             return redirect(url_for('frontend.signup', email=form.email.data))
     if form.email.data:
         return render_template('login.html', form=form, tries=tries, 
+                                newtaskform = TaskForm(),
                                 email=form.email.data, login_form=login_form)
     return render_template('login.html', form=form, tries=tries, 
                             newtaskform = TaskForm(),

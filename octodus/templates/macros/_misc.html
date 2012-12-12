@@ -122,7 +122,6 @@ from type import *
                     {% set badges = "badge badge-points" %}
                     <div class="pull-right points {{class}}"> 
                             {% if object.owner != current_user and object.sender==current_user %}
-                            <span class="{{badges}} {{class}} launchpopover"  rel="popover" data-placement="top" data-content="You sent and propped this task" data-original-title="Points" data-trigger="hover">-1</span>
                             {% else %}
                         <span class="{{badges}} {{class}}"  rel="popover" data-placement="top" data-content="{{object.get_propped_users()}}" data-original-title="Props" data-trigger="hover">
                             +{{ object.earned_points }}</span>
@@ -215,13 +214,13 @@ from type import *
                             {% else %}
                             <span class="badge {{badge}} {{class}}">
                             {% endif %}
-                            {% if (not object.done) and (object.owner != current_user ) and (class=='timeline') %}
+                            {% if (not object.done) and (object.owner != current_user )  %}
                                 <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
                     <i class="icon-thumbs-up icon-white {{ class }}"></i>
             </span>
                     {% endif %}
                     {{ object.get_props() }}
-                     {% if (not object.done) and (object.owner != current_user ) and (class=='timeline') and (current_user.username in object.get_propped_usernames() ) %}
+                     {% if (not object.done) and (object.owner != current_user )  and (current_user.username in object.get_propped_usernames() ) %}
                                 <span onClick="return _action($(this));" type="button" href="unprop/{{object.id}}" title="Unprop" style="cursor:pointer;">
                     <i class="icon-thumbs-down icon-white {{ class }}"></i>
             </span>

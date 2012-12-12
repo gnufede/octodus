@@ -246,7 +246,7 @@ def project_tasks(name):
                 #tasks = sorted(tasks, key=lambda task: task.earned_points, reverse=True)
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
-                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects'], 
+                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,

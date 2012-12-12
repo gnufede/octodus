@@ -17,6 +17,7 @@ from octodus.decorators import cached_response
 from octodus.models import User, Project
 from octodus.extensions import db, mail, login_manager  # cache
 from octodus.forms import (SignupForm, LoginForm, RecoverPasswordForm,
+                           TaskForm,
                          ChangePasswordForm, ReauthForm)
 import os
 import re
@@ -39,6 +40,7 @@ def index():
     horario = "bla "
     pagination = User.query.paginate(page=page, per_page=10)
     return render_template('index.html', horario=horario,
+                            newtaskform = TaskForm(),
                             pagination=pagination, login_form=login_form,
                            signup_form=signup_form, current_user=current_user)
 
@@ -49,6 +51,7 @@ def email():
     login_form = LoginForm(next=request.args.get('next'))
     form = SignupForm(next=request.args.get('next'))
     return render_template('email.html', login_form=login_form,
+                            newtaskform = TaskForm(),
                            signup_form=form, current_user=current_user)
 
 
@@ -68,6 +71,7 @@ def search():
         pagination = None #User.query.all()
         flash('Please input keyword(s)', 'error')
     return render_template('search.html', pagination=None,
+                            newtaskform = TaskForm(),
                            keywords=keywords, login_form=login_form)
 
 
@@ -102,7 +106,9 @@ def login():
     if form.email.data:
         return render_template('login.html', form=form, tries=tries, 
                                 email=form.email.data, login_form=login_form)
-    return render_template('login.html', form=form, tries=tries, login_form=login_form)
+    return render_template('login.html', form=form, tries=tries, 
+                            newtaskform = TaskForm(),
+                           login_form=login_form)
     #return redirect(url_for('frontend.login',email=email))
 
 
@@ -121,7 +127,9 @@ def reauth():
             return redirect('/change_password')
 
         flash(_(u'Password is wrong.'), 'error') #Password is wrong.
-    return render_template('reauth.html', form=form)
+    return render_template('reauth.html', 
+                            newtaskform = TaskForm(),
+                            form=form)
 
 
 @frontend.route('/logout')
@@ -182,7 +190,9 @@ def signup():
            #              #Invalid code
            #       "error")
 
-    return render_template('signup.html', form=form, login_form=login_form)
+    return render_template('signup.html', form=form,
+                            newtaskform = TaskForm(),
+                           login_form=login_form)
 
 
 @frontend.route('/change_password', methods=['GET', 'POST'])
@@ -230,7 +240,9 @@ def change_password():
               "success")
             return redirect(url_for("frontend.login", email=email))
 
-    return render_template("change_password.html", form=form)
+    return render_template("change_password.html",
+                            newtaskform = TaskForm(),
+                           form=form)
 
 
 @frontend.route('/reset_password', methods=['GET', 'POST'])
@@ -262,7 +274,9 @@ def reset_password():
             flash(_('Sorry, no user found for that email address'),
                     'error')  # Sorry, no user found for that email address
 
-    return render_template('reset_password.html', form=form, value=value)
+    return render_template('reset_password.html',
+                            newtaskform = TaskForm(),
+                           form=form, value=value)
 
 
 

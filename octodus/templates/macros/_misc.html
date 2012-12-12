@@ -104,6 +104,8 @@ from type import *
                 {% if object[j] is not is_list %}
                     {% if j == 'id' %}
                     <div class="taskid {{ class }}">{{ object[j] }}</div>
+                    {% elif j == 'description' and object[j]  %}
+                   <div class="taskdescription {{class}}">{{ object[j] }}</div>
                     {% elif j == 'owner' %}
                       <div class="owner owner_label {{ class }}">
                         {% if object.owner != current_user and class == 'timeline'%}

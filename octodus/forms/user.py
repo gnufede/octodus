@@ -3,7 +3,8 @@
 from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList,
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label,
-                          RadioField, SelectMultipleField, length)
+                          RadioField, SelectMultipleField, TextAreaField,
+                          IntegerField, DateTimeField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from octodus.models import User, Project
@@ -57,6 +58,10 @@ class EditDatosForm(Form):
 class TaskForm(Form):
     next = HiddenField()
     name = TextField()
+    description = TextAreaField()
+    priority = IntegerField()
+    duration_minutes = IntegerField()
+    deadline = DateTimeField()
     submit = SubmitField(_('Hecho'))
 
 

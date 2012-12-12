@@ -7,14 +7,21 @@
 {% block body %}
 <div class="row offset3 ">
 <div class="btn-toolbar span12"> <!--navbar navbar-inner navbar-form -->
+                <button id="newtask_button" type="button" class="btn btn-primary pull-left" style="margin-right:5px;margin-left:5px;" onClick="return _action($(this));" title="New Task">
+                    <i class="icon-white icon-plus"></i> 
+                    New Task</button>
     <div id="newtask" class="input pull-left" style="display:inline-block;" >
-                    <input class="input-xxlarge" id="newtaskname" name="name"
+            <!--onsubmit="submitAjaxQuery(event)" -->
+        <form id="task_quickentry" method="POST"
+             onsubmit="return _onsubmit(event, $(this), 
+            '/user/tasks/new/');"
+            action="{{ url_for('user.new_task')}}">
+                    <input class="input-xxlarge newtaskname" id="newtaskname" name="name"
                     style="display:inline-block;" type="text" value="New Task"
                     
-             onKeyUp="return _onKeyUp(event, $(this), 
-            '/user/tasks/new/', false);"
             onFocus="if ($(this).val()=='New Task'){$(this).val('')};"
             onBlur="if ($(this).val()==''){$(this).val('New Task')};">
+        </form>
                     
                 </div>
 

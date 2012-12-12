@@ -239,3 +239,14 @@ box-shadow: inset 0 -7px 22px -3px black;
     border-radius: 30px;
 
 }
+
+.taskdescription{
+    font-size: 9pt;
+    display: none;
+    clear: both;
+}
+.taskdiv:hover .taskdescription, .taskdiv.hover .taskdescription{
+    margin-left: 4px;
+    padding-top: 10px;
+display: block; 
+}

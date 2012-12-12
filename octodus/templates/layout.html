@@ -1,3 +1,4 @@
+{% from "macros/_misc.html" import render_input, render_action %}
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
@@ -88,12 +89,10 @@
       	  <ul class="nav pull-right">
               {% if current_user.is_authenticated() %}
               <li>
-                    <form class="form-search navbar-search" action="">
-                    <input class="xlarge" id="globalnewtaskname" name="name"
+              <form class="form-search navbar-search" method="POST" onsubmit="_onsubmit(event, $(this), '/user/tasks/new/');" action="{{ url_for('user.new_task')}}" >
+                    <input class="xlarge newtaskname" id="globalnewtaskname" name="name"
                     style="display:inline-block;" type="text" value="New Task"
                     
-            onKeyDown="return _onKeyDown(event);" onKeyUp="return _onKeyUp(event, $(this), 
-            '/user/tasks/new/', false);"
             onBlur="if ($(this).val()==''){$(this).val('New Task')};"
             onFocus="if ($(this).val()=='New Task'){$(this).val('')};">
         </form>
@@ -128,7 +127,44 @@
             </div>
 
             <div class="row-fluid">
-            <div class="span12">
+                <div class="span12">
+                    <div id="modal_new_task" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myNewTaskLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myNewTaskLabel">New Task</h3>
+  </div>
+       <!--div id="task_to" class="input input-prepend" style="display:inline-block;" >
+           <span class="add-on">@</span>
+           <select class="xlarge" id="task_to_owner" name="name"
+               type="text"></select>
+       </div-->
+       <form class='form-stacked' method="POST" 
+             onsubmit="return _onsubmit(event, $(this), 
+            '/user/tasks/new/');"
+           action="{{ url_for('user.new_task') }}">
+  <div class="modal-body">
+        {{ newtaskform.hidden_tag() }}
+        {{ newtaskform.next }}
+       
+
+        <fieldset>
+             {{ render_input(newtaskform.name, 'input-xlarge') }}
+             {{ render_input(newtaskform.description, 'input-xlarge') }}
+             {{ render_input(newtaskform.priority, 'input-xlarge') }}
+             {{ render_input(newtaskform.deadline, 'input-xlarge') }}
+             {{ render_input(newtaskform.duration_minutes, 'input-xlarge') }}
+             
+        </fieldset>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-primary" type="submit">Done</button>
+    </form>
+  </div>
+</div>
+
+
                 {% block menu %}
                 {% endblock %}
                 {% block body %}

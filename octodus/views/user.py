@@ -221,6 +221,7 @@ def unset_project_tasks(name, task_id):
 @login_required
 def project_tasks(name):
     project = None
+    newtaskform = TaskForm()
     users = current_user.getContacts()
     proj_name = re.compile('^'+name+'$', re.I)
     timeline=current_user.timeline(name)
@@ -256,6 +257,7 @@ def project_tasks(name):
                             usersfields=['id','username','points', 'projects'],
                             cls='tasklist',
                             project = project,
+                           newtaskform=newtaskform,
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
@@ -281,6 +283,7 @@ def following(name=None):
 @user.route('/users/search/<query>')
 @login_required
 def users(query=None):
+    newtaskform = TaskForm()
     active=None
     timeline=current_user.timeline()
     timeline_actions=[]
@@ -300,6 +303,7 @@ def users(query=None):
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
                            contacts=[],
+                           newtaskform=newtaskform,
                            project=None,
                             current_user=current_user)
 
@@ -310,6 +314,7 @@ def users(query=None):
 def contacts(name=None, followho=None):
     active = None
     project = None
+    newtaskform = TaskForm()
     title = ""
     if name != "following" and name != "followers":
         if followho:
@@ -356,6 +361,7 @@ def contacts(name=None, followho=None):
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
                            contacts=[],
+                           newtaskform=newtaskform,
                            project=project,
                             current_user=current_user)
 
@@ -368,6 +374,7 @@ def tasks(name=None, done=None):
     users = current_user.getContacts()
     users = sorted(users, key=lambda user: user.points, reverse=True)
     timeline_actions=[]
+    newtaskform = TaskForm()
     if name:
         user = User.query.filter_by(username=name).first()
     else:
@@ -411,7 +418,7 @@ def tasks(name=None, done=None):
     return render_template('tasklist.html', title="Tareas", headers=False, 
                            tasks=tasks, 
                             #fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
-                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects'], 
+                            fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
                             actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-share-alt'],['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',
@@ -423,6 +430,7 @@ def tasks(name=None, done=None):
                             usersfields=['id','username','points', 'projects'],
                            contacts=json.dumps(contacts),
                            project=None,
+                           newtaskform=newtaskform,
                             current_user=current_user)
 
 @user.route('/tasks/done_sent')
@@ -487,7 +495,9 @@ def new_task(name=None):
     form = TaskForm()
     owner = current_user
     project = None
-    if name:
+
+    if request.method == 'POST':
+        name = form.name.data
         if name[0] == '@' and current_user.points > 5:
             username, space, name = name[1:].partition(' ')
             allusers = User.query.all()
@@ -501,13 +511,19 @@ def new_task(name=None):
             for each_project in current_user.projects:
                 if proj_name.match(each_project.name):
                     project = each_project
-        form.name.data = name;
 
-    if request.method == 'POST' or name:
         if owner != current_user:
             if owner not in current_user.getContacts():
                 return redirect(url_for('user.tasks'))
-        newtask = Task(name=form.name.data, owner=owner, sender=current_user)
+        newtask = Task(name=name, owner=owner, sender=current_user)
+        if form.description.data:
+            newtask.description = form.description.data
+        if form.priority.data:
+            newtask.priority = form.priority.data
+        if form.duration_minutes.data:
+            newtask.duration_minutes = form.duration_minutes.data
+        if form.deadline.data:
+            newtask.deadline = form.deadline.data
         if project:
             newtask.projects.append(project)
         else:
@@ -522,8 +538,9 @@ def new_task(name=None):
                     newtask.projects.append(inbox[0])
         db.session.add(newtask)
         db.session.commit()
-        current_user.prop(newtask)
-        flash('You have sent '+newtask.name+' to '+owner.username+' and propped for '+str(value)+' points!', 'success')
+        if owner != current_user:
+            current_user.prop(newtask)
+            flash('You have sent '+newtask.name+' to '+owner.username+' and propped for '+str(1)+' points!', 'success')
         return jsonify({'1':True})
     return render_template('user_newtask.html', form=form,
                             current_user=current_user)
@@ -723,6 +740,7 @@ def pub(name=None):
                             timeline=timeline,
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
+                            newtaskform = TaskForm(),
                             objects=contacts, 
                             fields=['id','username','points', 'projects'], 
                             actions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],

@@ -109,7 +109,7 @@
         var proj_label = $(this).parent();
         var proj_name = proj_label.text();
         proj_name = proj_name.replace('×','');
-        var element = proj_label.parent().siblings().first().next();
+        var element = proj_label.parent().siblings().first();
         var action = 'deluser';
         if (element.hasClass('tasklist')){
             action = 'unset'

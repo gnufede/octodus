@@ -95,8 +95,8 @@
   </div>
   <div class="modal-body">
       <p id="tasknametosend"></p>
-                <div id="newownerdiv" class="input input-prepend" style="display:inline-block;" >
-                    <span class="add-on">@</span>
+                <div id="newownerdiv" class="input" style="display:inline-block;" >
+                    <!--span class="add-on">@</span input-prepend -->
                     <select class="xlarge" id="newtaskowner" name="name"
                         type="text"></select>
                 </div>
@@ -187,6 +187,7 @@
     jQuery("abbr.timeago").timeago();
     $('.launchtooltip').tooltip();
     $('.launchpopover').popover();
+    $('#newtaskowner').select2();
         $( ".project" ).draggable({helper: 'clone'});
         $( ".label" ).draggable();
         $( ".droppable" ).droppable({

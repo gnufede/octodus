@@ -1,3 +1,4 @@
+
 .timestamp,
 .timeago {
   font-size: 7pt;
@@ -41,8 +42,12 @@
     float:right;
   margin-bottom: 3px;
 }
-.tasklist .proj_labels {
-   min-width: 20%;
+.userlist.proj_labels,
+.timeline.proj_labels,
+.tasklist.owner_label,
+.tasklist.sender_label,
+.tasklist.proj_labels {
+   margin-top: 5px;
 }
 .userid, 
 .taskid {
@@ -140,11 +145,12 @@ opacity:1;
   font-size: 11pt;
 }
 .tasklist.taskname {
-    max-width: 70%;
+    max-width: 80%;
+    font-size: 11pt;
 }
 .taskname {
     margin-left: 2px;
-  font-size: 9pt;
+  font-size: 10pt;
 }
 .username,
 .taskname.owner {
@@ -168,7 +174,7 @@ opacity:1;
 .sender_label, 
 .owner_label {
     float: left;
-    margin-top: 1px;
+    
 }
 .sender_label{
     clear: both;
@@ -276,3 +282,13 @@ margin-top: 1px;
 -moz-border-radius: 4px;
 border-radius: 4px;
 }
+
+
+.label{
+padding: 2px 5px 4px 5px;
+}
+.badge {
+padding: 2px 9px 4px 9px;
+}
+
+

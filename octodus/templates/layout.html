@@ -15,14 +15,15 @@
     <meta name="google-site-verification" content="" />
     <link rel="Shortcut Icon" href="{{ url_for('static', filename='favicon.ico')}}" type="image/x-icon">
     {% block css %}
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"-->
+    
+    <!--link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/octodus.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datepicker.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datepicker.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/octodus.css') }}">
     <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}"-->
     {% endblock %}
     {% block append_css %}

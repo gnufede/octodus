@@ -21,6 +21,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery-ui-1.8.16.custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/octodus.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datepicker.css') }}">
+
     <!--link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-wysihtml5.css') }}"-->
     {% endblock %}
     {% block append_css %}
@@ -138,9 +140,9 @@
            <select class="xlarge" id="task_to_owner" name="name"
                type="text"></select>
        </div-->
-       <form class='form-stacked' method="POST" style="margin:0;"
+       <form id="edit_new_form" class='form-stacked' method="POST" style="margin:0;"
              onsubmit="return _onsubmit(event, $(this), 
-            '/user/tasks/new/');"
+            $(this).attr('action'));"
            action="{{ url_for('user.new_task') }}">
   <div class="modal-body">
         {{ newtaskform.hidden_tag() }}
@@ -151,7 +153,9 @@
              {{ render_input(newtaskform.name, 'input-xlarge') }}
              {{ render_input(newtaskform.description, 'input-xlarge') }}
              {{ render_input(newtaskform.priority, 'input-xlarge') }}
+             <div id="deadlinediv">
              {{ render_input(newtaskform.deadline, 'input-xlarge', extra='calendar', value=today) }}
+             </div>
              {{ render_input(newtaskform.duration_minutes, 'input-xlarge', extra='time') }}
              
         </fieldset>
@@ -197,7 +201,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
     
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
-    <script  src="{{ url_for('static', filename='js/libs/bootstrap-timepicker.js') }}"></script>
+    <script  src="{{ url_for('static', filename='js/libs/bootstrap-datepicker.js') }}"></script>
     
     {% endblock %}
 
@@ -213,15 +217,27 @@
     {% endblock %}
     {% block append_js2 %}
     {% endblock %}
-<script async>
+    <script async>
+    function get_today(){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = yyyy +'-'+ mm+'-'+dd;
+        return today
+    }
     $(function() {
     {% block append_js_on_load %}
     {% endblock %}
-    $('#deadline').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            weekStart: 1
-        });
+
+    $('#deadline').parent().attr('data-date', get_today());
+    $('#deadline').attr('data-date', get_today());
+    $('#deadline').parent().addClass('input-append');
+    $('#deadline').parent().addClass('date');
+    $('#deadline').parent().attr('data-date-format','yyyy-mm-dd');
+    $('#deadline').attr('data-date-format','yyyy-mm-dd');
+    $('#deadline').datepicker();
 
 });
 </script>

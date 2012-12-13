@@ -60,8 +60,8 @@
     {% endif %}
     
     <div class="timeline div" >
-    <h4 style="display:inline-block">Timeline</h4> 
-        <button id="showhide_timeline" type="button" class="btn  btn-small pull-right" data-toggle="buttons-checkbox">Hide timeline</button>
+    <h4 style="display:inline-block">Timeline
+        <button id="showhide_timeline" type="button" class="btn  btn-small " data-toggle="buttons-checkbox"><i class="icon-eye-close"></i></button></h4> 
     <div class="timeline list" >
     {% if not project %}
     {{ render_tasklist(timeline, 'timeline', headers, timeline_fields, delete, no_set_delete, timeline_actions, current_user, '') }}
@@ -72,8 +72,8 @@
     </div>
     &nbsp;
     <div class="timeline div">
-    <h4 style="display:inline-block">Contacts</h4> 
-        <button id="showhide_userlist" type="button" class="btn btn-small pull-right" data-toggle="buttons-checkbox">Hide contacts</button>
+    <h4 style="display:inline-block">Contacts
+    <button id="showhide_userlist" type="button" class="btn btn-small" data-toggle="buttons-checkbox"><i class="icon-eye-close"></i></button></h4> 
     <div class="list userlist" >
     {% if not project %}
     {{ render_userlist(objects, 'userlist', usersfields, usersactions, current_user, '') }}

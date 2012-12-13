@@ -247,7 +247,7 @@ def project_tasks(name):
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
                             fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
-                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Edit', 'edit', 'icon-pencil'],['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
                             timeline_fields=timeline_fields,
@@ -419,7 +419,7 @@ def tasks(name=None, done=None):
                            tasks=tasks, 
                             #fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
                             fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
-                            actions=[['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'], ['Enviar', '', 'icon-share-alt'],['Borrar', 'del', 'icon-trash']],
+                            actions=[['Edit', 'edit', 'icon-pencil'],['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',
                             timeline=timeline,
@@ -485,6 +485,28 @@ def send_task(taskid=None, userid=None):
             db.session.commit()
             return jsonify({'1':True})
     return jsonify({'1':False})
+
+
+@user.route('/tasks/edit/<id>', methods=['POST', 'GET'])
+def edit_task(id):
+    form = TaskForm()
+    if request.method == 'POST':
+        task = Task.query.get(id)
+        if task.owner == current_user:
+            form.populate_obj(task)
+            db.session.commit()
+            return jsonify({'1':True})
+    return jsonify({'1':False})
+
+@user.route('/task/<id>.json', methods=['GET'])
+def task_json(id):
+    task=Task.query.get(id)
+    if task.owner == current_user:
+        dictask = dict((col, getattr(task, col)) for col in task.__table__.columns.keys())
+        for (key,value) in dictask.iteritems():
+            if isinstance(value, datetime.datetime):
+                dictask[key] = value.date().isoformat()
+        return jsonify(dictask)
 
 
 @user.route('/tasks/new/<name>', methods=['POST', 'GET'])

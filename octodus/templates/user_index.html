@@ -259,8 +259,46 @@
 
     function _action(node)
     {
-        if (node.attr('title') == "New Task"){
+        if (node.attr('title') == "Edit"){
+            var id = node.parent().parent().parent().children('.taskid').text();
+            var url = '/user/task/'+id+'.json';
+            $.getJSON(url, function(data){
+                $('#name').val(data.name);
+                if (data.description != null){
+                    $('#description').val(data.description);
+                }
+                if (data.deadline != null){
+                    $('#deadline').val(data.deadline);
+                    $('#deadline').attr('value', data.deadline);
+                    $('#deadline').datepicker('update');
+                }
+                if (data.duration_minutes != null){
+                    $('#duration_minutes').val(data.duration_minutes);
+                }
+                if (data.priority != null){
+                    $('#priority').val(data.priority);
+                }
+                $("#edit_new_form").attr('action', '/user/tasks/edit/'+id)
+
+                /*
+            $.each(data, function(key, val) {
+                alert(val.name);
+                alert(val.description);
+            });
+            */
+            
+            });
             $('#modal_new_task').modal();
+        }
+        if (node.attr('title') == "New Task"){
+            $('#name').val('');
+            $('#description').val('');
+            $('#deadline').val(get_today());
+            $('#deadline').datepicker('update');
+            $('#duration_minutes').val('30');
+            $('#priority').val('0');
+            $('#modal_new_task').modal();
+            $("#edit_new_form").attr('action', '/user/tasks/new/')
         }
         if (node.attr('title') == "Enviar"){
             setTaskToSend(node.attr('href'))

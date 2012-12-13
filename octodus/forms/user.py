@@ -4,7 +4,7 @@ from flask.ext.wtf import (Form, HiddenField, BooleanField, TextField, FieldList
                           PasswordField, SubmitField, TextField, SelectField, 
                           ValidationError, required, equal_to, email, Label,
                           RadioField, SelectMultipleField, TextAreaField,
-                          IntegerField, DateTimeField, length)
+                          IntegerField, DateField, length)
 from flaskext.babel import gettext, lazy_gettext as _
 
 from octodus.models import User, Project
@@ -61,7 +61,7 @@ class TaskForm(Form):
     description = TextAreaField()
     priority = IntegerField()
     duration_minutes = IntegerField()
-    deadline = DateTimeField()
+    deadline = DateField()
     submit = SubmitField(_('Hecho'))
 
 

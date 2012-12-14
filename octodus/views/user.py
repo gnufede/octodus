@@ -487,6 +487,86 @@ def send_task(taskid=None, userid=None):
     return jsonify({'1':False})
 
 
+@user.route('/comment/<id>.json', methods=['POST', 'GET'])
+def comment_json(id):
+    comment=Comment.query.get(id)
+    dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
+    for (key,value) in dict_comment.iteritems():
+        if isinstance(value, datetime.datetime):
+            dictcomment[key] = value.date().isoformat()
+    return jsonify(dict_comment)
+
+
+
+@user.route('/comments/pretty/<id>.json', methods=['POST', 'GET'])
+def comments_pretty_json(id):
+    task=Task.query.get(id)
+    comments = task.comments
+    dict_comments = dict()
+    for comment in comments:
+        dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
+        for (key,value) in dict_comment.iteritems():
+            if isinstance(value, datetime.datetime):
+                dict_comment[key] = value.date().isoformat()
+        dict_comment['username'] = User.query.get(dict_comment['user_id']).username
+        dict_comments[str(comment.id)] = dict_comment
+    return jsonify(dict_comments)
+
+
+
+@user.route('/comments/<id>.json', methods=['POST', 'GET'])
+def comments_json(id):
+    task=Task.query.get(id)
+    comments = task.comments
+    dict_comments = dict()
+    for comment in comments:
+        dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
+        for (key,value) in dict_comment.iteritems():
+            if isinstance(value, datetime.datetime):
+                dict_comment[key] = value.date().isoformat()
+        dict_comment['username'] = User.query.get(dict_comment['user_id']).username
+        dict_comments[str(comment.id)] = dict_comment
+    return jsonify(dict_comments)
+
+
+
+
+@user.route('/comments/edit/<id>', methods=['POST', 'GET'])
+def edit_comment(id):
+    form = CommentForm()
+    comment = Comment.query.get(id)
+    if request.method == 'POST' and comment.owner==current_user:
+        form.populate_obj(comment)
+        db.session.commit()
+        return jsonify({'1':True})
+    return jsonify({'1':False})
+
+
+@user.route('/comments/reply/<id>', methods=['POST', 'GET'])
+def reply_comment(id):
+    form = CommentForm()
+    if request.method == 'POST':
+        form.populate_obj(comment)
+        comment.parent_id = id
+        comment.task = comment.parent.task
+        db.session.commit()
+        return jsonify({'1':True})
+    return jsonify({'1':False})
+
+
+@user.route('/tasks/comment/<id>', methods=['POST', 'GET'])
+def comment_task(id):
+    form = CommentForm()
+    if request.method == 'POST':
+        comment = Comment()
+        form.populate_obj(comment)
+        comment.task_id=id
+        db.session.add(comment)
+        db.session.commit()
+        return jsonify({'1':True})
+    return jsonify({'1':False})
+
+
 @user.route('/tasks/edit/<id>', methods=['POST', 'GET'])
 def edit_task(id):
     form = TaskForm()

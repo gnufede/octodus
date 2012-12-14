@@ -76,8 +76,11 @@
                 	 <ul class="nav pull-right">
                   <li><a id="mypoints" href="/user/tasks/done_sent" class="badge badge-points mypoints " style="color:#B04C00;margin:3px 5px; font-weight:bold;"> {{current_user.points}} puntos </a></li>
                   <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" style="font-weight:bold;" data-toggle="dropdown">{{ current_user.username }} 
-                      <b class="caret"></b>
+                  <a href="#" class="dropdown-toggle" style="font-weight:bold; padding-top:0; padding-bottom:0;" data-toggle="dropdown">
+                      <img src={{ current_user.email | gravatar(size=40)}} >
+                      </img>
+                      {{ current_user.username }} 
+                      <b class="caret" style="margin-top:15px;"></b>
                   </a>
                   <ul class="dropdown-menu">
                 	  <li id='profile' ><a href="/user/profile">Profile</a></li>

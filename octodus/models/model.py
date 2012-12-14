@@ -8,6 +8,7 @@ from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
 from flask import url_for
 import datetime
+import os
 
 #import datetime
 
@@ -16,7 +17,14 @@ from werkzeug import (generate_password_hash, check_password_hash)
 from flask.ext.login import UserMixin
 
 #from flask import jsonify
+SQLALCHEMY_DATABASE_URI = 'mysql://octodus:sudotco@localhost/octodus'
 
+if os.environ.get('SHARED_DATABASE_URL'):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SHARED_DATABASE_URL')
+if os.environ.get('DATABASE_URL'):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+
+engine = create_engine(SQLALCHEMY_DATABASE_URI)
 
 class Definitions(object):
     USER_TYPE_ADMIN = 1
@@ -47,6 +55,24 @@ class Prop(db.Model):
     user_id = db.Column(db.Integer, ForeignKey("users.id"), primary_key=True)
     task_id = db.Column(db.Integer, ForeignKey("tasks.id"), primary_key=True)
     points = db.Column(db.Integer, default=1)
+
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, ForeignKey("comments.id"))
+    children = relationship ("Comment", backref=backref('parent',
+                                                        remote_side=[id]))
+    task_id = db.Column(db.Integer, ForeignKey("tasks.id"))
+    task = relationship("Task", backref="comments")
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    user = relationship("User", backref="comments")
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    modified = db.Column(db.DateTime, default=datetime.datetime.utcnow,
+                         onupdate=datetime.datetime.utcnow)
+    content = db.Column(db.Text)
+#    upvotes = db.Column(db.Integer)
+#    downvotes = db.Column(db.Integer)
 
 
 class User(db.Model, UserMixin):

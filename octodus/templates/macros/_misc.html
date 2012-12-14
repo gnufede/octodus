@@ -76,7 +76,7 @@ from type import *
         {% endif %}
         <div class="taskdiv {{ class }}" >
 
-
+            <img src="{{ object.owner.email | gravatar(size=40)}}" class="pull-left" style="margin-right:5px;"></img>
 
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}
@@ -259,6 +259,7 @@ from type import *
         {% for object in objects %}
         <li class="user droppable {{ class }}" id="user_{{object.id}}">
         <div class="userdiv {{ class }}" >
+            <img src="{{ object.email | gravatar(size=40)}}"></img>
 
             {% for j in f %}
             {% if j != "_sa_instance_state" and j != "_labels" %}

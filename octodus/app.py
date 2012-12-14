@@ -5,6 +5,8 @@ from flask_gzip import Gzip
 
 from flask import Flask, request, render_template
 from flaskext.babel import Babel
+from flaskext.gravatar import Gravatar
+
 
 from octodus import utils
 from octodus.models import User
@@ -47,6 +49,12 @@ def create_app(config=None, app_name=None, blueprints=None):
     configure_error_handlers(app)
     app.jinja_env.tests['is_list'] = is_list
     app.jinja_env.filters['type'] = type
+    gravatar = Gravatar(app,
+                    size=60,
+                    rating='g',
+                    default='mm',
+                    force_default=False,
+                    force_lower=False)
     gzipped = Gzip(app)
     app = gzipped.app
 

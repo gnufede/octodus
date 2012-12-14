@@ -28,6 +28,7 @@ setup(
         'MySQL-python ==1.2.3',
         'nose ==1.1.2',
         'python-dateutil ==2.1',
+        'Flask-Gravatar',
         'chardet ==1.1'
     ]
 )

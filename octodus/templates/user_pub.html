@@ -8,6 +8,7 @@
 <div class="offset3 row">
 <div class='span8'>
     <div class="points " style="display:inline-block">
+        <img src={{ user.email | gravatar(size=150) }}></img>
         <span class="badge badge-points mypoints " >
         {{ user.points }} puntos
         </span>

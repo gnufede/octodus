@@ -55,6 +55,11 @@ class EditDatosForm(Form):
  #           raise ValidationError, gettext('This email is taken')
 
 
+class CommentForm(Form):
+    next = HiddenField()
+    content = TextAreaField()
+
+
 class TaskForm(Form):
     next = HiddenField()
     name = TextField()

@@ -76,6 +76,10 @@ from type import *
         {% endif %}
         <div class="taskdiv {{ class }}" >
 
+            {% if class!="timeline" and object.owner!=object.sender %}
+            <img src="{{ object.sender.email | gravatar(size=40)}}" class="pull-left img-rounded" style="margin-right:5px;"></img>
+            {% endif %}
+
             <img src="{{ object.owner.email | gravatar(size=40)}}" class="pull-left img-rounded" style="margin-right:5px;"></img>
 
             {% for j in f %}
@@ -237,6 +241,9 @@ from type import *
             {% endfor %}
         </div>
         {% endif %}
+        <div id="comments_{{object.id}}" class="comments">
+            <a class="show-comments" data-id="{{object.id}}" data-action="/user/comments/{{object.id}}.json">Show comments</a>
+        </div>
         </div>
         </li>
         {% endfor %}

@@ -24,9 +24,9 @@
     <h4>Users</h4> 
 <div class="list">
     {% if not project %}
-    {{ render_userlist(objects, 'userlist', fields, actions, current_user, '') }}
+    {{ render_userlist(objects, 'userlist main', fields, actions, current_user, '') }}
     {% else %}
-    {{ render_userlist(objects, 'userlist', fields, actions, current_user, project.name) }}
+    {{ render_userlist(objects, 'userlist main', fields, actions, current_user, project.name) }}
     {% endif %}
 </div>
 </div>

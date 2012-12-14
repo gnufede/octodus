@@ -8,17 +8,17 @@ from flask import Blueprint, render_template, redirect, url_for, request, \
 from flask.ext.login import login_required, current_user
 
 from flaskext.mail import Message
-
 from octodus.models import *
 from octodus.decorators import admin_required
                             #keep_login_url
-from octodus.forms import EditDatosForm, FollowForm, TaskForm, ProjectForm
+from octodus.forms import EditDatosForm, FollowForm, TaskForm, ProjectForm, CommentForm
 from octodus.extensions import db, mail
 from sqlalchemy import Date, cast
 import re
 import math
 from random import randint
 import json
+import hashlib
 #import datetime
 
 
@@ -257,7 +257,8 @@ def project_tasks(name):
                             usersfields=['id','username','points', 'projects'],
                             cls='tasklist',
                             project = project,
-                           newtaskform=newtaskform,
+                            commentform = CommentForm(),
+                            newtaskform=newtaskform,
                             current_user=current_user, active=each_project.name)
     return redirect(url_for('user.tasks'))
 
@@ -303,6 +304,7 @@ def users(query=None):
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
                            contacts=[],
+                            commentform = CommentForm(),
                            newtaskform=newtaskform,
                            project=None,
                             current_user=current_user)
@@ -361,6 +363,7 @@ def contacts(name=None, followho=None):
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
                            contacts=[],
+                            commentform = CommentForm(),
                            newtaskform=newtaskform,
                            project=project,
                             current_user=current_user)
@@ -430,6 +433,7 @@ def tasks(name=None, done=None):
                             usersfields=['id','username','points', 'projects'],
                            contacts=json.dumps(contacts),
                            project=None,
+                            commentform = CommentForm(),
                            newtaskform=newtaskform,
                             current_user=current_user)
 
@@ -498,35 +502,39 @@ def comment_json(id):
 
 
 
-@user.route('/comments/pretty/<id>.json', methods=['POST', 'GET'])
-def comments_pretty_json(id):
-    task=Task.query.get(id)
-    comments = task.comments
-    dict_comments = dict()
-    for comment in comments:
-        dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
-        for (key,value) in dict_comment.iteritems():
-            if isinstance(value, datetime.datetime):
-                dict_comment[key] = value.date().isoformat()
-        dict_comment['username'] = User.query.get(dict_comment['user_id']).username
-        dict_comments[str(comment.id)] = dict_comment
-    return jsonify(dict_comments)
-
-
-
 @user.route('/comments/<id>.json', methods=['POST', 'GET'])
 def comments_json(id):
     task=Task.query.get(id)
-    comments = task.comments
-    dict_comments = dict()
-    for comment in comments:
-        dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
-        for (key,value) in dict_comment.iteritems():
-            if isinstance(value, datetime.datetime):
-                dict_comment[key] = value.date().isoformat()
-        dict_comment['username'] = User.query.get(dict_comment['user_id']).username
-        dict_comments[str(comment.id)] = dict_comment
-    return jsonify(dict_comments)
+    if task:
+        comments = task.comments
+        if comments:
+            dict_comments = dict()
+            m = hashlib.md5()
+            for comment in comments:
+                dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
+                for (key,value) in dict_comment.iteritems():
+                    if isinstance(value, datetime.datetime):
+                        dict_comment[key] = value.isoformat()
+                dict_comment['username'] = User.query.get(dict_comment['user_id']).username
+                m.update(User.query.get(dict_comment['user_id']).email)
+                dict_comment['avatar'] = 'http://www.gravatar.com/avatar/'+m.hexdigest()+'?s=40&amp;d=mm&amp;r=g'
+                dict_comments[str(comment.id)] = dict_comment
+            return jsonify(dict_comments)
+    return jsonify(dict())
+
+
+@user.route('/comments/del/<id>', methods=['POST', 'GET'])
+def edit_comment(id):
+    form = CommentForm()
+    comment = Comment.query.get(id)
+    if request.method == 'POST' and (comment.owner==current_user or\
+       comment.task.owner == current_user):
+        for child in comment.children:
+            child.parent = comment.parent
+        db.session.remove(comment)
+        db.session.commit()
+        return jsonify({'1':True})
+    return jsonify({'1':False})
 
 
 
@@ -546,9 +554,13 @@ def edit_comment(id):
 def reply_comment(id):
     form = CommentForm()
     if request.method == 'POST':
+        comment = Comment()
         form.populate_obj(comment)
+        parent = Comment.query.get(id)
         comment.parent_id = id
-        comment.task = comment.parent.task
+        comment.task_id = parent.task_id
+        comment.user_id = current_user.id
+        db.session.add(comment)
         db.session.commit()
         return jsonify({'1':True})
     return jsonify({'1':False})
@@ -561,6 +573,7 @@ def comment_task(id):
         comment = Comment()
         form.populate_obj(comment)
         comment.task_id=id
+        comment.user_id=current_user.id
         db.session.add(comment)
         db.session.commit()
         return jsonify({'1':True})
@@ -728,7 +741,7 @@ def task_prop(id, value=1):
     return redirect(url_for('user.timeline'))
 
 
-@user.route('/unprop/<id>/')
+
 @user.route('/unprop/<id>/<value>/')
 @user.route('/contacts/unprop/<id>/')
 @user.route('/contacts/unprop/<id>/<value>/')
@@ -842,6 +855,7 @@ def pub(name=None):
                             timeline=timeline,
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
+                            commentform = CommentForm(),
                             newtaskform = TaskForm(),
                             objects=contacts, 
                             fields=['id','username','points', 'projects'], 

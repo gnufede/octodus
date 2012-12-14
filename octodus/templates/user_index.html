@@ -125,6 +125,36 @@
 {% endif %}	
 </div>
 </div>
+
+
+<div id="modal_comment" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myCommentLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myCommentLabel">New Comment</h3>
+  </div>
+       <!--div id="task_to" class="input input-prepend" style="display:inline-block;" >
+           <span class="add-on">@</span>
+           <select class="xlarge" id="task_to_owner" name="name"
+               type="text"></select>
+       </div-->
+       <form id="comment_form" class='form-stacked' method="POST" style="margin:0;"
+             onsubmit="_onsubmit(event, $(this), 
+            $(this).attr('action'));$('#modal_comment').modal('hide');"
+           action="/user/comment">
+  <div class="modal-body">
+        {{ newtaskform.hidden_tag() }}
+        {{ newtaskform.next }}
+        <fieldset>
+             {{ render_input(commentform.content, 'input-xlarge') }}
+        </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    <button class="btn btn-primary" type="submit">Done</button>
+    </form>
+  </div>
+</div>
+
 {% endblock %}
 {% block body %}
 {% endblock %}
@@ -196,8 +226,12 @@
             event.preventDefault();
         else
             event.cancel = true;
+
+        sel = "algo"
     
-        sel = node.children('.newtaskname').val();
+        if (node.children('.newtaskname').length > 0){
+            sel = node.children('.newtaskname').val();
+        }
         if (sel != '') {
                 $.ajax({
                     url:url,
@@ -252,13 +286,73 @@
             return _onKeyUp(event, node, url, isProject)
         }
     }
+    
+
+    $('.buttoncomment').live('click', function(){
+        var url = $(this).attr('data-url');
+        $("#comment_form").attr('action', url);
+        $('#modal_comment').modal();
+    });
+    
+    $('.hide-comments').live('click', function(){
+        id = $(this).attr('data-id');
+        showcomments = '<a class="show-comments" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Show comments</a>';
+        
+        $('#comments_'+id).empty().append(showcomments);
+    });
+    
+    $('.show-comments').live('click', function(){
+
+        id = $(this).attr('data-id');
+        url = $(this).attr('data-action');
+        node = $(this).parent();
+         $.getJSON(url, function(data) {
+                hidecomments = '<a class="hide-comments" style="display:block;" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Hide comments</a>'
+        
+            if ($.isEmptyObject(data)) {
+                node.empty().append(hidecomments).append('<button class="buttoncomment btn btn-primary" data-url="/user/tasks/comment/'+id+'"><i class="icon-white icon-comment"></i> Comment</button>');
+                }
+                else{
+
+
+               var comments = jQuery('<div/>', {});
+            //$.each(data, function() {window.thumbsShown++;});
+            $.each(data, function(key, val) {
+                html = '<div class="comment" style="font-size:10pt; clear:both;">';
+                html += '<div class="commenthead" style="display:inline-block">';
+                html += '<div class="avatar" style="display:inline-block">';
+                html += '<img src="'+val.avatar+'"></img></div>';
+                html += '<div class="commentheader" style="display:inline-block">';
+                html += '<abbr class="timeago timestamp" style="display:block;padding-left:5px;" title="' + val.created_at + 'Z"></abbr>';
+                html += '<div class="name" style="display:block; padding-left: 5px;"><a href="/user/'+val.username+'">' + val.username + '</a> said:</div></div></div>';
+                html += '<div class="comment-content" style="padding-left:45px;font-size:8pt;">' + val.content + '</div>';
+                html += '<button class="buttoncomment btn btn-small pull-right" data-url="/user/comments/reply/'+val.id+'"><i class="icon-comment"></i> Reply</button>';
+                html += '</div><br/>';
+                comments.append(html);
+            });
+               $('#comments_'+id).empty().append(hidecomments).append(comments).append('<button class="buttoncomment btn  btn-primary" data-url="/user/tasks/comment/'+id+'"><i class="icon-white icon-comment"></i> Comment</button>');
+                jQuery("abbr.timeago").timeago(); 
+                
+                }
+    
+            });
+
+    });
 
 
     var task_to_send = '';
     var username_to_send = '';
 
+
     function _action(node)
     {
+        if (node.attr('title') == "Comment"){
+            var id = node.parent().parent().parent().children('.taskid').text();
+            var url = '/user/tasks/comment/'+id;
+        
+            $("#comment_form").attr('action', url)
+            $('#modal_comment').modal();
+        }
         if (node.attr('title') == "Edit"){
             var id = node.parent().parent().parent().children('.taskid').text();
             var url = '/user/task/'+id+'.json';
@@ -284,7 +378,7 @@
             $.each(data, function(key, val) {
                 alert(val.name);
                 alert(val.description);
-            });
+            }) ;
             */
             
             });

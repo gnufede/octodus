@@ -242,7 +242,7 @@ from type import *
         </div>
         {% endif %}
         <div id="comments_{{object.id}}" class="comments">
-            <a class="show-comments" data-id="{{object.id}}" data-action="/user/comments/{{object.id}}.json">Show comments</a>
+            <a class="show-comments" data-num="{{object.comments|length}}" data-id="{{object.id}}" data-action="/user/comments/{{object.id}}.json">Show {{object.comments|length}} comments</a>
         </div>
         </div>
         </li>
@@ -276,7 +276,9 @@ from type import *
                     {% elif j == 'email' %}
                     <div class="{{ class }} field email" style='display:inline-block;'><a href='mailto:{{ object[j] }}'>{{ object[j] }}</a></div>
                     {% elif j == 'points' %}
-                            <div class="points badge badge-points {{class}}">{{ object[j] }}</div>
+                    <div class="points badge badge-points {{class}}">{{ object[j] }}</div>
+
+
                     {% elif j == 'username' %}
                     <div class="username {{class}}"><a href="/user/{{ object[j] }}">{{ object[j] }}</a></div>
                     {% elif object[j] != None%}
@@ -285,6 +287,32 @@ from type import *
                 {% else %}
                     {% if j == 'projects'%}
                     <div class="proj_labels  {{class}}">
+                    <div class="relation label pull-right" style="margin-left:5px; margin-top:1px;">
+                    {% if object != current_user %}
+                        {% if object in current_user.following %}
+                        {% set following = True %}
+                        {% else %}
+                        {% set following = False %}
+                        {% endif %}
+                        {% if object in current_user.followers %}
+                        {% set follower = True %}
+                        {% else %}
+                        {% set follower = False %}
+                        {% endif %}
+                        {% if following and follower %}
+                        Following each other
+                        {% elif following %}
+                        You follow
+                        {% elif follower %}
+                        Follows you
+                        {% else %}
+                        Mutually oblivious
+                        {% endif %}
+                    {% else %}
+                    That's you!
+                    {% endif %}
+                    </div>
+                    
                         {% set proj_label = 'proj_label'%}
                         {% for proj in current_user.getProjs(object) %}
                         <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}<a class="label label-info close">&times;</a></span>

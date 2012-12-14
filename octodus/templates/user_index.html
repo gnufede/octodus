@@ -286,7 +286,25 @@
             return _onKeyUp(event, node, url, isProject)
         }
     }
-    
+   /* 
+    $('.delcomment').live('click', function(){
+        var url = $(this).attr('data-url');
+        $("#delcomment_form").attr('action', url);
+        $.ajax({
+            url:url,
+            type: "POST",
+            data: $("#delcomment_form").serialize(),
+            success: function(data)
+                {
+                  document.location.reload();
+                } 
+        });
+    });
+    */
+    function getNumComments(task_id){
+        return 
+    }
+
 
     $('.buttoncomment').live('click', function(){
         var url = $(this).attr('data-url');
@@ -296,28 +314,30 @@
     
     $('.hide-comments').live('click', function(){
         id = $(this).attr('data-id');
-        showcomments = '<a class="show-comments" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Show comments</a>';
+        num = $(this).attr('data-num');
+        showcomments = '<a class="show-comments" data-num="'+num+'" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Show '+num+' comments</a>';
         
         $('#comments_'+id).empty().append(showcomments);
     });
     
     $('.show-comments').live('click', function(){
-
         id = $(this).attr('data-id');
+        num = $(this).attr('data-num');
         url = $(this).attr('data-action');
         node = $(this).parent();
          $.getJSON(url, function(data) {
-                hidecomments = '<a class="hide-comments" style="display:block;" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Hide comments</a>'
-        
+             hidecomments = '<a class="hide-comments" style="display:block;" data-num="'+num+'" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Hide '+num+' comments</a>'
             if ($.isEmptyObject(data)) {
                 node.empty().append(hidecomments).append('<button class="buttoncomment btn btn-primary" data-url="/user/tasks/comment/'+id+'"><i class="icon-white icon-comment"></i> Comment</button>');
                 }
                 else{
 
+                var num_comments = 0;
+
 
                var comments = jQuery('<div/>', {});
-            //$.each(data, function() {window.thumbsShown++;});
             $.each(data, function(key, val) {
+                num_comments ++;
                 html = '<div class="comment" style="font-size:10pt; clear:both;">';
                 html += '<div class="commenthead" style="display:inline-block">';
                 html += '<div class="avatar" style="display:inline-block">';
@@ -330,6 +350,7 @@
                 html += '</div><br/>';
                 comments.append(html);
             });
+                hidecomments = '<a class="hide-comments" style="display:block;" data-num="'+num_comments+'" data-id="'+id+'" data-action="/user/comments/'+id+'.json">Hide '+num_comments+' comments</a>'
                $('#comments_'+id).empty().append(hidecomments).append(comments).append('<button class="buttoncomment btn  btn-primary" data-url="/user/tasks/comment/'+id+'"><i class="icon-white icon-comment"></i> Comment</button>');
                 jQuery("abbr.timeago").timeago(); 
                 

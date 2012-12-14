@@ -509,13 +509,13 @@ def comments_json(id):
         comments = task.comments
         if comments:
             dict_comments = dict()
-            m = hashlib.md5()
             for comment in comments:
                 dict_comment = dict((col, getattr(comment, col)) for col in comment.__table__.columns.keys())
                 for (key,value) in dict_comment.iteritems():
                     if isinstance(value, datetime.datetime):
                         dict_comment[key] = value.isoformat()
                 dict_comment['username'] = User.query.get(dict_comment['user_id']).username
+                m = hashlib.md5()
                 m.update(User.query.get(dict_comment['user_id']).email)
                 dict_comment['avatar'] = 'http://www.gravatar.com/avatar/'+m.hexdigest()+'?s=40&amp;d=mm&amp;r=g'
                 dict_comments[str(comment.id)] = dict_comment

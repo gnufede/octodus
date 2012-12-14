@@ -76,9 +76,9 @@
     <button id="showhide_userlist" type="button" class="btn btn-small" data-toggle="buttons-checkbox"><i class="icon-eye-close"></i></button></h4> 
     <div class="list userlist" >
     {% if not project %}
-    {{ render_userlist(objects, 'userlist', usersfields, usersactions, current_user, '') }}
+    {{ render_userlist(objects, 'userlist contacts', usersfields, usersactions, current_user, '') }}
     {% else %}
-    {{ render_userlist(objects, 'userlist', usersfields, usersactions, current_user, project.name) }}
+    {{ render_userlist(objects, 'userlist contacts', usersfields, usersactions, current_user, project.name) }}
     {% endif %}
     </div>
     </div>

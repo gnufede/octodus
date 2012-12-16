@@ -320,7 +320,7 @@ display: block;
 }
 */
 .bs-docs-sidenav[style] {
-    width: 22% !important;
+    min-width: 22% !important;
 }
 
 .slimScrollBar{

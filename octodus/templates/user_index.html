@@ -6,18 +6,6 @@
 <div class="span3 usernav bs-nav-sidebar" >	
 <div class="usernav" >
 <ul class="nav nav-list bs-docs-sidenav affix">
-{% if current_user.is_admin() %}
-    <li class='nav-header'>
-    <i class='icon-user'></i>
-    Usuarios
-    </li>
-    <li id='user_list'><a href='{{ url_for('user.list') }}'>
-    <i class='icon-list'></i>
-    Lista de usuarios
-    </a>
-    </li>
-    <li class="divider"></li>
-{% endif %}
 <li id="Inbox"> <a href='/user/tasks/inbox'>
         <i class='icon-inbox' style="display:inline-block;"></i>
         <div class='project draggable'  style="display:inline-block;">

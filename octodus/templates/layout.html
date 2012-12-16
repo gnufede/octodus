@@ -62,9 +62,9 @@
             </a>
         	{% if current_user.is_authenticated() %}
                 	 <ul class="nav">
-                	  <li id='tasks' ><a href="/user/tasks">Tasks</a></li>
+                	  <li id='tasks' ><a href="/user/tasks"><i class="icon-check icon-large"></i> Tasks</a></li>
                         <li id='users' class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-group icon-large"></i> Users
                             <b class="caret"></b>
                         </a>
                       <ul class="dropdown-menu dropdown">
@@ -82,14 +82,14 @@
                       <img src={{ current_user.email | gravatar(size=40)}} class="img-rounded" >
                       </img>
                       {{ current_user.username }} 
-                      <b class="caret" style="margin-top:15px;"></b>
+                      <b class="caret" style="margin-top:17px;"></b>
                   </a>
                   <ul class="dropdown-menu">
-                	  <li id='profile' ><a href="/user/profile">Profile</a></li>
+                      <li id='profile' ><a href="/user/profile"><i class="icon-user"></i> Profile</a></li>
                       <!--li><a href="{{ url_for('user.edit_datos') }}">Preferencias</a></li-->
-                      <li><a href="{{ url_for('frontend.change_password') }}">Change password</a></li>
+                      <li><a href="{{ url_for('frontend.change_password') }}"><i class="icon-key"></i> Change password</a></li>
                       <li class="divider"></li>
-                      <li><a href="{{ url_for('frontend.logout') }}">Logout</a></li>
+                      <li><a href="{{ url_for('frontend.logout') }}"><i class="icon-off"></i> Logout</a></li>
                   </ul>
                   </li>
                   </ul>

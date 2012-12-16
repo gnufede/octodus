@@ -253,7 +253,7 @@ def project_tasks(name):
                             timeline_fields=timeline_fields,
                             timeline_actions=timeline_actions,
                             objects=users,
-                            usersactions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-trash']],
+                            usersactions=[['Follow', 'follow', 'follow icon-plus'],['Unfollow', 'unfollow', 'unfollow icon-remove']],
                             usersfields=['id','username','points', 'projects'],
                             cls='tasklist',
                             project = project,

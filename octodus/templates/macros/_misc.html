@@ -12,11 +12,11 @@ from type import *
 {%- endmacro %}
 
 {% macro render_input(field, cls='', value='', style='', placeholder='', nolabel=False, extra='', labelAfter=False) %}
-<div class='clearfix {% if field.errors %}error{% endif %}'>
+<div class=' control-group {% if field.errors %}error{% endif %}'>
     {% if not nolabel and not labelAfter%}
-      {{ field.label }}
+      {{ field.label(class_="control-label") }}
     {% endif %}
-    <div class='input'>
+    <div class='input controls'>
         {% if field.errors %}
           {{ field(class_=cls~' error') }}
         {% else %}

@@ -1,3 +1,12 @@
+body {
+  margin: 0;
+  font-family: "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,"Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  background-color: #ffffff;
+}
+
 
 .timestamp,
 .timeago {
@@ -300,4 +309,28 @@ padding: 2px 5px 4px 5px;
 padding: 2px 9px 4px 9px;
 }
 
+.form-horizontal .input-append {
+display: block;
+}
+
+/*.bs-docs-sidenav {
+    max-height: 99%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+*/
+.bs-docs-sidenav[style] {
+    width: 22% !important;
+}
+
+.slimScrollBar{
+   // margin-top: 30px;
+}
+
+
+.nav-list > li > a,
+.nav-list .nav-header {
+margin-left: 0;
+margin-right: 0;
+}
 

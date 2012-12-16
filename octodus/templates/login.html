@@ -5,8 +5,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class='span10'>
-    <form class='form-stacked' method="POST" action="{{ url_for('frontend.login') }}">
+<div class='span5 offset4'>
+    <form class='form-horizontal' method="POST" action="{{ url_for('frontend.login') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
@@ -18,13 +18,14 @@
             {% endif %}
             {{ render_input(form.email, 'xlarge', value=email) }}
             {{ render_input(form.password, 'xlarge') }}
-            <div class='clearfix'>
-                <label></label>
-                <div class="input">
+            <div class='clearfix control-group'>
+            <div class='controls'>
+                <div class="input checkbox">
                     {{ form.remember() }}<span class='remember_me'>{{ _('Remember me') }}</span>
                 </div>
-            </div>
             {{ render_action(form.submit) }}
+            </div>
+            </div>
         </fieldset>
     </form>
 </div>

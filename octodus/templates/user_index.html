@@ -3,9 +3,9 @@
 {% extends "layout.html" %}
 
 {% block menu %}
-<div class="span3 usernav affix" >	
-<div class="well usernav" style="padding: 8px 0;" >
-<ul class="nav nav-list">
+<div class="span3 usernav bs-nav-sidebar" >	
+<div class="usernav" >
+<ul class="nav nav-list bs-docs-sidenav affix">
 {% if current_user.is_admin() %}
     <li class='nav-header'>
     <i class='icon-user'></i>
@@ -161,7 +161,11 @@
 
 {% block append_js2 %}
 <script async>
-    $('.active a i').addClass('icon-white');
+   /* $('.active a i').addClass('icon-white'); */
+   $('.bs-docs-sidenav').slimScroll({
+       height: '236px',
+       size: '10px'
+    });
     
     $(".more_projects").hover(function() {
         $(this).append('<button class="more_proj close pull-right" style="float:right;display:inline-block;">&times;</button>');
@@ -346,7 +350,7 @@
                 html += '<abbr class="timeago timestamp" style="display:block;padding-left:5px;" title="' + val.created_at + 'Z"></abbr>';
                 html += '<div class="name" style="display:block; padding-left: 5px;"><a href="/user/'+val.username+'">' + val.username + '</a> said:</div></div></div>';
                 html += '<div class="comment-content" style="padding-left:45px;font-size:8pt;">' + val.content + '</div>';
-                html += '<button class="buttoncomment btn btn-small pull-right" data-url="/user/comments/reply/'+val.id+'"><i class="icon-comment"></i> Reply</button>';
+                html += '<button class="buttoncomment btn btn-small pull-right" data-url="/user/comments/reply/'+val.id+'"><i class="icon-comments"></i> Reply</button>';
                 html += '</div><br/>';
                 comments.append(html);
             });

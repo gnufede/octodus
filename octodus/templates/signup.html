@@ -5,8 +5,8 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class='span10'>
-    <form class='form-stacked' method="POST" action="{{ url_for('frontend.signup') }}">
+<div class='span5 offset4'>
+    <form class='form-horizontal' method="POST" action="{{ url_for('frontend.signup') }}">
         {{ form.hidden_tag() }}
         {{ form.next }}
         <fieldset>
@@ -18,7 +18,9 @@
             {{ render_input(form.password, 'xlarge') }}
             {{ render_input(form.password_again, 'xlarge') }}
             {#{ render_input(form.nocode, 'xlarge', labelAfter=True) }#}
+            <div class="controls">
             {{ render_action(form.submit) }}
+            </div>
         </fieldset>
     </form>
 </div>

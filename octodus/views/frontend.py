@@ -31,6 +31,8 @@ frontend = Blueprint('frontend', __name__)
 def index():
     if current_user.is_authenticated():
         return redirect(url_for('user.index'))
+    else:
+        return redirect(url_for('frontend.login'))
 
     login_form = signup_form = None
     if not current_user.is_authenticated():

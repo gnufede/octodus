@@ -246,8 +246,9 @@ class Task(db.Model):
     __tablename__ = "tasks"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
-    description = db.Column(db.String(256))
+    description = db.Column(db.Text)
     priority = db.Column(db.Integer, default=0)
+    urgency = db.Column(db.Integer, default=0)
     duration_minutes = db.Column(db.Integer, default=30)
     earned_points = db.Column(db.Integer, default=0)
     done = db.Column(db.Boolean, default=False)

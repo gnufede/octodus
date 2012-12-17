@@ -105,16 +105,25 @@
         }
         });
 
-    $(".proj_label > .close").live("click", function() {
-        var proj_label = $(this).parent();
-        var proj_name = proj_label.text();
-        proj_name = proj_name.replace('×','');
-        var element = proj_label.parent().siblings().first();
+
+    $(".proj_label.tasklist > .close").live("click", function() {
+        var project_id = $(this).attr('data-project');
+        var task_id = $(this).attr('data-taskid');
+        var action = 'unset';
+        url='/user/project/'+project_id+'/'+action+'/'+task_id;
+        $.ajax({
+            url:url
+             }).done(function() { 
+                 document.location.reload();
+        });
+        });
+
+
+    $(".proj_label.userlist > .close").live("click", function() {
+        var project_id = $(this).attr('data-project');
+        var user_id = $(this).attr('data-userid');
         var action = 'deluser';
-        if (element.hasClass('tasklist')){
-            action = 'unset'
-        }
-        url='/user/project/'+proj_name+'/'+action+'/'+element.text()
+        url='/user/project/'+project_id+'/'+action+'/'+user_id;
         $.ajax({
             url:url
              }).done(function() { 

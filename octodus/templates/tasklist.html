@@ -125,17 +125,8 @@
     $("#showhide_timeline").button();
     $("#showhide_userlist").button();
     $('#{{ active }}').addClass('active');
-    /*$('.affix').affix()*/
     
 
-/*
-    $(".proj_label.label.label-info").append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
-    $(".proj_label.label.label-info").hover(function() {
-        $(this).append('<a class="label label-info close" style="color:white;float:inherit;opacity:1;padding-top:0;padding-bottom:0;padding-right:2px;">&times;</a>');
-        }, function() {
-            $(".close").remove();
-        });
-    */
     $("#showhide_userlist").click(function() {
         if ($("#showhide_userlist").hasClass('active')){
            $('.list.userlist').fadeIn();
@@ -166,16 +157,11 @@
         }
         });
 
-    $(".proj_label > .close").live("click", function() {
-        var proj_label = $(this).parent();
-        var proj_name = proj_label.text();
-        proj_name = proj_name.replace('×','');
-        var element = proj_label.parent().siblings().first();
-        var action = 'deluser';
-        if (element.hasClass('tasklist')){
-            action = 'unset'
-        }
-        url='/user/project/'+proj_name+'/'+action+'/'+element.text()
+    $(".proj_label.tasklist > .close").live("click", function() {
+        var project_id = $(this).attr('data-project');
+        var task_id = $(this).attr('data-taskid');
+        var action = 'unset';
+        url='/user/project/'+project_id+'/'+action+'/'+task_id
         $.ajax({
             url:url
              }).done(function() { 
@@ -183,6 +169,20 @@
         });
         });
     
+
+    $(".proj_label.userlist > .close").live("click", function() {
+        var project_id = $(this).attr('data-project');
+        var user_id = $(this).attr('data-userid');
+        var action = 'deluser';
+        url='/user/project/'+project_id+'/'+action+'/'+user_id
+        $.ajax({
+            url:url
+             }).done(function() { 
+                 document.location.reload();
+        });
+        });
+
+
    // });
     jQuery("abbr.timeago").timeago();
     $('.launchtooltip').tooltip();

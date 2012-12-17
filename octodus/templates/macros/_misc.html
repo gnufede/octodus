@@ -69,6 +69,9 @@ from type import *
 <div class='table table-hover {{ class }}'>
     <ul type=none style="margin-left:0;" class="{{class}} sortable">
         {% for object in objects %}
+        {% set datataskid = object.id %}
+        {% set dataowner = object.owner %}
+        {% set datasender = object.sender %}
         {% if object.done == True %}
         <li class="task droppable taskdone {{ class }}" id="task_{{object.id}}">
         {% else %}
@@ -94,9 +97,9 @@ from type import *
                         {% if object.owner != current_user and class == 'timeline'%}
                         <a class="owner_label {{ class }}" href="/user/{{object.owner.username}}">{{ object.owner.username }}</a>
                         {% elif object.owner != current_user and class == 'tasklist'%}
-                        <a href="/user/{{object.owner.username}}" class="owner_label label launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="This user owns the task">{{ object.owner.username }}</a>
+                        <a href="/user/{{object.owner.username}}" class="owner_label label launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="{{object.owner.username}} owns the task"><i class="icon-user"></i> {{ object.owner.username }}</a>
                         {% if object.sender == current_user and object.done %}
-                        <span class="badge {{class}} launchtooltip"  rel="tooltip" data-placement="top" data-content="Points earned by the owner" data-original-title="Points earned by the owner" data-trigger="hover">{{object.earned_points}}</span>
+                        <span class="badge {{class}} badge-points launchtooltip"  rel="tooltip" data-placement="top" data-content="Points earned by {{object.owner.username}}" data-original-title="Points earned by {{object.owner.username}}" data-trigger="hover">+{{object.earned_points}}</span>
                         {% endif %}
 
                         {% elif class == 'timeline' %}
@@ -117,7 +120,7 @@ from type import *
                     {% elif j == 'sender' %}
                      <div class="sender sender_label {{ class }}">
                         {% if object.sender != current_user%}
-                        <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="This user sent you the task">{{ object.sender.username }}</a>
+                        <a href="/user/{{object.sender.username}}" class="sender_label label-inverse label draggable launchtooltip {{ class }}" rel="tooltip" data-placement="top" data-original-title="{{ object.sender.username }} sent you the task"><i class="icon-user"></i> {{ object.sender.username }}</a>
                         {% endif %}
                     </div>
                     {% elif j == 'created_at' %}
@@ -162,15 +165,15 @@ from type import *
                     {% endif %}
                         {% set proj_label = 'proj_label'%}
                         {% if object.owner == current_user %}
-                        {% for proj in object[j] %}
-                        {% set proj_label = 'proj_label'%}
-                        {% if projectname == proj.name %}
-                        {% set proj_label = proj_label+' this_project'%}
-                        {% endif %}
-                        {% if proj.owner == current_user %}
-                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}<a class="label label-info close">&times;</a></span>
+                            {% for proj in object[j] %}
+                                {% set proj_label = 'proj_label'%}
+                                {% if projectname == proj.name %}
+                                    {% set proj_label = proj_label+' this_project'%}
+                                {% endif %}
+                                {% if proj.owner == current_user %}
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" data-taskid="{{datataskid}}" data-project="{{proj.id}}"><i class="icon-tag"></i> {{ proj.name }}<a  data-taskid="{{datataskid}}" data-project="{{proj.id}}" class="label label-info close">&times;</a></span>
                         {% else %}
-                        <span class="{{proj_label}} owned others label clearfix {{class}}" >{{ proj.name }}</span>
+                        <span class="{{proj_label}} owned others label clearfix {{class}}" ><i class="icon-tag"></i> {{ proj.name }}</span>
                         {% endif %}
                         {% endfor %}
                         {% else %}
@@ -179,9 +182,9 @@ from type import *
                         {% set proj_label = proj_label+' this_project'%}
                         {% endif %}
                         {% if class == 'timeline' %}
-                        <span class="{{proj_label}} others label pull-right {{class}}" >{{ proj.name }}</span>
+                        <span class="{{proj_label}} others label pull-right {{class}}" ><i class="icon-tag"></i> {{ proj.name }}</span>
                         {% else %}
-                        <span class="{{proj_label}} label {{class}}" >{{ proj.name }}<a class="label close">&times;</a></span>
+                        <span class="{{proj_label}} label {{class}}" ><i class="icon-tag"></i> {{ proj.name }}<a class="label close" data-taskid="{{datataskid}}" data-project="{{proj.id}}">&times;</a></span>
                         {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -200,13 +203,13 @@ from type import *
                             <span class="badge {{badge}} {{class}}">
                             {% endif %}
                             {% if (not object.done) and (object.owner != current_user )  %}
-                                <span onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
+                            <span data-taskid="{{datataskid}}" class="prop-action" onClick="return _action($(this));" type="button" href="prop/{{object.id}}" title="Prop" style="cursor:pointer;">
                     <i class="icon-thumbs-up icon-white {{ class }}"></i>
             </span>
                     {% endif %}
                     {{ object.get_props() }}
                      {% if (not object.done) and (object.owner != current_user )  and (current_user.username in object.get_propped_usernames() ) %}
-                                <span onClick="return _action($(this));" type="button" href="unprop/{{object.id}}" title="Unprop" style="cursor:pointer;">
+                                <span onClick="return _action($(this));" data-taskid="{{datataskid}}" class="unprop-action" type="button" href="unprop/{{object.id}}" title="Unprop" style="cursor:pointer;">
                     <i class="icon-thumbs-down icon-white {{ class }}"></i>
             </span>
                     {% endif %}
@@ -264,6 +267,9 @@ from type import *
 <div class='table table-hover {{ class }}'>
     <ul type=none style="margin-left:0;" class="{{class}} sortable">
         {% for object in objects %}
+        {% set datauserid = object.id %}
+        {% set dataowner = object.owner %}
+        {% set datasender = object.sender %}
         <li class="user droppable {{ class }}" id="user_{{object.id}}">
         <div class="userdiv {{ class }}" >
             <img src="{{ object.email | gravatar(size=40)}}" class="img-rounded"></img>
@@ -315,7 +321,7 @@ from type import *
                     
                         {% set proj_label = 'proj_label'%}
                         {% for proj in current_user.getProjs(object) %}
-                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" >{{ proj.name }}<a class="label label-info close">&times;</a></span>
+                        <span class="{{proj_label}} owned label label-info draggable clearfix {{class}}" ><i class="icon-tag"></i> {{ proj.name }}<a class="label label-info close" data-userid="{{datauserid}}" data-project="{{proj.id}}">&times;</a></span>
                         {% endfor %}
                     </div>
                     {% else %}

@@ -185,34 +185,38 @@ def set_project_tasks(name, task_id):
 @user.route('/project/<name>/unset/<task_id>', methods=['POST', 'GET'])
 @login_required
 def unset_project_tasks(name, task_id):
-    proj_name = re.compile('^'+name+'$', re.I)
-    for each_project in current_user.projects:
-        if proj_name.match(each_project.name):
-            project = each_project
-            task = Task.query.filter_by(id=task_id, owner=current_user).first()
-            if not task:
-                task = Task.query.filter_by(id=task_id, sender=current_user).first_or_404()
+    task = Task.query.get(task_id)
+    if not task or (task and task.owner != current_user and task.sender != current_user):
+        return jsonify({'1':False})
+    project = Project.query.get(name)
+    if not project:
+        proj_name = re.compile('^'+name+'$', re.I)
+        for each_project in current_user.projects:
+            if proj_name.match(each_project.name):
+                project = each_project
+    if project and project.owner == current_user:
+        if task in project.tasks:
+            project.tasks.remove(task)
+            db.session.commit()
+            if task.owner != current_user:
+                return jsonify({'1':True})
+        in_project = None
+        for project in current_user.projects:
             if task in project.tasks:
-                project.tasks.remove(task)
-                db.session.commit()
-                if task.owner != current_user:
-                    return jsonify({'1':True})
-            in_project = None
-            for project in current_user.projects:
-                if task in project.tasks:
-                    in_project = True
-            if not in_project: 
-                inbox = [proj for proj in current_user.projects 
-                         if proj.name == 'Inbox']
-                inbox[0].tasks.append(task)
-                db.session.commit()
-            return jsonify({'1':True})
+                in_project = True
+        if not in_project: 
+            inbox = [proj for proj in current_user.projects 
+                     if proj.name == 'Inbox']
+            inbox[0].tasks.append(task)
+            db.session.commit()
+        return jsonify({'1':True})
     #for project in current_user.projects:
     #    if project.name == name:
     #        for task in current_user.tasks:
     #            if task.id == task_id:
     #                project.addTasks(task)
     #                db.session.commit()
+    return jsonify({'1':False})
     return redirect('user/tasks/'+name)
 
 
@@ -247,7 +251,7 @@ def project_tasks(name):
                 return render_template('tasklist.html', title=name+"'s tasks", headers=False, 
                            tasks=tasks, 
                             fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
-                            actions=[['Edit', 'edit', 'icon-pencil'],['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Edit', 'edit', 'icon-pencil'],['Start', 'start', 'icon-play'],['Mark done', 'do', 'icon-ok'],['Send', '', 'icon-share-alt'], ['Delete', 'del', 'icon-trash']],
                            contacts=json.dumps(contacts),
                             timeline=timeline,
                             timeline_fields=timeline_fields,
@@ -422,7 +426,7 @@ def tasks(name=None, done=None):
                            tasks=tasks, 
                             #fields=['id','name', 'props', 'earned_points',  'created_at','sender', 'projects'], 
                             fields=['id','name', 'props', 'earned_points', 'created_at','sender', 'owner', 'projects', 'description'], 
-                            actions=[['Edit', 'edit', 'icon-pencil'],['Comenzar', 'start', 'icon-play'],['Marcar terminada', 'do', 'icon-ok'],['Enviar', '', 'icon-share-alt'], ['Borrar', 'del', 'icon-trash']],
+                            actions=[['Edit', 'edit', 'icon-pencil'],['Start', 'start', 'icon-play'],['Mark done', 'do', 'icon-ok'],['Send', '', 'icon-share-alt'], ['Delete', 'del', 'icon-trash']],
                            active=active,
                            cls='tasklist',
                             timeline=timeline,
@@ -901,32 +905,29 @@ def unfollow(name=None):
 @user.route('/project/<name>/adduser/<username>', methods=['POST', 'GET'])
 @login_required
 def project_adduser(name=None, username=None):
-    if name:
-        project = Project.query.filter_by(name=name, owner=current_user).first()
+    project = Project.query.get(name)
+    followed = User.query.get(username)
     if not project:
-        project = Project.query.get(name)
-    if username:
-        followed = User.query.filter_by(username=username).first()
+        project = Project.query.filter_by(name=name, owner=current_user).first()
     if not followed:
-        followed = User.query.get(username)
-    if followed not in project.users:
+        followed = User.query.filter_by(username=username).first()
+    if followed not in project.users and project.owner == current_user:
         project.users.append(followed)
         db.session.commit()
        # return redirect(url_for('user.index'))
         return jsonify({'1':True})
+    return jsonify({'1':False})
 
 @user.route('/project/<name>/deluser/<username>', methods=['POST', 'GET'])
 @login_required
 def project_deluser(name=None, username=None):
-    if name:
-        project = Project.query.filter_by(name=name, owner=current_user).first()
+    project = Project.query.get(name)
+    followed = User.query.get(username)
     if not project:
-        name = Project.query.get(name)
-    if username:
-        followed = User.query.filter_by(username=username).first()
+        project = Project.query.filter_by(name=name, owner=current_user).first()
     if not followed:
-        followed = User.query.get(username)
-    if followed in project.users:
+        followed = User.query.filter_by(username=username).first()
+    if followed in project.users and project.owner == current_user:
         project.users.remove(followed)
         db.session.commit()
        # return redirect(url_for('user.index'))

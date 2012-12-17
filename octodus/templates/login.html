@@ -11,7 +11,7 @@
         {{ form.next }}
         <fieldset>
         	{% if not tries -%}
-            <legend>Don't have an account yet? <a href="{{ url_for('frontend.signup') }}">Register</a> please.</legend>
+            <legend>Don't have an account yet? <a href="{{ url_for('frontend.signup') }}">Signup</a> please.</legend>
             {% endif %}
             {% if tries -%}
             <legend>Forgot your password? <a href="{{ url_for('frontend.reset_password',value=form.data.email) }}">Get your password back</a>.</legend>

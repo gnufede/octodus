@@ -161,8 +161,7 @@
             $(".more_proj.close").remove();
     });
 
-
-    $(".more_projects > .close").live("click", function() {
+    $(".proj_label.tasklist > .close").live("click", function() {
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
         proj_name=proj_name.replace(/ /g,"").replace(/(\r\n|\n|\r)/gm,"");
@@ -407,7 +406,7 @@
             $('#modal_new_task').modal();
             $("#edit_new_form").attr('action', '/user/tasks/new/')
         }
-        if (node.attr('title') == "Enviar"){
+        if (node.attr('title') == "Send"){
             setTaskToSend(node.attr('href'))
             $('#tasknametosend').text(node.parent().parent().parent().children('.taskname').text());
             $('#myModal').modal();
@@ -415,14 +414,14 @@
             // node.parent().parent().parent().remove();
          }else{
         url = node.attr('href');
-        if (node.attr('title') == "Comenzar"){
+        if (node.attr('title') == "Start"){
              node.children().first().removeClass('icon-play');
              node.children().first().addClass('icon-pause');
          }
         $.ajax({
             url:url
             }).done(function() { 
-            if (node.attr('title') == "Borrar"){
+            if (node.attr('title') == "Delete"){
                 node.parent().parent().parent().parent().remove();
             }
             if (node.attr('title') == "Unprop"){
@@ -431,7 +430,7 @@
             if (node.attr('title') == "Prop"){
                  document.location.reload();
             }
-            if (node.attr('title') == "Marcar terminada"){
+            if (node.attr('title') == "Mark done"){
                  document.location.reload();
             }
             if (node.attr('title') == "Unfollow"){

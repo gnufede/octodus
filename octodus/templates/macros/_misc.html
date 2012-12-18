@@ -73,9 +73,9 @@ from type import *
         {% set dataowner = object.owner %}
         {% set datasender = object.sender %}
         {% if object.done == True %}
-        <li class="task droppable taskdone {{ class }}" id="task_{{object.id}}">
+        <li class="task droppable taskdone {{ class }}" id="task_{{object.id}}" data-id="{{object.id}}">
         {% else %}
-        <li class="task droppable {{ class }}" id="task_{{object.id}}">
+        <li class="task droppable {{ class }}" id="task_{{object.id}}" data-id="{{object.id}}">
         {% endif %}
         <div class="taskdiv {{ class }}" >
 
@@ -270,7 +270,7 @@ from type import *
         {% set datauserid = object.id %}
         {% set dataowner = object.owner %}
         {% set datasender = object.sender %}
-        <li class="user droppable {{ class }}" id="user_{{object.id}}">
+        <li class="user droppable {{ class }}" id="user_{{object.id}}" data-id="{{object.id}}">
         <div class="userdiv {{ class }}" >
             <img src="{{ object.email | gravatar(size=40)}}" class="img-rounded"></img>
 

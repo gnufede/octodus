@@ -8,11 +8,11 @@
 <ul class="nav nav-list bs-docs-sidenav affix">
 <li id="Inbox"> <a href='/user/tasks/inbox'>
         <i class='icon-inbox' style="display:inline-block;"></i>
-        <div class='project draggable'  style="display:inline-block;">
-        Inbox
-        </div>
         {% for project in current_user.projects: %}
         {% if project.name in ['Inbox'] %}
+        <div class='project draggable' data-id="{{project.id}}"  style="display:inline-block;">
+        Inbox
+        </div>
             {% if project.get_undone_tasks() > 0 %}
             <div class='undone draggable badge' style="display:inline-block;">
             {{project.get_undone_tasks()}}
@@ -24,11 +24,11 @@
         </li>
         <li id="Private"><a href='/user/tasks/private'>
         <i class='icon-user' style="display:inline-block;"></i>
-        <div class='project draggable' style="display:inline-block;">
-        Private
-        </div>
         {% for project in current_user.projects: %}
         {% if project.name in ['Private'] %}
+        <div class='project draggable' data-id="{{project.id}}" style="display:inline-block;">
+        Private
+        </div>
             {% if project.get_undone_tasks() > 0 %}
             <div class='undone draggable badge' style="display:inline-block;">
             {{project.get_undone_tasks()}}
@@ -40,11 +40,11 @@
         </li>
         <li id="Public"><a href='/user/tasks/public'>
         <i class='icon-bullhorn' style="display:inline-block;"></i>
-        <div class='project draggable' style="display:inline-block;">
-        Public
-        </div>
         {% for project in current_user.projects: %}
         {% if project.name in ['Public'] %}
+        <div class='project draggable' data-id="{{project.id}}" style="display:inline-block;">
+        Public
+        </div>
             {% if project.get_undone_tasks() > 0 %}
             <div class='undone draggable badge' style="display:inline-block;">
             {{project.get_undone_tasks()}}
@@ -87,7 +87,7 @@
     {% if project.name not in ['Inbox','Private','Public'] %}
     <li id="{{project.name}}"><a href="{{project.name}}"  class='more_projects'>
             <i class='icon-tag' style="display:inline-block;"></i>
-            <div class='project proj_name draggable' style="display:inline-block;">
+            <div class='project proj_name draggable'  data-id="{{project.id}}" style="display:inline-block;">
             {{project.name}}
             </div>
             {% if project.get_undone_tasks() > 0 %}

@@ -158,13 +158,17 @@ def project_delete(id):
 @user.route('/project/<name>/set/<task_id>', methods=['POST', 'GET'])
 @login_required
 def set_project_tasks(name, task_id):
-    proj_name = re.compile('^'+name+'$', re.I)
-    for each_project in current_user.projects:
-        if proj_name.match(each_project.name):
-            project = each_project
-            task = Task.query.filter_by(id=task_id, owner=current_user).first()
-            if not task:
-                task = Task.query.filter_by(id=task_id, sender=current_user).first_or_404()
+    task = Task.query.get(task_id)
+    if not task or (task and task.owner != current_user and task.sender != current_user):
+        return jsonify({'1':False})
+    project = Project.query.get(name)
+    if not project:
+        proj_name = re.compile('^'+name+'$', re.I)
+        for each_project in current_user.projects:
+            if proj_name.match(each_project.name):
+                project = each_project
+    if project and project.owner == current_user:
+        if task not in project.tasks:
             project.addTask(task)
             if project.name != 'Inbox':
                 inbox = [proj for proj in current_user.projects 
@@ -173,12 +177,6 @@ def set_project_tasks(name, task_id):
                     inbox[0].tasks.remove(task)
                     db.session.commit()
             return jsonify({'1':True})
-    #for project in current_user.projects:
-    #    if project.name == name:
-    #        for task in current_user.tasks:
-    #            if task.id == task_id:
-    #                project.addTasks(task)
-    #                db.session.commit()
     return redirect('user/tasks/'+name)
 
 
@@ -905,13 +903,17 @@ def unfollow(name=None):
 @user.route('/project/<name>/adduser/<username>', methods=['POST', 'GET'])
 @login_required
 def project_adduser(name=None, username=None):
-    project = Project.query.get(name)
-    followed = User.query.get(username)
-    if not project:
+    try:
+        project = Project.query.get(name) 
+    except:
         project = Project.query.filter_by(name=name, owner=current_user).first()
-    if not followed:
+
+    try:
+        followed = User.query.get(username)
+    except:
         followed = User.query.filter_by(username=username).first()
-    if followed not in project.users and project.owner == current_user:
+    
+    if project and followed and (followed not in project.users) and (project.owner == current_user):
         project.users.append(followed)
         db.session.commit()
        # return redirect(url_for('user.index'))

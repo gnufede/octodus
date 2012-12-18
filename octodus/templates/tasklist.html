@@ -199,14 +199,10 @@
         $( ".label" ).draggable();
         $( ".droppable" ).droppable({
             drop: function( event, ui ) {
-    var task_id =  $(this).attr('id');
-    var indexof_ = task_id.indexOf('_')+1;
-    var id = task_id.substr(indexof_, task_id.length);
-    var type = task_id.substr(0, indexof_-1);
-    var project_name = $(ui.draggable).text().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-    //window.location.href = 
+    var id =  $(this).attr('data-id');
+    var project_name = $(ui.draggable).attr('data-id');
     var action = 'adduser';
-    if ( type==="task"){
+    if ( $(this).hasClass('task') ){
         action = 'set';
     }
      url='/user/project/'+project_name+'/'+action+'/'+id;

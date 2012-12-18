@@ -114,12 +114,9 @@
 {% block append_js_on_load %}
 
     $('.taskdiv, .userdiv').click(function(e){
-    e.preventDefault();
-    //var content = $(this).attr('rel');
-    $('.taskdiv.active, .userdiv.active').removeClass('active');
-    $(this).addClass('active');
-    //$('.content').hide();
-    //$('#'+content).show();
+        e.preventDefault();
+        $('.taskdiv.active, .userdiv.active').removeClass('active');
+        $(this).addClass('active');
     });
 
     var contacts ={{ contacts|safe }}; 

@@ -327,19 +327,30 @@ display: block;
     overflow: hidden;
     overflow-y: auto;
 }
+.slimScrollBar{
+   // margin-top: 30px;
+}
 */
 .bs-docs-sidenav[style] {
     min-width: 22% !important;
 }
 
-.slimScrollBar{
-   // margin-top: 30px;
-}
 
 
 .nav-list > li > a,
 .nav-list .nav-header {
 margin-left: 0;
 margin-right: 0;
+}
+
+.nav-list{
+  -webkit-border-radius: 6px 6px 6px 6px;
+     -moz-border-radius: 6px 6px 6px 6px;
+          border-radius: 6px 6px 6px 6px;
+  border: 1px solid #e5e5e5;
+}
+
+.usenav{
+  margin-top: 30px;
 }
 

@@ -3,9 +3,10 @@
 {% extends "layout.html" %}
 
 {% block menu %}
-<div class="span3 usernav bs-nav-sidebar" >	
+<div class="span3 usenav usernav" style="margin-top:50px;">	
+<div class="span3 bs-nav-sidebar affix" >
 <div class="usernav" >
-<ul class="nav nav-list bs-docs-sidenav affix">
+<ul class="nav nav-list bs-docs-sidenav">
 <li id="Inbox"> <a href='/user/tasks/inbox'>
         <i class='icon-inbox' style="display:inline-block;"></i>
         {% for project in current_user.projects: %}
@@ -111,6 +112,7 @@
 	</li>
 </ul>
 {% endif %}	
+</div>
 </div>
 </div>
 

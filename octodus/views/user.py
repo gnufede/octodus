@@ -177,7 +177,9 @@ def set_project_tasks(name, task_id):
                     inbox[0].tasks.remove(task)
                     db.session.commit()
             return jsonify({'1':True})
-    return redirect('user/tasks/'+name)
+        else:
+            return jsonify({'False':"task in project tasks"})
+    return jsonify({'False':"not project or not owner"})
 
 
 @user.route('/project/<name>/unset/<task_id>', methods=['POST', 'GET'])

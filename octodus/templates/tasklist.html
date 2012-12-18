@@ -7,9 +7,6 @@
 {% block body %}
 <div class="row offset3 ">
 <div class="btn-toolbar span12"> <!--navbar navbar-inner navbar-form -->
-                <button id="newtask_button" type="button" class="btn btn-primary pull-left" style="margin-right:5px;margin-left:5px;" onClick="return _action($(this));" title="New Task">
-                    <i class="icon-white icon-plus"></i> 
-                    New Task</button>
     <div id="newtask" class="input pull-left" style="display:inline-block;" >
             <!--onsubmit="submitAjaxQuery(event)" -->
         <form id="task_quickentry" method="POST"
@@ -24,7 +21,9 @@
         </form>
                     
                 </div>
-
+                <button id="newtask_button" type="button" class="btn btn-primary pull-left" style="margin-right:5px;margin-left:5px;" title="New Task">
+                    <i class="icon-white icon-plus"></i> 
+                    New Task</button>
         <button id="showhide_done" type="button" class="btn btn-small  pull-right" data-toggle="buttons-checkbox">Hide done tasks</button>
     </div>
 <div class="row-fluid ">
@@ -119,6 +118,7 @@
         $(this).addClass('active');
     });
 
+
     var contacts ={{ contacts|safe }}; 
 
     $.each(contacts, function(key, value) {   
@@ -150,6 +150,17 @@
             $('.list.timeline').fadeOut();
         }
         });
+
+        $("#newtask_button").click(function() {
+            if ($('#newtaskname').val() === "New Task"){
+                return _action($(this));
+            }
+            else{
+             return _onsubmit(event, $('#task_quickentry'), '/user/tasks/new/');
+            }
+        });
+
+
     $("#showhide_done").click(function() {
         if ($("#showhide_done").hasClass('active')){
            $('.taskdone').fadeIn();//css('display','inherit');

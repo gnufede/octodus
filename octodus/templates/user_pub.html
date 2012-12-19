@@ -68,6 +68,10 @@
 {% endblock %}
 {% block append_js %}
 <script>
+    $('.taskdiv, .userdiv').click(function(e){
+        $('.taskdiv.active, .userdiv.active').removeClass('active');
+        $(this).addClass('active');
+    });
     $(function() {
     jQuery("abbr.timeago").timeago();
     $('.launchpopover').popover();

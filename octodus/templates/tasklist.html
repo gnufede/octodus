@@ -112,11 +112,24 @@
 
 {% block append_js_on_load %}
 
-    $('.taskdiv, .userdiv').click(function(e){
-        $('.taskdiv.active, .userdiv.active').removeClass('active');
-        $(this).addClass('active');
-    });
+    var config = {    
+        over: makeTall, // function = onMouseOver callback (REQUIRED)    
+        timeout: 700, // number = milliseconds delay before onMouseOut    
+        out: makeShort // function = onMouseOut callback (REQUIRED)    
+    };
 
+    $(".taskdiv , .userdiv").hoverIntent( config)
+
+
+    function makeShort(){
+        $(this).removeClass('active', 200, function(){}); 
+       // $(this).animate({"height":68},200);
+    }
+
+    function makeTall(){
+       // $(this).animate({"height":120},200);
+        $(this).addClass('active', 200, function(){}); 
+    }
 
     var contacts ={{ contacts|safe }}; 
 

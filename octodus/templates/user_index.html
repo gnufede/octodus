@@ -86,7 +86,7 @@
     {% if current_user.projects|length %}
     {% for project in current_user.projects: %}
     {% if project.name not in ['Inbox','Private','Public'] %}
-    <li id="{{project.name}}"><a href="{{project.name}}"  class='more_projects'>
+    <li id="{{project.name}}"><a href="{{project.name}}" data-id="{{project.id}}"  class='more_projects'>
             <i class='icon-tag' style="display:inline-block;"></i>
             <div class='project proj_name draggable'  data-id="{{project.id}}" style="display:inline-block;">
             {{project.name}}
@@ -163,6 +163,17 @@
             $(".more_proj.close").remove();
     });
 
+    $(".more_proj.close").live("click", function(e) {
+        e.preventDefault();
+        url='/user/projects/del/'+$(this).parent().attr('data-id');
+        $.ajax({
+            url:url
+             }).done(function() { 
+                 document.location.reload();
+        });
+
+    });
+    /*
     $(".proj_label.tasklist > .close").live("click", function() {
         var proj_label = $(this).siblings('.project');
         var proj_name = proj_label.text();
@@ -175,6 +186,7 @@
         });
         $(this).parent().remove();
     });
+    */
 /*
     $('#newproject').keyup(function (event){
         alert(event.keycode);

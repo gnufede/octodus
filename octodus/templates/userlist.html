@@ -157,8 +157,8 @@
     $(function() {
     jQuery("abbr.timeago").timeago();
     $('.launchpopover').popover();
-        $( ".project" ).draggable({helper: 'clone'});
-        $( ".label" ).draggable();
+        $( ".project" ).draggable({appendTo: 'body', helper: 'clone'});
+        $( ".label" ).draggable({appendTo: 'body'});
         $( ".droppable" ).droppable({
             drop: function( event, ui ) {
     var id =  $(this).attr('data-id');

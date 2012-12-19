@@ -115,19 +115,21 @@
     var config = {    
         over: makeTall, // function = onMouseOver callback (REQUIRED)    
         timeout: 700, // number = milliseconds delay before onMouseOut    
+        interval: 300,
         out: makeShort // function = onMouseOut callback (REQUIRED)    
     };
 
     $(".taskdiv , .userdiv").hoverIntent( config)
 
+    $('.taskdiv, .userdiv').click(function(e){
+        $(this).addClass('active');
+    });
 
     function makeShort(){
         $(this).removeClass('active', 200, function(){}); 
-       // $(this).animate({"height":68},200);
     }
 
     function makeTall(){
-       // $(this).animate({"height":120},200);
         $(this).addClass('active', 200, function(){}); 
     }
 

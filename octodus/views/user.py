@@ -618,6 +618,7 @@ def new_task(name=None):
 
     if request.method == 'POST':
         name = form.name.data
+        projects_ids = form.projects.data
         if name[0] == '@' and current_user.points > 5:
             username, space, name = name[1:].partition(' ')
             allusers = User.query.all()
@@ -644,6 +645,11 @@ def new_task(name=None):
             newtask.duration_minutes = form.duration_minutes.data
         if form.deadline.data:
             newtask.deadline = form.deadline.data
+        if form.projects.data:
+            for project_id in form.projects.data:
+                project = Project.query.get(project_id)
+                if project.owner == current_user:
+                    newtask.projects.append(project)
         if project:
             newtask.projects.append(project)
         else:

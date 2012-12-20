@@ -67,6 +67,7 @@ class TaskForm(Form):
     priority = IntegerField()
     duration_minutes = IntegerField()
     deadline = DateField()
+    projects = SelectMultipleField()
     submit = SubmitField(_('Hecho'))
 
 
